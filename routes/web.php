@@ -16,3 +16,32 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::group([
+    'name'=>'areas',
+    'prefix'=>'areas',
+],function(){
+    Route::get('/index','AreaController@index');
+    Route::get('/create', 'AreaController@create');
+    Route::get('/{area}','AreaController@show');
+    Route::get('/{area}/edit', 'AreaController@edit');
+    Route::put('/{area}','AreaController@update');
+    Route::post('/','AreaController@store');
+    Route::delete('/{area}', 'AreaController@destroy');
+});
+
+Route::group([
+    'name' => 'useraddresses',
+    'prefix' => 'useraddresses',
+], function () {
+    Route::get('/index', 'UserAddressController@index');
+    Route::get('/create', 'UserAddressController@create');
+    Route::get('/{useraddress}', 'UserAddressController@show');
+    Route::get('/{useraddress}/edit', 'UserAddressController@edit');
+    Route::put('/{useraddress}', 'UserAddressController@update');
+    Route::post('/', 'UserAddressController@store');
+    Route::delete('/{useraddress}', 'UserAddressController@destroy');
+});
+
+
