@@ -66,5 +66,19 @@ Route::delete('/pharmacies/{pharmacy}', function () {
     // return view('pharmacy.destroy');
 })->name('pharmacies.destroy');
 
+//=========================================================
+//=========================================================
 
-
+Route::group([
+    'name' => 'orders',
+    'prefix' => 'orders',
+], function () {
+    Route::delete('/{order}', 'OrderController@destroy')->name('orders.destroy');
+    Route::get('/', 'OrderController@index')->name('orders.index');
+    Route::get('/create', 'OrderController@create')->name('orders.create');
+    Route::post('/', 'OrderController@store')->name('orders.store');
+    Route::get('{order}', 'OrderController@show')->name('orders.show');
+    Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
+    Route::put('{order}', 'OrderController@update')->name('orders.update');
+    
+});
