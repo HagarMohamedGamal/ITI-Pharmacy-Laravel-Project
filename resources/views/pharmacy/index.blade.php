@@ -4,7 +4,7 @@
 @section('content')
 <h1>index</h1>
 <a class="btn btn-info btn-lg btn-block mb-5" href="{{route('pharmacies.create')}}">Add Pharmacy</a>
-<table class="table table-dark text-center">
+<table id="mytable" class="table table-bordered data-table text-center display compact">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -65,5 +65,10 @@
       @endforeach
   </tbody>
 </table>
-
+ 
+<script>
+$(document).ready(function() {
+  $('#mytable').DataTable();
+} );
+</script>
 @endsection
