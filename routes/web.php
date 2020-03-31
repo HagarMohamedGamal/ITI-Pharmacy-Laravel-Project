@@ -1,5 +1,6 @@
 <?php
 
+use App\Doctor;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/doctors', 'DoctorController@index')->name('doctors.index');
+Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
+Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update');
+Route::get('/doctors/create', 'DoctorController@create')->name('doctors.create');
+Route::get('/doctors/{doctor}', 'DoctorController@show')->name('doctors.show');
+Route::post('/doctors', 'DoctorController@store')->name('doctors.store');
+Route::delete('/doctors/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
