@@ -197,7 +197,7 @@ to get the desired effect
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('pharmacies.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pharmacies</p>
                 </a>
@@ -209,25 +209,25 @@ to get the desired effect
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('medicines.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Users</p>
+                  <p>Medicine</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('areas.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Area</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('useraddresses.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>User Addresses</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('orders.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Orders</p>
                 </a>
@@ -357,4 +357,3 @@ to get the desired effect
 </script>
 </body>
 </html>
-
