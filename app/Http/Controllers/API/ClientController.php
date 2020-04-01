@@ -28,7 +28,7 @@ class ClientController extends Controller
     public function store(StoreClientRequest $request)
     {
         return new ClientResource(
-            client::create([
+            Client::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
@@ -55,13 +55,23 @@ class ClientController extends Controller
     }
 
 
+
+
+
+
     public function update(Request $request, $id)
     {
-        $update = ['name' => $request->name, 'password' => $request->password, 'national_id' => $request->national_id, 'avatar' => $request->avatar, 'birth_day' => $request->birth_day, 'mobile' => $request->mobile];
-        Client::where('id', $id)->update($update);
 
 
-        
+        $client = $request->only(['name', 'password', 'national_id', 'avatar', 'birth_day','mobile','gender']);
+
+
+        Client::where('id', $id)->update($client);
+         return response()->json([
+
+        'success' => 'Record update successfully!'
+
+    ]);
     }
 
 
