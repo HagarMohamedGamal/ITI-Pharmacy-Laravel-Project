@@ -20,7 +20,7 @@ class CreateClientsTable extends Migration
 
             $table->string('password');
             $table->timestamps();
-            $table->string('avatar')->default('default.jpg');
+            $table->string('avatar');
             $table->bigInteger('national_id')->nullable();
             $table->string('gender');
             $table->string('birth_day');

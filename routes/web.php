@@ -80,5 +80,22 @@ Route::group([
     Route::get('{order}', 'OrderController@show')->name('orders.show');
     Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
     Route::put('{order}', 'OrderController@update')->name('orders.update');
-    
+
+});
+
+Route::group([
+    'name' => 'medicines',
+    'prefix' => 'medicines',
+], function () {
+    Route::delete('/{medicine}', 'MedicineController@destroy')->name('medicines.destroy');
+    Route::get('/', 'MedicineController@index')->name('medicines.index');
+    Route::get('/create', 'MedicineController@create')->name('medicines.create');
+    Route::post('/', 'MedicineController@store')->name('medicines.store');
+    Route::get('/{medicine}/edit', 'MedicineController@edit')->name('medicines.edit');
+    Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
+
+
+    Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
+
+
 });
