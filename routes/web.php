@@ -25,3 +25,7 @@ Route::get('/doctors/create', 'DoctorController@create')->name('doctors.create')
 Route::get('/doctors/{doctor}', 'DoctorController@show')->name('doctors.show');
 Route::post('/doctors', 'DoctorController@store')->name('doctors.store');
 Route::delete('/doctors/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
+
+Route::get('/admin', function () {
+    return view('admin');
+})->name('admin');
