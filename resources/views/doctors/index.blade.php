@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<a href="{{route('doctors.create')}}" class="btn btn-primary m-5">Create Doctor</a>
 <div class="container">
 
     <!-- Main content -->
@@ -11,14 +10,19 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">DataTable with default features</h3>
+              <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">avatar</th>
                     <th scope="col">name</th>
                     <th scope="col">email</th>
+                    <th scope="col">national id</th>
+                    <th scope="col">pharmacy name</th>
                     <th scope="col">is_baned</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -26,15 +30,19 @@
                 <tbody>
                     @foreach($doctors as $doctor)
                     <tr>
+                        <td>{{$doctor->id}}</td>
+                        <td>{{$doctor->avatar}}</td>
                         <td>{{$doctor->name}}</td>
                         <td>{{$doctor->email}}</td>
+                        <td>{{$doctor->national_id}}</td>
+                        <td>{{$doctor->pharmacy_name}}</td>
                         <td>{{$doctor->is_baned}}</td>
                         <td>
-                            <a href="{{route('doctors.show', ['doctor' => $doctor->id])}}" class="btn btn-primary btn-success">View</a>
-                            <a href="{{route('doctors.edit', ['doctor' => $doctor->id])}}" class="btn btn-primary btn-warning">Edit</a>
+                            <a href="{{route('doctors.show', ['doctor' => $doctor->id])}}" class="btn btn-primary btn-success"><i class="fas fa-eye"></i></a>
+                            <a href="{{route('doctors.edit', ['doctor' => $doctor->id])}}" class="btn btn-primary btn-warning"><i class="fas fa-edit text-white"></i></a>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#exampleModal_{{$doctor->id}}">
-                            Delete
+                            <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
@@ -66,8 +74,12 @@
                 <tbody>
                 <tfoot>
                 <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">avatar</th>
                     <th scope="col">name</th>
                     <th scope="col">email</th>
+                    <th scope="col">national id</th>
+                    <th scope="col">pharmacy name</th>
                     <th scope="col">is_baned</th>
                     <th scope="col">Actions</th>
                 </tr>
