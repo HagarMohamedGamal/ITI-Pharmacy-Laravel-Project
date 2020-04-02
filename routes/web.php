@@ -1,5 +1,6 @@
 <?php
 
+use App\Doctor;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,31 +18,48 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/admin', function () {
+    return view('admin');
+})->name('admin');
+
+Route::group([
+    'name' => 'doctors',
+    'prefix' => 'doctors',
+], function () {
+    Route::get('/', 'DoctorController@index')->name('doctors.index');
+    Route::get('/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
+    Route::put('/{doctor}', 'DoctorController@update')->name('doctors.update');
+    Route::get('/create', 'DoctorController@create')->name('doctors.create');
+    Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
+    Route::post('/', 'DoctorController@store')->name('doctors.store');
+    Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
+    
+});
 
 Route::group([
     'name'=>'areas',
     'prefix'=>'areas',
 ],function(){
-    Route::get('/index','AreaController@index');
-    Route::get('/create', 'AreaController@create');
-    Route::get('/{area}','AreaController@show');
-    Route::get('/{area}/edit', 'AreaController@edit');
-    Route::put('/{area}','AreaController@update');
-    Route::post('/','AreaController@store');
-    Route::delete('/{area}', 'AreaController@destroy');
+    Route::get('/index','AreaController@index')->name('areas.index');
+    Route::get('/create', 'AreaController@create')->name('areas.create');
+    Route::get('/{area}','AreaController@show')->name('areas.show');
+    Route::get('/{area}/edit', 'AreaController@edit')->name('areas.edit');
+    Route::put('/{area}','AreaController@update')->name('areas.update');
+    Route::post('/','AreaController@store')->name('areas.store');
+    Route::delete('/{area}', 'AreaController@destroy')->name('areas.destroy');
 });
 
 Route::group([
     'name' => 'useraddresses',
     'prefix' => 'useraddresses',
 ], function () {
-    Route::get('/index', 'UserAddressController@index');
-    Route::get('/create', 'UserAddressController@create');
-    Route::get('/{useraddress}', 'UserAddressController@show');
-    Route::get('/{useraddress}/edit', 'UserAddressController@edit');
-    Route::put('/{useraddress}', 'UserAddressController@update');
-    Route::post('/', 'UserAddressController@store');
-    Route::delete('/{useraddress}', 'UserAddressController@destroy');
+    Route::get('/index', 'UserAddressController@index')->name('useraddresses.index');
+    Route::get('/create', 'UserAddressController@create')->name('useraddresses.create');
+    Route::get('/{useraddress}', 'UserAddressController@show')->name('useraddresses.show');
+    Route::get('/{useraddress}/edit', 'UserAddressController@edit')->name('useraddresses.edit');
+    Route::put('/{useraddress}', 'UserAddressController@update')->name('useraddresses.update');
+    Route::post('/', 'UserAddressController@store')->name('useraddresses.store');
+    Route::delete('/{useraddress}', 'UserAddressController@destroy')->name('useraddresses.destroy');
 });
 
 
@@ -73,5 +91,18 @@ Route::group([
     Route::get('{order}', 'OrderController@show')->name('orders.show');
     Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
     Route::put('{order}', 'OrderController@update')->name('orders.update');
-    
+
+});
+
+Route::group([
+    'name' => 'medicines',
+    'prefix' => 'medicines',
+], function () {
+    Route::delete('/{medicine}', 'MedicineController@destroy')->name('medicines.destroy');
+    Route::get('/', 'MedicineController@index')->name('medicines.index');
+    Route::get('/create', 'MedicineController@create')->name('medicines.create');
+    Route::post('/', 'MedicineController@store')->name('medicines.store');
+    Route::get('/{medicine}/edit', 'MedicineController@edit')->name('medicines.edit');
+    Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
+    Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
 });
