@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Doctor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DoctorController extends Controller
 {
@@ -23,11 +22,7 @@ class DoctorController extends Controller
     }
 
     function destroy(Request $request){
-        // dd($request);
         Doctor::find($request->doctor)->delete();
-        // return response()->json([
-        //     'success' => 'Record deleted successfully!'
-        // ]);
     }
 
     function create(){
@@ -36,16 +31,13 @@ class DoctorController extends Controller
 
     function store(){
         $request = request();
-        // dd($request->name);
-        // $input = $request->only(['name', 'email', 'is_baned']);
         Doctor::create(
             [
                 'name' => $request->name,
                 'email' => $request->email, 
-                'password' => "", 
-                'national_id' => "", 
-                'avatar' => "", 
-                'pharmacy_name' => "", 
+                'national_id' => $request->national_id, 
+                'avatar' => $request->avatar, 
+                'pharmacy_name' => $request->pharmacy_name, 
                 'is_baned' => $request->is_baned
             ]
         );
@@ -63,10 +55,9 @@ class DoctorController extends Controller
             [
                 'name' => $request->name,
                 'email' => $request->email, 
-                'password' => "", 
-                'national_id' => "", 
-                'avatar' => "", 
-                'pharmacy_name' => "", 
+                'national_id' => $request->national_id, 
+                'avatar' => isset($request->avatar)?$request->avatar:"", 
+                'pharmacy_name' => $request->pharmacy_name, 
                 'is_baned' => $request->is_baned
             ]
         );
