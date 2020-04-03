@@ -108,6 +108,6 @@ Route::group([
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
     Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
 });
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
