@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Doctor;
 use Illuminate\Http\Request;
+// use Response;
 
 class DoctorController extends Controller
 {
@@ -22,7 +23,8 @@ class DoctorController extends Controller
     }
 
     function destroy(Request $request){
-        Doctor::find($request->doctor)->delete();
+        $doctor=Doctor::find($request->doctor)->delete();
+        // return Response::json($doctor);
     }
 
     function create(){
@@ -51,6 +53,18 @@ class DoctorController extends Controller
     }
 
     function update(Request $request){
+        if(request()->ajax()){
+            $doctor=Doctor::find($request->doctor);
+            if($doctor->isBanned()){
+                $doctor->unban();
+            } else{
+                $doctor->ban();
+            }
+            // dd($doctor);
+            return response()->json([
+                'is_baned' => $doctor->isBanned(),
+            ]);
+        }
         Doctor::find($request->doctor)->update(
             [
                 'name' => $request->name,

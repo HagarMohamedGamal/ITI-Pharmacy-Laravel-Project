@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+  <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
   <title>AdminLTE 3 | Dashboard 3</title>
 
   <!-- Font Awesome Icons -->
@@ -343,17 +343,18 @@ to get the desired effect
 <script src="{{ asset("/bower_components/admin-lte/plugins/chart.js/Chart.min.js")}}"></script>
 <script src="{{ asset("/bower_components/admin-lte/dist/js/pages/dashboard3.js")}}"></script>
 <script>
-  $(function () {
-    $("#example1").DataTable();
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-    });
-  });
+  // $(function () {
+  //   // $("#example1").DataTable();
+  //   $('#example2').DataTable({
+  //     "paging": true,
+  //     "lengthChange": false,
+  //     "searching": false,
+  //     "ordering": true,
+  //     "info": true,
+  //     "autoWidth": false,
+  //   });
+  // });
 </script>
+<script src="{{asset('/js/doctors.js')}}"></script>
 </body>
 </html>
