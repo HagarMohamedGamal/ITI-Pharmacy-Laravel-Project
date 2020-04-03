@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
-  <title>AdminLTE 3 | Dashboard 3</title>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/fontawesome-free/css/all.min.css")}}">
@@ -31,6 +45,7 @@ to get the desired effect
 |---------------------------------------------------------|
 -->
 <body class="hold-transition sidebar-mini">
+
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -165,15 +180,18 @@ to get the desired effect
 
     <!-- Sidebar -->
     <div class="sidebar">
+      @guest  
+      @else
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img src="{{ asset("/bower_components/admin-lte/dist/img/user2.jpg")}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
         </div>
       </div>
+      @endguest
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -267,17 +285,40 @@ to get the desired effect
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ asset("/bower_components/admin-lte/pages/examples/login.html")}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Login</p>
+                  <p>
+
+                            @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
+                            </a>
+                        </li>
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">
+                                    <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
+                                    </a>
+                                </li>
+                            @endif
+
+                            @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                
+                                <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+                            @endguest
+                  </p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ asset("/bower_components/admin-lte/pages/examples/register.html")}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Register</p>
-                </a>
-              </li>
+              
               <li class="nav-item">
                 <a href="{{ asset("/bower_components/admin-lte/pages/examples/forgot-password.html")}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>

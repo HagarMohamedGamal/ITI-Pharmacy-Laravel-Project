@@ -2,11 +2,11 @@
 @extends('layouts.app')
 
 @section('content')
-      <div class="container m-5">
+      <div class="container">
       <div class="text-center">
         <a href="{{route('orders.create')}}" class="btn btn-outline-success font-weight-bold mb-5">Create order</a>
       </div>
-          <table class="table ml-5">
+          <table class="table table-bordered data-table text-center display compact">
               <thead>
                 <tr>
                   <th scope="col">ID</th>

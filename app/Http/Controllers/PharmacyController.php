@@ -9,8 +9,10 @@ class PharmacyController extends Controller
     public function index()
     {
         $pharmacies = Pharmacy::all();
+        $deletedPharmacies = $this->readsoftdelete();
         return view('pharmacy.index', [
-            'pharmacies' => $pharmacies
+            'pharmacies' => $pharmacies,
+            'deletedPharmacies' => $deletedPharmacies['pharmacies']
         ]);
     }
 
@@ -75,4 +77,40 @@ class PharmacyController extends Controller
         ]);
         return redirect()->route('pharmacies.index');
     }
+
+    public function destroy(Request $request)
+    {
+        $pharmacyId = $request->pharmacy;
+        $pharmacy = Pharmacy::withTrashed()
+                ->where('id', $request->pharmacy)
+                ->get()->first();
+        $pharmacy->forceDelete();
+        return redirect()->route('pharmacies.index');
+    }
+
+
+
+    public function softdelete(Request $request)
+    {
+        $pharmacy = Pharmacy::find($request->pharmacy);
+        $pharmacy->delete();
+        return redirect()->route('pharmacies.index');
+    }
+    public function readsoftdelete()
+    {
+        $pharmacies = Pharmacy::onlyTrashed()
+                    ->get();
+        return [
+                'pharmacies' => $pharmacies
+                ];
+    }
+    public function restore(Request $request)
+    {
+        $pharmacy = Pharmacy::onlyTrashed()->where('id', $request->pharmacy);
+        $pharmacy->restore();
+        return redirect()->route('pharmacies.index');
+    }
+
+
+
 }
