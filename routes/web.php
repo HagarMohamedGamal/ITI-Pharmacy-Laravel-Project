@@ -67,7 +67,7 @@ Route::group([
 Route::group([
     'name' => 'pharmacies',
     'prefix' => 'pharmacies',
-    'middleware' => 'auth',
+    'middleware' => ['auth', 'verified'],
 ], function () {
     Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
