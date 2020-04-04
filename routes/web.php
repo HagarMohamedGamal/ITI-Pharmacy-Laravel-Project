@@ -25,6 +25,7 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
+    // 'middleware' => 'auth',
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
     Route::get('/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
@@ -63,29 +64,23 @@ Route::group([
 });
 
 
-Route::get('/pharmacies', 'PharmacyController@index')->name('pharmacies.index');
+Route::group([
+    'name' => 'pharmacies',
+    'prefix' => 'pharmacies',
+    // 'middleware' => 'auth',
+], function () {
+    Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
+    Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
+    Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
+    Route::get('/{pharmacy}/edit', 'PharmacyController@edit')->name('pharmacies.edit');
+    Route::put('/{pharmacy}', 'PharmacyController@update')->name('pharmacies.update');
+    Route::post('/', 'PharmacyController@store')->name('pharmacies.store');
+    Route::delete('/{pharmacy}', 'PharmacyController@destroy')->name('pharmacies.destroy');
+    Route::get('/{pharmacy}/softdelete', 'PharmacyController@softdelete')->name('pharmacies.softdelete');
+    Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
+    Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
+});
 
-// =======================create========================
-Route::get('/pharmacies/create', 'PharmacyController@create')->name('pharmacies.create');
-
-Route::post('/pharmacies', 'PharmacyController@store')->name('pharmacies.store');
-
-
-// ========================update=========================
-Route::get('/pharmacies/{pharmacy}/edit', 'PharmacyController@edit')->name('pharmacies.edit');
-
-Route::put('/pharmacies/{pharmacy}', 'PharmacyController@update')->name('pharmacies.update');
-
-
-Route::get('/pharmacies/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
-
-// ========================destroy=========================
-Route::delete('/pharmacies/{pharmacy}', function () {
-    // return view('pharmacy.destroy');
-})->name('pharmacies.destroy');
-
-//=========================================================
-//=========================================================
 
 Route::group([
     'name' => 'orders',
@@ -113,3 +108,6 @@ Route::group([
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
     Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
 });
+Auth::routes(['verify' => true]);
+
+Route::get('/home', 'HomeController@index')->name('home');
