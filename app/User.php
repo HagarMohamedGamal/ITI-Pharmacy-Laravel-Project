@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Notifications\GreetVerification;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -38,6 +40,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function greetingUser(){
+        $this->notify(new GreetVerification);
+    }
+
     /**
      * Get the owning typeable model.
      */
@@ -45,6 +51,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphTo();
     }
-
 
 }
