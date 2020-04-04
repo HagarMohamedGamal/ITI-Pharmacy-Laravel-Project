@@ -33,10 +33,6 @@ Route::group([
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
-<<<<<<< HEAD
-=======
-
->>>>>>> 9d17e52aa8947125961bf62271ea562a3f26829d
 });
 Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['
     role_or_permission:super-admin|admin|pharmacy|update doctor']);
@@ -129,11 +125,9 @@ Route::group([
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-<<<<<<< HEAD
 
 Route::get('/roles', 'RolesController@create');
-=======
+
 Route::get('stripe', 'StripePaymentController@stripe');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post');
 
->>>>>>> 9d17e52aa8947125961bf62271ea562a3f26829d
