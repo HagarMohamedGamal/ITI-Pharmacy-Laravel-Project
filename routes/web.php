@@ -33,7 +33,7 @@ Route::group([
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
-    
+
 });
 
 Route::group([
@@ -113,3 +113,9 @@ Route::group([
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
     Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
 });
+
+Auth::routes(['verify' => true]);
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('stripe', 'StripePaymentController@stripe');
+Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post');

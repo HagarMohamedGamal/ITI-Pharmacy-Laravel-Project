@@ -21,7 +21,7 @@
         <th scope="row">{{$medicine->id}}</th>
         <td>{{$medicine->name}}</td>
         <td>{{$medicine->type}}</td>
-
+            <td>{{$medicine->price}}</td>
         <td>{{$medicine->quantity}}</td>
 
 

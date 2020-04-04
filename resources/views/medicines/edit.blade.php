@@ -33,7 +33,7 @@
 
 
     <div class="form-group">
-        <label for="exampleFormControlInput1">quantity</label>
+        <label for="exampleFormControlInput1">price</label>
         <input type="text" class="form-control" name="price" value="{{$medicine->price}}">
     </div>
 
