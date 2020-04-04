@@ -25,7 +25,7 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
-    'middleware' => 'auth',
+    // 'middleware' => 'auth',
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
     Route::get('/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
@@ -67,7 +67,7 @@ Route::group([
 Route::group([
     'name' => 'pharmacies',
     'prefix' => 'pharmacies',
-    'middleware' => 'auth',
+    // 'middleware' => 'auth',
 ], function () {
     Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');

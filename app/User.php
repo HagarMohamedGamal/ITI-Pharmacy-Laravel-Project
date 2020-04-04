@@ -7,9 +7,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','typeable_type','typeable_id'
     ];
 
     /**
@@ -41,4 +43,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function greetingUser(){
         $this->notify(new GreetVerification);
     }
+
+    /**
+     * Get the owning typeable model.
+     */
+    public function typeable()
+    {
+        return $this->morphTo();
+    }
+
 }

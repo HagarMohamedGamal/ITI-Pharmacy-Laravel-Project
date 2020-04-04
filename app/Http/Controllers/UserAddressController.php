@@ -61,16 +61,13 @@ class UserAddressController extends Controller
             'is_main' => $request['is_main'],
 
         ]);
-
     }
 
     public function destroy()
     {
         $request = request();
         $addressid = $request->useraddress;
-        $address = UserAddress::destroy($addressid);
-       
-
+        UserAddress::destroy($addressid);
     }
 
     public function create()
