@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Pharmacy;
 use App\User;
@@ -11,6 +12,7 @@ class PharmacyController extends Controller
 {
     public function index()
     {
+        
         $pharmacies = Pharmacy::all();
         $deletedPharmacies = $this->readsoftdelete();
         return view('pharmacy.index', [
@@ -57,12 +59,13 @@ class PharmacyController extends Controller
             'avatar' => $avatar,
             'priority' => $pharmacy['priority'],
         ]);
+
         // dd($user);
         $user = $user->refresh();
         $pharmacy=$pharmacy->refresh();
 
         $pharmacy->type()->save($user);
-
+        $user->assignRole('pharmacy');
         return redirect()->route('pharmacies.index');
     }
 
