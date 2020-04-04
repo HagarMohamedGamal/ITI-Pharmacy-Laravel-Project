@@ -71,7 +71,6 @@ Route::group([
 ], function () {
     Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
-    Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
     Route::get('/{pharmacy}/edit', 'PharmacyController@edit')->name('pharmacies.edit');
     Route::put('/{pharmacy}', 'PharmacyController@update')->name('pharmacies.update');
     Route::post('/', 'PharmacyController@store')->name('pharmacies.store');
@@ -79,6 +78,7 @@ Route::group([
     Route::get('/{pharmacy}/softdelete', 'PharmacyController@softdelete')->name('pharmacies.softdelete');
     Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
     Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
+    Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
 });
 
 

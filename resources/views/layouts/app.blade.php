@@ -20,7 +20,6 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/fontawesome-free/css/all.min.css")}}">
@@ -385,17 +384,23 @@ to get the desired effect
 <script src="{{ asset("/bower_components/admin-lte/plugins/chart.js/Chart.min.js")}}"></script>
 <script src="{{ asset("/bower_components/admin-lte/dist/js/pages/dashboard3.js")}}"></script>
 <script>
-  $(function () {
-    $("#example1").DataTable();
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-    });
-  });
+  // $(function () {
+  //   // $("#example1").DataTable();
+  //   $('#example2').DataTable({
+  //     "paging": true,
+  //     "lengthChange": false,
+  //     "searching": false,
+  //     "ordering": true,
+  //     "info": true,
+  //     "autoWidth": false,
+  //   });
+  // });
 </script>
+<script src="{{asset('/js/doctors.js')}}"></script>
+
+
+
+<script src="{{asset('/js/pharmacy.js')}}"></script>
+
 </body>
 </html>
