@@ -21,7 +21,7 @@ class CreateUserAddressesTable extends Migration
             $table->string('floor_no', 5);
             $table->string('flat_no', 10);
             $table->boolean('is_main');
-            $table->timestamps();
+           
         });
     }
 

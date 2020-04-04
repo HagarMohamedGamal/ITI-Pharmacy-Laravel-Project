@@ -22,7 +22,7 @@ class AddDoctorTable extends Migration
             $table->string('avatar');
             $table->string('pharmacy_name');
             $table->boolean('is_baned');
-            $table->timestamps();
+            
         });
     }
 
