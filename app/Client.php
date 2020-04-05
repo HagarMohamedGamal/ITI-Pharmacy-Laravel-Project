@@ -19,5 +19,6 @@ class Client extends Model
         return $this->morphOne('App\User', 'typeable');
     }
 
+    public $timestamps = false;
 }
 

@@ -62,7 +62,8 @@ class DoctorController extends Controller
         $doctor = $doctor->refresh();
 
         $doctor->type()->save($user);
-        
+        $user->assignRole('doctor');
+
         // dd($user) ;
         
         

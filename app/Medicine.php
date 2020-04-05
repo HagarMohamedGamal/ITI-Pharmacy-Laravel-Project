@@ -15,4 +15,5 @@ class Medicine extends Model
     }
     protected $fillable = ['name', 'quantity', 'type', 'price'];
 
+    
 }
