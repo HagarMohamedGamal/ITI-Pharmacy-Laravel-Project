@@ -19,6 +19,10 @@ class Client extends Model
         return $this->morphOne('App\User', 'typeable');
     }
 
+    public function addresses()
+    {
+        return $this->hasMany('App\UserAddress');
+    }
     public $timestamps = false;
 }
 
