@@ -275,69 +275,44 @@ to get the desired effect
               <p>Contacts</p>
             </a>
           </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon far fa-plus-square"></i>
-              <p>
-                Extras
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
+                 
+            <li class="nav-item">
+              <a href="{{ route('password.request') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reset Password</p>
+              </a>
+            </li>
+            
+                  @guest
               <li class="nav-item">
-                  <p>
+                  <a class="nav-link" href="{{ route('login') }}">
+                      <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
+                  </a>
+              </li>
+                  @if (Route::has('register'))
+                      <li class="nav-item">
+                          <a class="nav-link" href="{{ route('register') }}">
+                          <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
+                          </a>
+                      </li>
+                  @endif
 
-                            @guest
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">
-                                <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
-                            </a>
-                        </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">
-                                    <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
-                                    </a>
-                                </li>
-                            @endif
+                  @else
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('logout') }}"
+                     onclick="event.preventDefault();
+                                   document.getElementById('logout-form').submit();">
+                      
+                      <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
+                  </a>
 
-                            @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                
-                                <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
-                            </a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      @csrf
+                  </form>
+              </li>
+                  @endguest
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                            @endguest
-                  </p>
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a href="{{ asset("/bower_components/admin-lte/pages/examples/forgot-password.html")}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Forgot Password</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ asset("/bower_components/admin-lte/pages/examples/recover-password.html")}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Recover Password</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ asset("/bower_components/admin-lte/pages/examples/lockscreen.html")}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Lockscreen</p>
-                </a>
-              </li>
-        </ul>
+
         </li>
       </nav>
       <!-- /.sidebar-menu -->

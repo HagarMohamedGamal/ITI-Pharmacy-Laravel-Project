@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -23,11 +22,12 @@
     </tr>
   </thead>
   <tbody>
+
       @foreach($pharmacies as $pharmacy)
         <tr id="{{$pharmacy->id}}">
         <th scope="row">{{$pharmacy->id}}</th>
-        <td>{{$pharmacy->name}}</td>
-        <td>{{$pharmacy->email}}</td>
+        <td>{{$pharmacy->type ? $pharmacy->type->name :"no" }}</td>
+        <td>{{$pharmacy->type ? $pharmacy->type->email : "no"}}</td>
         <th scope="col"><img src="{{asset('/storage/'.$pharmacy->avatar)}}" width="30px" height="30px"></th>
         <td>{{$pharmacy->national_id}}</td>
         <td>{{$pharmacy->area_id}}</td>

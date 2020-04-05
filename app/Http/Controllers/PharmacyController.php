@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Pharmacy;
+use App\User;
+use App\Area;
+use Illuminate\Support\Facades\Hash;
 class PharmacyController extends Controller
 {
     public function index()
     {
+        
         $pharmacies = Pharmacy::all();
         // $deletedPharmacies = $this->readsoftdelete();
         return view('pharmacy.index', [
@@ -28,25 +33,39 @@ class PharmacyController extends Controller
 
     public function create()
     {
-        $pharmacies = Pharmacy::all();
+        $areas = Area::all();
         return view('pharmacy.create', [
-            'pharmacies' => $pharmacies
+            'areas' => $areas
         ]);
     }
 
 
     public function store(Request $request)
     {
-        $pharmacy = $request->only(['name', 'email', 'national_id', 'area_id', 'avatar', 'priority']);
+        $pharmacy = $request->only(['name', 'email','password' ,'national_id', 'area_id', 'avatar', 'priority']);
         $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "xx.png";
-        Pharmacy::create([
-            'name' => $pharmacy['name'],
-            'email' => $pharmacy['email'],
+        // dd($pharmacy['name']);
+       
+       
+        $user = User::create([
+            'name'=> $pharmacy['name'],
+            'email'=> $pharmacy['email'],
+            'password' => Hash::make($pharmacy['password']),
+
+        ]);
+        $pharmacy = Pharmacy::create([
             'national_id' => $pharmacy['national_id'],
             'area_id' => $pharmacy['area_id'],
             'avatar' => $avatar,
             'priority' => $pharmacy['priority'],
         ]);
+
+        // dd($user);
+        $user = $user->refresh();
+        $pharmacy=$pharmacy->refresh();
+
+        $pharmacy->type()->save($user);
+        $user->assignRole('pharmacy');
         return redirect()->route('pharmacies.index');
     }
 
@@ -65,11 +84,10 @@ class PharmacyController extends Controller
     public function update(Request $request)
     {
         $pharmacyUser = Pharmacy::find($request->pharmacy);
-        $pharmacy = $request->only(['name', 'email', 'national_id', 'area_id', 'avatar', 'priority']);
+        $pharmacy = $request->only([ 'national_id', 'area_id', 'avatar', 'priority']);
         $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "xx.png";
         $pharmacyUser->update([
-            'name' => $pharmacy['name'],
-            'email' => $pharmacy['email'],
+            
             'national_id' => $pharmacy['national_id'],
             'area_id' => $pharmacy['area_id'],
             'avatar' => $avatar,

@@ -14,6 +14,16 @@ class Doctor extends Model implements BannableContract
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'national_id', 'avatar', 'pharmacy_name', 'is_baned'
+         'national_id', 'avatar', 'pharmacy_name', 'is_baned',''
     ];
+
+    /**
+     * Get the doctor user.
+     */
+    public function type()
+    {
+        return $this->morphOne('App\User', 'typeable');
+    }
+
+    public $timestamps = false;
 }

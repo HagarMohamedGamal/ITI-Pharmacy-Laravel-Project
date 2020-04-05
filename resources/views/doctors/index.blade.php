@@ -32,8 +32,8 @@
                     <tr id="{{$doctor->id}}">
                         <td>{{$doctor->id}}</td>
                         <td>{{$doctor->avatar}}</td>
-                        <td>{{$doctor->name}}</td>
-                        <td>{{$doctor->email}}</td>
+                        <td>{{$doctor->type ? $doctor->type->name :"no" }}</td>
+                        <td>{{$doctor->type ? $doctor->type->email : "no"}}</td>
                         <td>{{$doctor->national_id}}</td>
                         <td>{{$doctor->pharmacy_name}}</td>
                         <td>
