@@ -14,4 +14,8 @@ class UserAddress extends Model
     {
         return $this->belongsTo('App\Area');
     }
+    public function client()
+    {
+        return $this->belongsTo('App\Client');
+    }
 }
