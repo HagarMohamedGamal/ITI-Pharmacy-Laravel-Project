@@ -10,9 +10,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-<<<<<<< HEAD
 Vagrantfile
-=======
-Vagrantfile
-/.vagrant
->>>>>>> 9d17e52aa8947125961bf62271ea562a3f26829d
+/vagrant

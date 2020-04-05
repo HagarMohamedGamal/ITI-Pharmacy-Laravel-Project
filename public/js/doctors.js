@@ -1,5 +1,37 @@
 $(function(){
-    table=$("#example1").DataTable();
+    table=$("#example1").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax:{
+            url: '/doctors/indexDataTable'
+        },
+        columns:[
+            {
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'email',
+                name: 'email'
+            },
+            {
+                data: 'national_id',
+                name: 'national_id'
+            },
+            {
+                data: 'pharmacy_name',
+                name: 'pharmacy_name'
+            },
+            {
+                data: 'is_baned',
+                name: 'is_baned'
+            },
+        ]
+    });
     $("button").on("click", "span[id^='del_']" , (ev)=>{
         idName = ev.currentTarget.id;
         doctor = idName.split("_")[1];

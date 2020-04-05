@@ -12,24 +12,24 @@ class RolesController extends Controller
 {
     public function create()
     {
-        // $roleDoctor = Role::create(['name'=>'doctor']);
-        // $rolePharmacy=Role::create(['name'=>'pharmacy']);
-        // $roleClient = Role::create(['name'=>'client']);
-        // $roleAdmin=Role::create(['name'=>'admin']);
-        // $roleSuperAdmin=Role::create(['name'=>'super-admin']);
+        $roleDoctor = Role::create(['name'=>'doctor']);
+        $rolePharmacy=Role::create(['name'=>'pharmacy']);
+        $roleClient = Role::create(['name'=>'client']);
+        $roleAdmin=Role::create(['name'=>'admin']);
+        $roleSuperAdmin=Role::create(['name'=>'super-admin']);
         
         // // $permCreateDoctor = Permission::create(['name'=>'create doctor']);
-        // $permUpdateDoctor = Permission::create(['name'=>'update doctor']);
+        $permUpdateDoctor = Permission::create(['name'=>'update doctor']);
         // // $permDeleteDoctor = Permission::create(['name'=>'delete doctor ']);
         // // $permBanDoctor = Permission::create(['name'=>'ban doctor']);
 
         // // $permCreatePharmacy = Permission::create(['name'=> 'create pharmacy']);
-        // $permUpdatePharmacy = Permission::create(['name'=>'update pharmacy']);
+        $permUpdatePharmacy = Permission::create(['name'=>'update pharmacy']);
         // // $permDeletePharmacy = Permission::create(['name'=> 'delete pharmacy ']);
 
         // // $roleDoctor->givePermissionTo($permUpdateDoctor, $rolePharmacy);
-        // $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
-        // $permUpdatePharmacy->assignRole($rolePharmacy);
+        $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
+        $permUpdatePharmacy->assignRole($rolePharmacy);
 
          $user =User::create([
             'name' => 'admin',

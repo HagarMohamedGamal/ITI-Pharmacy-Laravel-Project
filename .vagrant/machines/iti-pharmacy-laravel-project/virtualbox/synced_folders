@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-{"virtualbox":{"/home/vagrant/code":{"type":null,"mount_options":["uid=1000","gid=1000"],"guestpath":"/home/vagrant/code","hostpath":"/home/osama-eltayar/Desktop/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/osama-eltayar/Desktop/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true}}}
-=======
-{"virtualbox":{"/home/vagrant/code":{"type":null,"mount_options":["uid=1000","gid=1000"],"guestpath":"/home/vagrant/code","hostpath":"/home/rolaahmed/Music/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/rolaahmed/Music/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true}}}
->>>>>>> 9d17e52aa8947125961bf62271ea562a3f26829d

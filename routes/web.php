@@ -25,9 +25,10 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
-    'middleware' =>['role:super-admin|admin|pharmacy'],
+    // 'middleware' =>['role:super-admin|admin|pharmacy'],
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
+    Route::get('/indexDataTable', 'DoctorController@indexDataTable')->name('doctors.indexDataTable');
 
     Route::get('/create', 'DoctorController@create')->name('doctors.create');
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');

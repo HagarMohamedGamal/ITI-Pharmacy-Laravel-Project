@@ -18,7 +18,7 @@ class AddDoctorTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('national_id');
+            $table->unsignedBigInteger('national_id');
             $table->string('avatar');
             $table->string('pharmacy_name');
             $table->boolean('is_baned');
