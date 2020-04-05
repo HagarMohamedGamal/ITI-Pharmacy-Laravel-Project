@@ -13,15 +13,17 @@ class RolesController extends Controller
 {
     public function create()
     {
-        // $roleDoctor = Role::create(['name' => 'doctor']);
-        // $rolePharmacy = Role::create(['name' => 'pharmacy']);
-        // $roleClient = Role::create(['name' => 'client']);
-        // $roleAdmin = Role::create(['name' => 'admin']);
-        // $roleSuperAdmin = Role::create(['name' => 'super-admin']);
-        // $permUpdateDoctor = Permission::create(['name' => 'update doctor']);
-        // $permUpdatePharmacy = Permission::create(['name' => 'update pharmacy']);
-        // $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
-        // $permUpdatePharmacy->assignRole($rolePharmacy);
+        // hashing till the line 
+
+        $roleDoctor = Role::create(['name' => 'doctor']);
+        $rolePharmacy = Role::create(['name' => 'pharmacy']);
+        $roleClient = Role::create(['name' => 'client']);
+        $roleAdmin = Role::create(['name' => 'admin']);
+        $roleSuperAdmin = Role::create(['name' => 'super-admin']);
+        $permUpdateDoctor = Permission::create(['name' => 'update doctor']);
+        $permUpdatePharmacy = Permission::create(['name' => 'update pharmacy']);
+        $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
+        $permUpdatePharmacy->assignRole($rolePharmacy);
 
         // ------------------------------------------------------------------
 
