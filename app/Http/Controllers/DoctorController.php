@@ -11,6 +11,7 @@ use App\Http\Requests\DoctorRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreDoctorRequest;
+use App\Http\Requests\UpdateDoctorRequest;
 // use Response;
 
 class DoctorController extends Controller
@@ -123,7 +124,7 @@ class DoctorController extends Controller
     }
 
     //  Update Doctor
-    function update(Request $request)
+    function update(UpdateDoctorRequest $request)
     {
         if (request()->ajax()) {
             $doctor = Doctor::find($request->doctor);
