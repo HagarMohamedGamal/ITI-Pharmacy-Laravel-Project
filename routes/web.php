@@ -78,17 +78,21 @@ Route::group([
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
     Route::post('/', 'PharmacyController@store')->name('pharmacies.store');
     Route::delete('/{pharmacy}', 'PharmacyController@destroy')->name('pharmacies.destroy');
+
+    Route::get('indexList', 'PharmacyController@indexList');
+    
     Route::get('/{pharmacy}/softdelete', 'PharmacyController@softdelete')->name('pharmacies.softdelete');
     Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
     Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
     Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
+
 });
 Route::put(
     '/pharmacies/{pharmacy}',
     'PharmacyController@update'
-)->name('pharmacies.update')->middleware(['role_or_permission:super-admin|admin|update pharmacy', 'auth', 'verified']);
+)->name('pharmacies.update')->middleware(['auth', 'verified']);
 Route::get(
-    '/{pharmacy}/edit',
+    '/pharmacies/{pharmacy}/edit',
     'PharmacyController@edit'
 )->name('pharmacies.edit')->middleware(['role_or_permission:super-admin|admin|update pharmacy', 'auth', 'verified']);
 
