@@ -25,5 +25,13 @@ class Doctor extends Model implements BannableContract
         return $this->morphOne('App\User', 'typeable');
     }
 
+    /**
+     * Get the pharmacy for the blog post.
+     */
+    public function pharmacy()
+    {
+        return $this->belongsTo('App\Pharmacy');
+    }
+
     public $timestamps = false;
 }

@@ -28,17 +28,16 @@ Route::group([
     // 'middleware' =>['role:super-admin|admin|pharmacy'],
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
-    Route::get('/indexDataTable', 'DoctorController@indexDataTable')->name('doctors.indexDataTable');
 
     Route::get('/create', 'DoctorController@create')->name('doctors.create');
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
+    Route::get('/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')
+    ->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor']);
+    Route::put('/{doctor}', 'DoctorController@update')->name('doctors.update')
+    ->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor']);
 });
-Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor']);
-Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor']);
 
 Route::group([
     'name' => 'areas',

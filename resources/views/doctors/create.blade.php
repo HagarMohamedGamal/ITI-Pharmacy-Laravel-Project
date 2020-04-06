@@ -20,20 +20,21 @@
         @endisset
         <div class="form-group">
             <label for="exampleFormControlInput1">name</label>
-            <input type="text" name="name" class="form-control" id="exampleFormControlInput1" value="{{isset($doctor)?$doctor->name:''}}">
+            <input type="text" name="name" class="form-control" id="exampleFormControlInput1" value="{{isset($doctor)?$doctor->type->name:''}}">
         </div>
         <div class="form-group">
             <label for="exampleFormControlInput2">email</label>
-            <input type="text" name="email" class="form-control" id="exampleFormControlInput2" value="{{isset($doctor)?$doctor->email:''}}">
+            <input type="text" name="email" class="form-control" id="exampleFormControlInput2" value="{{isset($doctor)?$doctor->type->email:''}}">
         </div>
         <div class="form-group">
             <label for="exampleFormControlInput2">password</label>
-            <input type="text" name="password" class="form-control" id="exampleFormControlInput2" value="{{isset($doctor)?$doctor->email:''}}">
+            <input type="text" name="password" class="form-control" id="exampleFormControlInput2" value="{{isset($doctor)?$doctor->type->email:''}}">
         </div>
-        <div class="form-group">
-            <label for="exampleFormControlInput3">pharmacy name</label>
-            <input type="text" name="pharmacy_name" class="form-control" id="exampleFormControlInput3" value="{{isset($doctor)?$doctor->pharmacy_name:''}}">
-        </div>
+        <select class="form-control" name="pharmacy_id">
+            @foreach($pharmacies as $pharmacy)
+            <option value="{{$pharmacy->id}}" {{(isset($doctor))?($doctor->pharmacy_id == $pharmacy->id)? 'selected':'' : ''}}>{{$pharmacy->type->name}}</option>
+            @endforeach
+        </select>
         <div class="form-group">
             <label for="exampleFormControlInput4">national id</label>
             <input type="text" name="national_id" class="form-control" id="exampleFormControlInput4" value="{{isset($doctor)?$doctor->national_id:''}}">

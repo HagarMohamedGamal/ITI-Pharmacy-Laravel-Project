@@ -28,6 +28,7 @@ class StoreDoctorRequest extends FormRequest
             'email'=> 'unique:App\User,email|email|required',
             'password'=> 'required|min:6',
             'national_id'=> 'required|unique:App\Doctor,national_id|min:10',
+            'pharmacy_id'=> 'exists:pharmacies,id',
             'avatar'=> 'image|mimes:jpeg,jpg'
         ];
     }

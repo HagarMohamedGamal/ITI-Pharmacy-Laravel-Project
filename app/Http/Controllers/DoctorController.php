@@ -4,65 +4,82 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Doctor;
+use DataTables;
+use App\Pharmacy;
 use Illuminate\Http\Request;
 use App\Http\Requests\DoctorRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreDoctorRequest;
-use DataTables;
 // use Response;
 
 class DoctorController extends Controller
 {
     function index()
     {
-        // $doctors = Doctor::all();
+        if(request()->ajax()){
+            return $this->indexDataTable();
+        }
         return view('doctors.index');
     }
     function indexDataTable()
     {
         if (request()->ajax()) {
-            $model = Doctor::query();
-            return DataTables()::of($model)->toJson();
+            $doctors = Doctor::query();
+            return DataTables()::of($doctors)
+            ->addColumn('id', function(Doctor $doctor){
+                return $doctor->id;
+            })
+            ->addColumn('name', function(Doctor $doctor){
+                return $doctor->type->name;
+            })
+            ->addColumn('email', function(Doctor $doctor){
+                return $doctor->type->email;
+            })
+            ->addColumn('pharmacy_id', function(Doctor $doctor){
+                $pharmacy = $doctor->pharmacy->type->name;
+                return $pharmacy;
+            })
+            ->addColumn('action', function(Doctor $doctor){
+                $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
+                
+            })
+            ->toJson();
         }
-        // $doctors = Doctor::all();
-        // return view('doctors.index', [
-        //     "doctors" => $doctors,
-        // ]);
     }
+
 
     function show($doctorId)
     {
         $doctor = Doctor::find($doctorId);
-        $doctor->avatar = Storage::url($doctor->avatar);
+        if($doctor->avatar)
+            $doctor->avatar = Storage::url($doctor->avatar);
         return view('doctors.show', [
             "doctor" => $doctor,
         ]);
     }
+
 
     function destroy(Request $request)
     {
         $doctor = Doctor::find($request->doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
-        // return Response::json($doctor);
     }
 
+    //  Creat Doctor View
     function create()
     {
-        return view('doctors.create');
+        $pharmacies = Pharmacy::all();
+        return view('doctors.create', [
+            "pharmacies" => $pharmacies,
+        ]);
     }
 
+
+    //  Insert Doctor
     function store(StoreDoctorRequest $request)
     {
-        $user =User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request['password']),
-            
-        ]);
-        $user= $user->refresh();
-
         $uploadedFile = $request->file('avatar');
         if($uploadedFile){
             $filename =  time().'_'.$uploadedFile->getClientOriginalName();
@@ -72,27 +89,40 @@ class DoctorController extends Controller
             $path = implode('/', $pathPeices);
         }
 
-       $doctor=Doctor::create([
+        $user =User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request['password']),
+        ]);
+        $user= $user->refresh();
 
+        $doctor=Doctor::create([
             'national_id' => $request->national_id,
             'avatar' => $uploadedFile ? $path : "",
-            'pharmacy_name' => $request->pharmacy_name,
+            'pharmacy_id' => $request->pharmacy_id,
             'is_baned' => $request->is_baned
         ]);
         $doctor = $doctor->refresh();
+
+        $pharmacy = Pharmacy::find($request->pharmacy_id);
+        $pharmacy->doctors()->save($doctor);
 
         $doctor->type()->save($user);
         $user->assignRole('doctor');
         return redirect()->route('doctors.index');
     }
 
+    //  Edit Doctor View
     function edit($doctorId)
     {
+        $pharmacies = Pharmacy::all();
         return view('doctors.create', [
-            "doctor" => Doctor::find($doctorId)
+            "doctor" => Doctor::find($doctorId),
+            "pharmacies" => $pharmacies,
         ]);
     }
 
+    //  Update Doctor
     function update(Request $request)
     {
         if (request()->ajax()) {
@@ -106,14 +136,33 @@ class DoctorController extends Controller
                 'is_baned' => $doctor->isBanned(),
             ]);
         }
+        $uploadedFile = $request->file('avatar');
+        if($uploadedFile){
+            $filename =  time().'_'.$uploadedFile->getClientOriginalName();
+            $path = $request->file('avatar')->storeAs("public/avatars", $filename);
+            $pathPeices = explode('/', $path);
+            array_shift($pathPeices);
+            $path = implode('/', $pathPeices);
+        }
+        $doctor = Doctor::find($request->doctor);
+        User::find($doctor->type->id)->update(
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request['password']),
+            ]
+        );
         Doctor::find($request->doctor)->update(
             [
                 'national_id' => $request->national_id,
-                'avatar' => isset($request->avatar) ? $request->avatar : "",
-                'pharmacy_name' => $request->pharmacy_name,
+                'avatar' => $uploadedFile ? $path : "",
+                'pharmacy_id' => $request->pharmacy_id,
                 'is_baned' => $request->is_baned
             ]
         );
+        $pharmacy = Pharmacy::find($request->pharmacy_id);
+        $pharmacy->doctors()->save($doctor);
         return redirect()->route('doctors.index');
     }
+
 }

@@ -22,7 +22,7 @@
                       <th>email</th>
                       <th>national id</th>
                       <th>pharmacy name</th>
-                      <th>is baned</th>
+                      <th>action</th>
                   </tr>
               </thead>
             </table>
