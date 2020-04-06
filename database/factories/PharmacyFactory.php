@@ -9,8 +9,9 @@ use Faker\Generator as Faker;
 $factory->define(Pharmacy::class, function (Faker $faker) {
     // return [
         return [
+            // 'id' => $faker->unique($reset = true)->buildingNumber,
             'national_id' => $faker->uuid,
-            'avatar' => Str::random(10),
+            'avatar' => "default.jpg",
             'area_id' => $faker->uuid,
             'priority' => $faker->randomDigit
         ];

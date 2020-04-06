@@ -43,6 +43,13 @@ class DoctorController extends Controller
             })
             ->addColumn('action', function(Doctor $doctor){
                 $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
+
+                $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
+                $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
+                // $button .= '&nbsp;&nbsp;';
+                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
+                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
+                return $button;
                 
             })
             ->toJson();
@@ -66,6 +73,9 @@ class DoctorController extends Controller
         $doctor = Doctor::find($request->doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 
     //  Creat Doctor View
