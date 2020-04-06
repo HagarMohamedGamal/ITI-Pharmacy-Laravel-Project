@@ -29,8 +29,6 @@ class RolesController extends Controller
         // ------------------------------------------------------------------
 
         // // $permCreateDoctor = Permission::create(['name'=>'create doctor']);
-
-
         // // $permDeleteDoctor = Permission::create(['name'=>'delete doctor ']);
         // // $permBanDoctor = Permission::create(['name'=>'ban doctor']);
 
@@ -57,7 +55,7 @@ class RolesController extends Controller
             'email_verified_at' => now()->toDateTimeString(),
 
         ]);
-
+        
         $user->refresh();
         $user->assignRole('super-admin');
         Auth::login($user);

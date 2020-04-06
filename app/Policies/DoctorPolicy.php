@@ -30,7 +30,7 @@ class DoctorPolicy
      */
     public function view(User $user, Doctor $doctor)
     {
-        return $user->typeable_id === $doctor->pharmacy_id;
+        return ($user->typeable_id === $doctor->pharmacy_id) || ($user->typeable_id === $doctor->id) || $user->hasRole('super-admin');
     }
 
     /**
@@ -53,7 +53,7 @@ class DoctorPolicy
      */
     public function update(User $user, Doctor $doctor)
     {
-        return $user->typeable_id === $doctor->pharmacy_id;
+        return ($user->typeable_id === $doctor->pharmacy_id) || ($user->typeable_id === $doctor->id) || $user->hasRole('super-admin');
     }
 
     /**
@@ -64,8 +64,9 @@ class DoctorPolicy
      * @return mixed
      */
     public function delete(User $user, Doctor $doctor)
-    {
-        return $user->typeable_id === $doctor->pharmacy_id;
+    { 
+        
+        return ($user->typeable_id === $doctor->pharmacy_id) || $user->hasRole('super-admin');
     }
 
     /**

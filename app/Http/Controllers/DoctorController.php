@@ -43,6 +43,13 @@ class DoctorController extends Controller
             })
             ->addColumn('action', function(Doctor $doctor){
                 $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
+
+                $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
+                $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
+                // $button .= '&nbsp;&nbsp;';
+                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
+                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
+                return $button;
                 
             })
             ->toJson();
@@ -53,6 +60,7 @@ class DoctorController extends Controller
     function show($doctorId)
     {
         $doctor = Doctor::find($doctorId);
+        $this->authorize('view', $doctor);
         if($doctor->avatar)
             $doctor->avatar = Storage::url($doctor->avatar);
         return view('doctors.show', [
@@ -64,14 +72,21 @@ class DoctorController extends Controller
     function destroy(Request $request)
     {
         $doctor = Doctor::find($request->doctor);
+        $this->authorize('delete', $doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 
     //  Creat Doctor View
     function create()
     {
         $pharmacies = Pharmacy::all();
+        // foreach ($pharmacies as $value) {
+        //    dd($value->id);
+        // }
         return view('doctors.create', [
             "pharmacies" => $pharmacies,
         ]);
@@ -116,6 +131,8 @@ class DoctorController extends Controller
     //  Edit Doctor View
     function edit($doctorId)
     {
+        $doctor = Doctor::find($doctorId);
+        $this->authorize('update', $doctor);
         $pharmacies = Pharmacy::all();
         return view('doctors.create', [
             "doctor" => Doctor::find($doctorId),

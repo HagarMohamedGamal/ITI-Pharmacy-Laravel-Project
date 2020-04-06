@@ -30,7 +30,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client)
     {
-        
+        return $user->typeable_id===$client->id||$user->hasRole('super-admin');
     }
 
     /**
@@ -53,7 +53,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client)
     {
-        return $user->typeable_id === $client->id ; 
+        return $user->typeable_id === $client->id || $user->hasRole('super-admin');
     }
 
     /**
