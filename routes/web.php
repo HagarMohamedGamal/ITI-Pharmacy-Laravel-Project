@@ -134,3 +134,6 @@ Route::get('/roles', 'RolesController@create');
 
 Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
+
+
+Route::get('/revenue', 'RevenueController@index')->name('orders.index');
