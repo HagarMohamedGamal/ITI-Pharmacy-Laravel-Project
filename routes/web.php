@@ -107,9 +107,10 @@ Route::group([
     Route::post('/', 'OrderController@store')->name('orders.store');
     Route::get('{order}', 'OrderController@show')->name('orders.show');
     Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
-    Route::put('{order}', 'OrderController@update')->name('orders.update');
+    Route::put('/', 'OrderController@update')->name('orders.update');
 });
 
+// Route::resource('orders', 'OrderController');
 
 
 Route::group([

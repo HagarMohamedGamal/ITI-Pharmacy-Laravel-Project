@@ -18,5 +18,13 @@ class Pharmacy extends Model
     {
         return $this->morphOne('App\User', 'typeable');
     }
+
+    /**
+     * Get the doctors for the blog post.
+     */
+    public function doctors()
+    {
+        return $this->hasMany('App\Doctor');
+    }
    
 }
