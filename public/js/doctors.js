@@ -67,7 +67,7 @@ $(function(){
         console.log(doctor);
     
         jQuery.ajax({
-            url: "doctors/"+doctor,
+            url: "/doctors/"+doctor,
             type: "put",
             data: {
                 'doctor': doctor,

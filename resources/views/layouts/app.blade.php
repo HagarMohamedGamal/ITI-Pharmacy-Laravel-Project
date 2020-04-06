@@ -380,7 +380,6 @@ to get the desired effect
     //   });
     // });
   </script>
-  <script src="{{asset('/js/doctors.js')}}"></script>
 
 </body>
 
