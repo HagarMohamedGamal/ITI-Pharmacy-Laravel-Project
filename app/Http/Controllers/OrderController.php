@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Medicine;
 use App\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
   public function index()
   {
-  
+
     if (request()->ajax()) {
       $orders = Order::latest()->get();
       return datatables()->of($orders)
@@ -23,8 +25,9 @@ class OrderController extends Controller
         ->make(true);
     }
 
-   
-    return view('orders.index');
+      $medicines= Medicine::all();
+
+      return view('orders.index', ['medicines' => $medicines]);
   }
 
   public function create()
@@ -34,12 +37,12 @@ class OrderController extends Controller
 
   public function store(Request $request)
   {
-    
+
     $request->validate([
       'is_insured' => 'boolean',
     ]);
-   
-    Order::create([
+
+    $order = Order::create([
       'user_id' => $request->user_id,
       'useraddress_id' => $request->useraddress_id,
       'doctor_id' => $request->doctor_id,
@@ -49,6 +52,11 @@ class OrderController extends Controller
       'pharmacy_id' => $request->pharmacy_id,
       'Actions' => $request->Actions,
     ]);
+
+    if($request->has('medicine_select')) {
+        $selected_medicines = $request->get('medicine_select');
+        $order->medicines()->sync($selected_medicines);
+    }
     return response()->json(['success' => 'Data Added successfully.']);
   }
 
@@ -57,7 +65,8 @@ class OrderController extends Controller
   {
     if (request()->ajax()) {
       $data = Order::findOrFail($id);
-      return response()->json(['data' => $data]);
+      $medicines_id = $data->medicines()->pluck('id')->toArray();
+      return response()->json(['data' => $data, 'medicine_ids' =>  $medicines_id]);
     }
     // $request = request();
     // $orderId = $request->order;
@@ -73,7 +82,7 @@ class OrderController extends Controller
     $request->validate([
       'is_insured' => 'boolean',
     ]);
-    
+
     dd($request->user_id);
     $orderId = $request->order;
     Order::where('id', $orderId)

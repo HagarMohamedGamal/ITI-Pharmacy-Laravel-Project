@@ -43,7 +43,7 @@ Route::group([
     'name' => 'areas',
     'prefix' => 'areas',
     'middleware' => ['role:super-admin|admin'],
-    
+
 ], function () {
     Route::get('/index', 'AreaController@index')->name('areas.index');
     Route::get('/create', 'AreaController@create')->name('areas.create');
@@ -115,13 +115,15 @@ Route::group([
     'prefix' => 'medicines',
     'middleware' => ['role:super-admin|admin|doctor|pharmacy'],
 ], function () {
-    Route::delete('/{medicine}', 'MedicineController@destroy')->name('medicines.destroy');
+    Route::get('/get-medicines', 'MedicineController@getMedicines')->name('get-medicines-datatable');
+    Route::delete('/{medicine}/delete', 'MedicineController@destroy')->name('medicines.destroy');
     Route::get('/', 'MedicineController@index')->name('medicines.index');
-    Route::get('/create', 'MedicineController@create')->name('medicines.create');
-    Route::post('/', 'MedicineController@store')->name('medicines.store');
+//    Route::get('/create', 'MedicineController@create')->name('medicines.create');
+    Route::post('/store', 'MedicineController@store')->name('medicines.store');
     Route::get('/{medicine}/edit', 'MedicineController@edit')->name('medicines.edit');
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
-    Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
+    Route::post('/{medicine}/update', 'MedicineController@update')->name('medicines.update');
+
 });
 Auth::routes(['verify' => true]);
 

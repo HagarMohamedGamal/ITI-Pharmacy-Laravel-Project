@@ -87,6 +87,14 @@
               <input type="text" name="pharmacy_id" id="pharmacy_id" class="form-control" />
             </div>
           </div>
+            <div class="form-group">
+                <label class="control-label col-md-4">Medicines </label>
+                <select class="form-control select2" multiple="multiple" required id="medicine_select" name="medicine_select[]">
+                        @foreach($medicines as $medicine)
+                            <option value="{{$medicine['id']}}">{{$medicine['name']}}</option>
+                        @endforeach
+                </select>
+            </div>
           <div class="form-group">
             <label class="control-label col-md-4">Actions </label>
             <div class="col-md-8">
@@ -125,6 +133,8 @@
 
 <script>
   $(document).ready(function() {
+       $(".select2").select2({
+       });
 
     $('#order_table').DataTable({
       processing: true,
@@ -274,8 +284,9 @@
           $('#creator_type').val(html.data.creator_type);
           $('#pharmacy_id').val(html.data.pharmacy_id);
           $('#Actions').val(html.data.Actions);
-
-          $('#hidden_id').val(html.data.id);
+          console.log(html.medicine_ids);
+          $('#medicine_select').val( html.medicine_ids).trigger('change');
+          $('#hidden_id').val(html.data.id);;
           $('.modal-title').text("Edit New Record");
           $('#action_button').val("Edit");
           $('#action').val("Edit");
