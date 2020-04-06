@@ -136,4 +136,5 @@ Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 
-Route::get('/revenue', 'RevenueController@index')->name('orders.index');
+Route::get('/revenue', 'RevenueController@index')->name('revenue.index');
+Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index');
