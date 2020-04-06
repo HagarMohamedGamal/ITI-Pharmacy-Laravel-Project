@@ -11,31 +11,36 @@ class AreaController extends Controller
     public function index()
     {
         $areas = Area::all();
-        return $areas;
+        return view('areas.index');
     }
 
     public function show()
     {
         $request = request();
-        $area = Area::find($request->id);
-        return $area;
+        $area = Area::find($request->area);
+        return view('areas.show', [
+            'areas' => $area
+        ]);
     }
 
     public function edit()
     {
         $request = request();
-        $area = Area::find($request->id);
-        return $area;
+        $area = Area::find($request->area);
+        return view('areas.edit', [
+            'areas' => $area
+        ]);
     }
 
     public function update()
     {
         $request = request();
-        $area = Area::find($request->id);
-        $area::update([
-            'name' => $request['name'],
-            'address' => $request['address'],
+        $area = Area::find($request->area);
+        $area->update([
+            'name' => $request->name,
+            'address' => $request->address,
         ]);
+        return redirect()->route('areas.index');
     }
 
     public function create()
@@ -52,8 +57,7 @@ class AreaController extends Controller
             'name' => $request['name'],
             'address' => $request['address'],
         ]);
-
-        return "tmam";
+        return redirect()->route('areas.index');
     }
 
     public function destroy()

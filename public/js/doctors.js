@@ -1,100 +1,69 @@
-$(function(){
-    table=$("#example1").DataTable({
+$(function () {
+    table = $("#example1").DataTable({
         processing: true,
         serverSide: true,
-        ajax:{
+        ajax: {
             url: '/doctors'
         },
-        columns:[
+        columns: [
             {
-                data: 'id',name: 'id'
+                data: 'id', name: 'id'
             },
             {
-<<<<<<< HEAD
-                data: 'type.name',
-                name: 'name'
+
+                data: 'name', name: 'name'
             },
             {
-                data: 'type.email',
-                name: 'email'
-=======
-                data: 'name',name: 'name'
+                data: 'email', name: 'email'
+
             },
             {
-                data: 'email',name: 'email'
->>>>>>> 319fa1a423dc9be47b68e250230ffe743a12c561
+                data: 'national_id', name: 'national_id'
             },
             {
-                data: 'national_id',name: 'national_id'
+                data: 'pharmacy_id', name: 'pharmacy_id'
             },
             {
-                data: 'pharmacy_id',name: 'pharmacy_id'
-            },
-            {
-                data: 'action',name: 'action'
+                data: 'action', name: 'action'
             },
         ]
     });
-    $("button").on("click", "span[id^='del_']" , (ev)=>{
-        idName = ev.currentTarget.id;
-        doctor = idName.split("_")[1];
-        $("div#mypopup button span.delete").removeAttr("id")
-        $("div#mypopup button span.delete").attr("id", "delete_"+doctor);
-        $('div#mypopup').modal('show');
+
+
+
+
+
+    $(document).on('click', '.delete', function () {
+        doctor_id = $(this).attr('id');
+
+        const token = $('meta[name="csrf-token"]').attr('content');
+        console.log(token);
+        $('#confirmModal').modal('show');
     });
 
-    $("button").on("click", "span[id^='delete_']" , (ev)=>{
-        idName = ev.currentTarget.id;
-        doctor = idName.split("_")[1];
+    $('#ok_button').click(function () {
         const token = $('meta[name="csrf-token"]').attr('content');
-    
-        jQuery.ajax({
-            url: "doctors/"+doctor,
+        $.ajax({
+            url: "/doctors/" + doctor_id,
             type: "delete",
             data: {
-                'doctor': doctor,
+                'id': doctor_id,
                 '_token': token,
             },
-            success: function(e){
-            rows = table
-                    .rows("tr#"+doctor)
-                    .remove()
-                    .draw();
+            beforeSend: function () {
+                $('#ok_button').text('Deleting...');
             },
-            error: function(e){
-                console.log("there is an error occured");
+            success: function (data) {
+                setTimeout(function () {
+                    $('#confirmModal').modal('hide');
+                    $('#ok_button').text('OK');
+                    $('#example1').DataTable().ajax.reload();
+                }, 2000);
             }
-        });
+        })
     });
 
-    $("button").on("click", "span[class^='ban_']" , (ev)=>{
-        idName = ev.currentTarget.className;
-        doctor = idName.split("_")[1];
-        console.log(doctor);
-        
-        const token = $('meta[name="csrf-token"]').attr('content');
-        console.log(doctor);
-    
-        jQuery.ajax({
-            url: "doctors/"+doctor,
-            type: "put",
-            data: {
-                'doctor': doctor,
-                '_token': token,
-            },
-            success: function(e){
-                console.log("success", e.is_baned);
-                if(e.is_baned){
-                    $("button#ban_color_"+doctor).toggleClass("btn-secondary");
-                    $("button#ban_color_"+doctor).toggleClass("btn-dark");
-                } else{
-                    $("button#ban_color_"+doctor).toggleClass("btn-secondary");
-                    $("button#ban_color_"+doctor).toggleClass("btn-dark");
-                }
-            },
-            error: function(e){
-                console.log("there is an error occured", e);
-            }
-        });
-    });
+
 });
+
+
