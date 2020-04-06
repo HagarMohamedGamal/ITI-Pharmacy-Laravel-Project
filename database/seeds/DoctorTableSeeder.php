@@ -13,7 +13,7 @@ class DoctorTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Doctor::class, 50)->create()->each(function ($doctor) {
+        factory(App\Doctor::class, 10)->create()->each(function ($doctor) {
             $doctor->type()->save(factory(App\User::class)->create());
         });
     }

@@ -11,6 +11,8 @@ class PharmaciesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Pharmacy::class, 10)->create();
+        factory(App\Pharmacy::class, 30 )->create()->each(function($pharmacy){
+        	$pharmacy->type()->save(factory(App\User::class)->create());
+        });
     }
 }

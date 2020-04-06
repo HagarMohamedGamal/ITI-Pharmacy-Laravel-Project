@@ -3,32 +3,35 @@ $(function(){
         processing: true,
         serverSide: true,
         ajax:{
-            url: '/doctors/indexDataTable'
+            url: '/doctors'
         },
         columns:[
             {
-                data: 'id',
-                name: 'id'
+                data: 'id',name: 'id'
             },
             {
+<<<<<<< HEAD
                 data: 'type.name',
                 name: 'name'
             },
             {
                 data: 'type.email',
                 name: 'email'
+=======
+                data: 'name',name: 'name'
             },
             {
-                data: 'national_id',
-                name: 'national_id'
+                data: 'email',name: 'email'
+>>>>>>> 319fa1a423dc9be47b68e250230ffe743a12c561
             },
             {
-                data: 'pharmacy_name',
-                name: 'pharmacy_name'
+                data: 'national_id',name: 'national_id'
             },
             {
-                data: 'is_baned',
-                name: 'is_baned'
+                data: 'pharmacy_id',name: 'pharmacy_id'
+            },
+            {
+                data: 'action',name: 'action'
             },
         ]
     });
@@ -67,6 +70,8 @@ $(function(){
     $("button").on("click", "span[class^='ban_']" , (ev)=>{
         idName = ev.currentTarget.className;
         doctor = idName.split("_")[1];
+        console.log(doctor);
+        
         const token = $('meta[name="csrf-token"]').attr('content');
         console.log(doctor);
     

@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Doctor;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDoctorRequest extends FormRequest
+class UpdateDoctorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +25,14 @@ class StoreDoctorRequest extends FormRequest
      */
     public function rules()
     {
+        $doctor = Doctor::find(Request()->doctor);
         return [
             'name'=> 'required|min:5',
-            'email'=> 'unique:App\User,email|email|required',
+            'email'=> [
+                'email',
+                'required',
+                Rule::unique('users')->ignore($doctor->type->id)
+            ],
             'password'=> 'required|min:6',
             'national_id'=> 'required|unique:App\Doctor,national_id|min:10',
             'pharmacy_id'=> 'exists:pharmacies,id',

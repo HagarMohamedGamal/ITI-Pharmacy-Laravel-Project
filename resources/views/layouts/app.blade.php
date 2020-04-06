@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/dist/css/adminlte.min.css")}}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
   <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -42,6 +43,7 @@
   <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -207,6 +209,7 @@ to get the desired effect
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
+                 
             <li class="nav-item">
               <a href="{{route("admin")}}" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
@@ -296,83 +299,52 @@ to get the desired effect
             <li class="nav-header">EXAMPLES</li>
             <li class="nav-item">
               <a href="{{ asset("/bower_components/admin-lte/pages/examples/contacts.html")}}" class="nav-link">
+              <a href="{{ route('password.request') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Contacts</p>
+                <p>Reset Password</p>
               </a>
             </li>
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-plus-square"></i>
-                <p>
-                  Extras
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <p>
-
-                    @guest
-                <li class="nav-item">
+            
+                  @guest
+              <li class="nav-item">
                   <a class="nav-link" href="{{ route('login') }}">
-                    <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
+                      <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
                   </a>
-                </li>
-                @if (Route::has('register'))
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('register') }}">
-                    <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
-                  </a>
-                </li>
-                @endif
+              </li>
+                  @if (Route::has('register'))
+                      <li class="nav-item">
+                          <a class="nav-link" href="{{ route('register') }}">
+                          <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
+                          </a>
+                      </li>
+                  @endif
 
-                @else
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-
-                    <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
+                  @else
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('logout') }}"
+                     onclick="event.preventDefault();
+                                   document.getElementById('logout-form').submit();">
+                      
+                      <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
                   </a>
 
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
+                      @csrf
                   </form>
-                </li>
-                @endguest
-                </p>
-                </a>
-            </li>
+              </li>
+                  @endguest
 
-            <li class="nav-item">
-              <a href="{{ asset("/bower_components/admin-lte/pages/examples/forgot-password.html")}}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Forgot Password</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ asset("/bower_components/admin-lte/pages/examples/recover-password.html")}}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Recover Password</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ asset("/bower_components/admin-lte/pages/examples/lockscreen.html")}}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Lockscreen</p>
-              </a>
-            </li>
-          </ul>
-          </li>
-        </nav>
-        <!-- /.sidebar-menu -->
-      </div>
-      <!-- /.sidebar -->
-    </aside>
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        @yield('content')
-      </div>
+
+        </li>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+  @yield('content')
     </div>
 
     <!-- Control Sidebar -->
@@ -421,6 +393,7 @@ to get the desired effect
     // });
   </script>
   <script src="{{asset('/js/doctors.js')}}"></script>
+
 </body>
 
 </html>

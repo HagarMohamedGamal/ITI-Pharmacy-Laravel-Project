@@ -30,7 +30,8 @@ class OrderPolicy
      */
     public function view(User $user, Order $order)
     {
-        //
+       return ($user->typeable_id === $order->pharmacy_id) || ($user->typeable_id === $order->doctor_id) || $user->hasRole('super-admin');
+        
     }
 
     /**
@@ -53,7 +54,9 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        //
+        return ($user->typeable_id === $order->pharmacy_id) ||
+         ($user->typeable_id === $order->doctor_id) ||
+          ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin');
     }
 
     /**
@@ -65,7 +68,9 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order)
     {
-        //
+        return ($user->typeable_id === $order->pharmacy_id) ||
+         ($user->typeable_id === $order->doctor_id) ||
+          ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin');
     }
 
     /**

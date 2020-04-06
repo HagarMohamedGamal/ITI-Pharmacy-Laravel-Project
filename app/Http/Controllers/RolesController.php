@@ -29,8 +29,6 @@ class RolesController extends Controller
         // ------------------------------------------------------------------
 
         // // $permCreateDoctor = Permission::create(['name'=>'create doctor']);
-
-
         // // $permDeleteDoctor = Permission::create(['name'=>'delete doctor ']);
         // // $permBanDoctor = Permission::create(['name'=>'ban doctor']);
 

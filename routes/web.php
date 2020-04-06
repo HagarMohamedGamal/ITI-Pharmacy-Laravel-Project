@@ -25,20 +25,19 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
-    // 'middleware' =>['role:super-admin|admin|pharmacy'],
+    'middleware' =>['role:super-admin|admin|pharmacy', 'auth', 'verified'],
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
-    Route::get('/indexDataTable', 'DoctorController@indexDataTable')->name('doctors.indexDataTable');
 
     Route::get('/create', 'DoctorController@create')->name('doctors.create');
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
 });
-Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor']);
-Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor']);
+Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->
+middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', ]);
+Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->
+middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
 
 Route::group([
     'name' => 'areas',
@@ -73,31 +72,34 @@ Route::group([
 Route::group([
     'name' => 'pharmacies',
     'prefix' => 'pharmacies',
-    'middleware' => ['role:super-admin|admin'],
+    'middleware' => ['role:super-admin|admin', 'auth', 'verified'],
 ], function () {
     Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
-    Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
-
     Route::post('/', 'PharmacyController@store')->name('pharmacies.store');
     Route::delete('/{pharmacy}', 'PharmacyController@destroy')->name('pharmacies.destroy');
+
+    Route::get('indexList', 'PharmacyController@indexList');
+    
     Route::get('/{pharmacy}/softdelete', 'PharmacyController@softdelete')->name('pharmacies.softdelete');
     Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
     Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
+    Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
+
 });
 Route::put(
     '/pharmacies/{pharmacy}',
     'PharmacyController@update'
-)->name('pharmacies.update')->middleware(['role_or_permission:super-admin|admin|update pharmacy']);
+)->name('pharmacies.update')->middleware(['auth', 'verified']);
 Route::get(
-    '/{pharmacy}/edit',
+    '/pharmacies/{pharmacy}/edit',
     'PharmacyController@edit'
-)->name('pharmacies.edit')->middleware(['role_or_permission:super-admin|admin|update pharmacy']);
+)->name('pharmacies.edit')->middleware(['role_or_permission:super-admin|admin|update pharmacy', 'auth', 'verified']);
 
 Route::group([
     'name' => 'orders',
     'prefix' => 'orders',
-    'middleware' => ['role_or_permission:super-admin|admin|doctor|pharmacy|create order |update order'],
+    'middleware' => ['role_or_permission:super-admin|admin|doctor|pharmacy|create order |update order', 'auth'],
 ], function () {
     Route::delete('/{order}', 'OrderController@destroy')->name('orders.destroy');
     Route::get('/', 'OrderController@index')->name('orders.index');
@@ -114,7 +116,7 @@ Route::group([
 Route::group([
     'name' => 'medicines',
     'prefix' => 'medicines',
-    'middleware' => ['role:super-admin|admin|doctor|pharmacy'],
+    'middleware' => ['role:super-admin|admin|doctor|pharmacy','auth'],
 ], function () {
     Route::delete('/{medicine}', 'MedicineController@destroy')->name('medicines.destroy');
     Route::get('/', 'MedicineController@index')->name('medicines.index');
@@ -130,6 +132,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/roles', 'RolesController@create');
 
-Route::get('stripe', 'StripePaymentController@stripe');
-Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post');
-
+Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
+Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');

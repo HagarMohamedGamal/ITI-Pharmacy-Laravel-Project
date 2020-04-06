@@ -20,7 +20,7 @@ class AddDoctorTable extends Migration
             $table->string('password');
             $table->unsignedBigInteger('national_id');
             $table->string('avatar');
-            $table->string('pharmacy_name');
+            $table->unsignedBigInteger('pharmacy_id')->nullable();
             $table->boolean('is_baned');
             
         });

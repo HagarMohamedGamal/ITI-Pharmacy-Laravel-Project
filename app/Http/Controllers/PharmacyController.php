@@ -2,29 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePharmacyRequest;
+use App\Http\Requests\UpdatePharmacyRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Pharmacy;
 use App\User;
 use App\Area;
 use Illuminate\Support\Facades\Hash;
+
+use Redirect,Response,DB,Config;
+use Datatables;
+
 class PharmacyController extends Controller
 {
     public function index()
     {
-        
-        $pharmacies = Pharmacy::all();
-        $deletedPharmacies = $this->readsoftdelete();
-        return view('pharmacy.index', [
-            'pharmacies' => $pharmacies,
-            'deletedPharmacies' => $deletedPharmacies['pharmacies']
-        ]);
+       
+        return view('pharmacy.index');
     }
+// ===========================================================
 
+    public function indexList()
+    {
+        if(request()->ajax())
+        {
+        $pharmacies = Pharmacy::query();
+          return DataTables()::of($pharmacies)
+                ->addColumn('name', function(Pharmacy $pharmacy) {
+                    return $pharmacy->type->name ;
+                })
+                ->addColumn('email', function(Pharmacy $pharmacy) {
+                    return $pharmacy->type->email ;
+                })
+                ->addColumn('action', function(Pharmacy $pharmacy) {
+
+                    $button = '<a name="show" id="'.$pharmacy->id.'" class="show btn btn-success btn-sm" href="/pharmacies/'.$pharmacy->id.'">Show</a>';
+                    $button .= '<a name="edit" id="'.$pharmacy->id.'" class="edit btn btn-primary btn-sm" href="/pharmacies/'.$pharmacy->id.'/edit">Edit</a>';
+                    // $button .= '&nbsp;&nbsp;';
+                    $button .= '<button type="button" name="delete" id="'.$pharmacy->id.'" class="delete btn btn-danger btn-sm">Delete</button>';
+                    return $button;
+                    
+                })
+                ->toJson();
+        }
+    }
+// ===========================================================    
 
     public function show(Request $request)
     {
         $pharmacy = Pharmacy::find($request->pharmacy);
+        $this->authorize('view', $pharmacy);
         return view('pharmacy.show', [
             'pharmacy' => $pharmacy
         ]);
@@ -33,17 +61,27 @@ class PharmacyController extends Controller
 
     public function create()
     {
-        $areas = Area::all();
-        return view('pharmacy.create', [
-            'areas' => $areas
-        ]);
+        // $areas = Area::all();
+        // return view('pharmacy.create', [
+        //     'areas' => $areas
+        // ]);
+        return view('pharmacy.create');
     }
 
 
-    public function store(Request $request)
+    public function store(StorePharmacyRequest $request)
     {
         $pharmacy = $request->only(['name', 'email','password' ,'national_id', 'area_id', 'avatar', 'priority']);
-        $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "xx.png";
+        $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "";
+        if ($avatar) 
+        {
+            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $new_name);
+        }
+        else
+        {
+            $new_name = "default.jpg";
+        }
         // dd($pharmacy['name']);
        
        
@@ -56,7 +94,7 @@ class PharmacyController extends Controller
         $pharmacy = Pharmacy::create([
             'national_id' => $pharmacy['national_id'],
             'area_id' => $pharmacy['area_id'],
-            'avatar' => $avatar,
+            'avatar' => $new_name,
             'priority' => $pharmacy['priority'],
         ]);
 
@@ -66,14 +104,17 @@ class PharmacyController extends Controller
 
         $pharmacy->type()->save($user);
         $user->assignRole('pharmacy');
-        return redirect()->route('pharmacies.index');
+        // return redirect()->route('pharmacies.index');
+        return response()->json(['success' => 'Data Added successfully.']);
     }
 
 
     public function edit(Request $request)
     {
-        $pharmacies = Pharmacy::all();
         $pharmacy = Pharmacy::find($request->pharmacy);
+        $this->authorize('view', $pharmacy);
+        $pharmacies = Pharmacy::all();
+        
         return view('pharmacy.edit', [
             'pharmacy' => $pharmacy,
             'pharmacies' => $pharmacies
@@ -81,29 +122,51 @@ class PharmacyController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function update(UpdatePharmacyRequest $request)
     {
-        $pharmacyUser = Pharmacy::find($request->pharmacy);
-        $pharmacy = $request->only([ 'national_id', 'area_id', 'avatar', 'priority']);
-        $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "xx.png";
-        $pharmacyUser->update([
-            
+        $pharmacy = $request->only(['name', 'email' ,'national_id', 'area_id', 'avatar', 'priority']);
+        $avatar = isset($pharmacy['avatar'])? $pharmacy['avatar'] : "";
+        if ($avatar) 
+        {
+            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $new_name);
+        }
+        else
+        {
+            $new_name = "default.jpg";
+        }
+        // dd($pharmacy['name']);
+       $updatePharmacy = Pharmacy::find($request->pharmacy);
+       
+        User::find($updatePharmacy->type->id)->update([
+            'name'=> $pharmacy['name'],
+            'email'=> $pharmacy['email'],
+
+        ]);
+        $updatePharmacy->update([
             'national_id' => $pharmacy['national_id'],
             'area_id' => $pharmacy['area_id'],
-            'avatar' => $avatar,
+            'avatar' => $new_name,
             'priority' => $pharmacy['priority'],
         ]);
-        return redirect()->route('pharmacies.index');
+        return response()->json([
+            'success' => 'Record Updated successfully!'
+        ]);
+        // return redirect()->route('pharmacies.index');
     }
 
     public function destroy(Request $request)
     {
+        
         $pharmacyId = $request->pharmacy;
         $pharmacy = Pharmacy::withTrashed()
                 ->where('id', $request->pharmacy)
                 ->get()->first();
         $pharmacy->forceDelete();
-        return redirect()->route('pharmacies.index');
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
+        // ret
     }
 
 
@@ -112,15 +175,18 @@ class PharmacyController extends Controller
     {
         $pharmacy = Pharmacy::find($request->pharmacy);
         $pharmacy->delete();
-        return redirect()->route('pharmacies.index');
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
+        // return redirect()->route('pharmacies.index');
     }
     public function readsoftdelete()
     {
         $pharmacies = Pharmacy::onlyTrashed()
                     ->get();
-        return [
-                'pharmacies' => $pharmacies
-                ];
+        return view('pharmacy.softdelete', [
+            'deletedPharmacies' => $pharmacies
+        ]);
     }
     public function restore(Request $request)
     {
