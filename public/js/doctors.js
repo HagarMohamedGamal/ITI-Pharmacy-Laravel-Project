@@ -11,11 +11,11 @@ $(function(){
                 name: 'id'
             },
             {
-                data: 'name',
+                data: 'type.name',
                 name: 'name'
             },
             {
-                data: 'email',
+                data: 'type.email',
                 name: 'email'
             },
             {

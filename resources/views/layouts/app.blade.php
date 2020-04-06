@@ -222,24 +222,43 @@ to get the desired effect
                 </p>
               </a>
               <ul class="nav nav-treeview">
+                @role('super-admin')
                 <li class="nav-item">
                   <a href="{{route('pharmacies.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Pharmacies</p>
                   </a>
                 </li>
+                @else
+                @endhasanyrole
+
+                @hasanyrole('pharmacy|super-admin')
                 <li class="nav-item">
                   <a href="{{route('doctors.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Doctors</p>
                   </a>
                 </li>
+                @else
+                @endhasanyrole
+
+                @hasanyrole('pharmacy|super-admin|doctor')
                 <li class="nav-item">
                   <a href="{{route('medicines.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Medicine</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{route('orders.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Orders</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+
+                @role('super-admin')
                 <li class="nav-item">
                   <a href="{{route('areas.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
@@ -252,12 +271,10 @@ to get the desired effect
                     <p>User Addresses</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{{route('orders.index')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Orders</p>
-                  </a>
-                </li>
+                @else
+                @endhasanyrole
+
+
               </ul>
             </li>
             <li class="nav-item">

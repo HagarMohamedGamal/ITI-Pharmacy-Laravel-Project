@@ -22,7 +22,7 @@ class DoctorController extends Controller
     function indexDataTable()
     {
         if (request()->ajax()) {
-            $model = Doctor::query();
+            $model = Doctor::with('type')->get();
             return DataTables()::of($model)->toJson();
         }
         // $doctors = Doctor::all();
