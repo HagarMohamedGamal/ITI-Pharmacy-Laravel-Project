@@ -45,7 +45,7 @@ Route::group([
     'middleware' => ['role:super-admin|admin'],
     
 ], function () {
-    Route::get('/index', 'AreaController@index')->name('areas.index');
+    Route::get('/', 'AreaController@index')->name('areas.index');
     Route::get('/create', 'AreaController@create')->name('areas.create');
     Route::get('/{area}', 'AreaController@show')->name('areas.show');
     Route::get('/{area}/edit', 'AreaController@edit')->name('areas.edit');
