@@ -1,97 +1,112 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
-    {
-        $orders = Order::all(); 
-       // dd($orders);
-        // return view('orders.index', [
-        //   'orders' => $orders,
-        // ]);
-        return view('orders.index',[
-            'orders' => $orders,
-        ]);
+  public function index()
+  {
+  
+    if (request()->ajax()) {
+      $orders = Order::latest()->get();
+      return datatables()->of($orders)
+        ->addColumn('action', function ($data) {
+          $button = '<button type="button" name="edit" id="' . $data->id . '" class="edit btn btn-primary btn-sm">Edit</button>';
+          $button .= '&nbsp;&nbsp;';
+          $button .= '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm">Delete</button>';
+          return $button;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
-    public function create()
-    {
-      return view('orders.create');
+   
+    return view('orders.index');
+  }
+
+  public function create()
+  {
+    return view('orders.create');
+  }
+
+  public function store(Request $request)
+  {
+    
+    $request->validate([
+      'is_insured' => 'boolean',
+    ]);
+   
+    Order::create([
+      'user_id' => $request->user_id,
+      'useraddress_id' => $request->useraddress_id,
+      'doctor_id' => $request->doctor_id,
+      'is_insured' => $request->is_insured,
+      'status' => $request->status,
+      'creator_type' => $request->creator_type,
+      'pharmacy_id' => $request->pharmacy_id,
+      'Actions' => $request->Actions,
+    ]);
+    return response()->json(['success' => 'Data Added successfully.']);
+  }
+
+
+  public function edit($id)
+  {
+    if (request()->ajax()) {
+      $data = Order::findOrFail($id);
+      return response()->json(['data' => $data]);
     }
+    // $request = request();
+    // $orderId = $request->order;
+    // $order = Order::find($orderId);
+    // return view('orders.edit', [
+    //   'order' => $order,
+    // ]);
+  }
 
-    public function store(Request $request)
-    { 
-
-        $request->validate([
-            'is_insured' => 'boolean',
-        ]);
-      Order::create([
-        'order_user_name'=>$request->order_user_name,
-        'delivering_address'=>$request->delivering_address,
-        'doctor_name'=>$request->doctor_name,
-        'is_insured'=>$request->is_insured,
-        'status'=>$request->status,
-        'creator_type'=>$request->creator_type,
-        'assigned_pharmacy_name'=>$request->assigned_pharmacy_name,
-        'Actions'=>$request->Actions,
-      ]);
-      return redirect()->route('orders.index');
-    }
-
-
-    public function edit()
-    {
-     $request = request();
-     $orderId = $request->order;
-     $order = Order::find($orderId);
-     return view('orders.edit',[
-         'order' => $order,
-     ]);
-    }
-
-    public function update(Request $request)
-    {   
+  public function update(Request $request)
+  {
 
     $request->validate([
-        'is_insured' => 'boolean',
+      'is_insured' => 'boolean',
     ]);
+    
+    dd($request->user_id);
     $orderId = $request->order;
     Order::where('id', $orderId)
-        ->update([
-            'order_user_name'=>$request->order_user_name,
-            'delivering_address'=>$request->delivering_address,
-            'doctor_name'=>$request->doctor_name,
-            'is_insured'=>$request->is_insured,
-            'status'=>$request->status,
-            'creator_type'=>$request->creator_type,
-            'assigned_pharmacy_name'=>$request->assigned_pharmacy_name,
-            'Actions'=>$request->Actions,
-          ]);
-          return redirect()->route('orders.index');
+      ->update([
+      'user_id' => $request->user_id,
+      'useraddress_id' => $request->useraddress_id,
+      'doctor_id' => $request->doctor_id,
+      'is_insured' => $request->is_insured,
+      'status' => $request->status,
+      'creator_type' => $request->creator_type,
+      'pharmacy_id' => $request->pharmacy_id,
+      'Actions' => $request->Actions,
+      ]);
+    return response()->json(['success' => 'Data is successfully updated']);
 
     //return redirect()->route('orders.index');
-    }
+  }
 
-    public function show(Request $request)
-    {
-         $ordersId = $request->order;
-         $order = Order::find($ordersId);
-         return view('orders.show',[
-             'order' => $order,
-         ]);
-    }
+  public function show(Request $request)
+  {
+    $ordersId = $request->order;
+    $order = Order::find($ordersId);
+    return view('orders.show', [
+      'order' => $order,
+    ]);
+  }
 
-    public function destroy()
-    {
-      $request = request();
-      $orderId = $request->order;
-      $order = Order::find($orderId);
-      $order->delete();
-      return redirect()->route('orders.index');
-    }
-
+  public function destroy()
+  {
+    $request = request();
+    $orderId = $request->order;
+    $order = Order::find($orderId);
+    $order->delete();
+    // return redirect()->route('orders.index');
+  }
 }
