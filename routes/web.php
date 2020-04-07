@@ -34,10 +34,8 @@ Route::group([
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
 });
-Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
-Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['
-    role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
 
 Route::group([
     'name' => 'areas',
@@ -59,7 +57,7 @@ Route::group([
     'prefix' => 'useraddresses',
     'middleware' => ['role:super-admin|admin|client'],
 ], function () {
-    Route::get('/index', 'UserAddressController@index')->name('useraddresses.index');
+    Route::get('/', 'UserAddressController@index')->name('useraddresses.index');
     Route::get('/create', 'UserAddressController@create')->name('useraddresses.create');
     Route::get('/{useraddress}', 'UserAddressController@show')->name('useraddresses.show');
     Route::get('/{useraddress}/edit', 'UserAddressController@edit')->name('useraddresses.edit');
