@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"virtualbox":{"/home/vagrant/code":{"type":null,"mount_options":["uid=1000","gid=1000"],"guestpath":"/home/vagrant/code","hostpath":"/home/hagar/Documents/laravel/project/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/hagar/Documents/laravel/project/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true}}}
-=======
 {"virtualbox":{"/home/vagrant/code":{"type":null,"mount_options":["uid=1000","gid=1000"],"guestpath":"/home/vagrant/code","hostpath":"/home/safaa/Downloads/laravel/project/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/safaa/Downloads/laravel/project/ITI-Pharmacy-Laravel-Project","disabled":false,"__vagrantfile":true}}}
->>>>>>> 319fa1a423dc9be47b68e250230ffe743a12c561

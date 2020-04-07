@@ -43,9 +43,11 @@ $(function () {
 
     $('#ok_button').click(function () {
         const token = $('meta[name="csrf-token"]').attr('content');
-        $.ajax({
-            url: "/doctors/" + doctor_id,
-            type: "delete",
+        console.log(doctor);
+    
+        jQuery.ajax({
+            url: "/doctors/"+doctor,
+            type: "put",
             data: {
                 'id': doctor_id,
                 '_token': token,

@@ -24,6 +24,7 @@
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/fontawesome-free/css/all.min.css")}}">
+  <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/select2/css/select2.css")}}">
   <!-- IonIcons -->
   <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
@@ -368,6 +369,7 @@ to get the desired effect
 
   <!-- jQuery -->
   <script src="{{ asset("/bower_components/admin-lte/plugins/jquery/jquery.min.js")}}"></script>
+  <script src="{{ asset("/bower_components/admin-lte/plugins/select2/js/select2.js")}}"></script>
   <!-- Bootstrap -->
   <script src="{{ asset("/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
   <!-- DataTables -->
@@ -392,7 +394,6 @@ to get the desired effect
     //   });
     // });
   </script>
-
 
 </body>
 

@@ -16,4 +16,9 @@ class Order extends Model
         'pharmacy_id',
         'Actions',
     ];
+
+    public function medicines()
+    {
+        return $this->belongsToMany(Medicine::class)->withTimestamps();
+    }
 }

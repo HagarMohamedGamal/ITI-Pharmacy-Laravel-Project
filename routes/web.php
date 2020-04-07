@@ -34,16 +34,19 @@ Route::group([
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
 });
-Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->
-middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', ]);
-Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->
-middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
+// ->middleware(['
+//     role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update');
+// ->middleware(['
+//     role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+
 
 Route::group([
     'name' => 'areas',
     'prefix' => 'areas',
     'middleware' => ['role:super-admin|admin'],
-    
+
 ], function () {
     Route::get('/', 'AreaController@index')->name('areas.index');
     Route::get('/create', 'AreaController@create')->name('areas.create');
@@ -59,7 +62,7 @@ Route::group([
     'prefix' => 'useraddresses',
     'middleware' => ['role:super-admin|admin|client'],
 ], function () {
-    Route::get('/index', 'UserAddressController@index')->name('useraddresses.index');
+    Route::get('/', 'UserAddressController@index')->name('useraddresses.index');
     Route::get('/create', 'UserAddressController@create')->name('useraddresses.create');
     Route::get('/{useraddress}', 'UserAddressController@show')->name('useraddresses.show');
     Route::get('/{useraddress}/edit', 'UserAddressController@edit')->name('useraddresses.edit');
@@ -118,13 +121,15 @@ Route::group([
     'prefix' => 'medicines',
     'middleware' => ['role:super-admin|admin|doctor|pharmacy','auth'],
 ], function () {
-    Route::delete('/{medicine}', 'MedicineController@destroy')->name('medicines.destroy');
+    Route::get('/get-medicines', 'MedicineController@getMedicines')->name('get-medicines-datatable');
+    Route::delete('/{medicine}/delete', 'MedicineController@destroy')->name('medicines.destroy');
     Route::get('/', 'MedicineController@index')->name('medicines.index');
-    Route::get('/create', 'MedicineController@create')->name('medicines.create');
-    Route::post('/', 'MedicineController@store')->name('medicines.store');
+//    Route::get('/create', 'MedicineController@create')->name('medicines.create');
+    Route::post('/store', 'MedicineController@store')->name('medicines.store');
     Route::get('/{medicine}/edit', 'MedicineController@edit')->name('medicines.edit');
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
-    Route::put('/{medicine}', 'MedicineController@update')->name('medicines.update');
+    Route::post('/{medicine}/update', 'MedicineController@update')->name('medicines.update');
+
 });
 Auth::routes(['verify' => true]);
 
