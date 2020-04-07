@@ -111,7 +111,7 @@ class PharmacyController extends Controller
     public function edit(Request $request)
     {
         $pharmacy = Pharmacy::find($request->pharmacy);
-        $this->authorize('view', $pharmacy);
+        $this->authorize('update', $pharmacy);
         $pharmacies = Pharmacy::all();
         
         return view('pharmacy.edit', [

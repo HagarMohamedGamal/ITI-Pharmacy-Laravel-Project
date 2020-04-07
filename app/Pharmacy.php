@@ -31,7 +31,11 @@ class Pharmacy extends Model
     {
         return $this->hasMany('App\Order');
     }
-
+  
+    public function Pharmacy_name()
+    {
+        return $this->hasOne('App\User','id');
+    }
     
    
 }

@@ -6,12 +6,12 @@ use App\Notifications\GreetVerification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphTo();
     }
+
+    
 
 }

@@ -14,7 +14,7 @@ class Doctor extends Model implements BannableContract
      * @var array
      */
     protected $fillable = [
-         'national_id', 'avatar', 'pharmacy_name', 'is_baned',''
+         'national_id', 'avatar', 'pharmacy_name', 'is_baned','created_at'
     ];
 
     /**

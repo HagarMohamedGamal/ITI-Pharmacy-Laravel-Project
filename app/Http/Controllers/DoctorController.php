@@ -8,16 +8,24 @@ use DataTables;
 use App\Pharmacy;
 use Illuminate\Http\Request;
 use App\Http\Requests\DoctorRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreDoctorRequest;
 use App\Http\Requests\UpdateDoctorRequest;
+use Spatie\Permission\Models\Role;
 // use Response;
 
 class DoctorController extends Controller
 {
     function index()
     {
+        // dd($doctors);
+        // $user = Auth::user();
+        // $users = User::whereHas('roles' , function($q){
+        //     $q->where('name', 'doctor');
+        // })->get();
+        // dd($users);
         if(request()->ajax()){
             return $this->indexDataTable();
         }
@@ -25,8 +33,13 @@ class DoctorController extends Controller
     }
     function indexDataTable()
     {
+        $user = Auth::user();
+        if($user->hasrole('pharmacy')){
+            $doctors = Doctor::query()->where('pharmacy_id', $user->typeable->id);
+        } else{
             $doctors = Doctor::query();
-            return DataTables()::of($doctors)
+        }
+        $data = DataTables()::of($doctors)
             ->addColumn('id', function(Doctor $doctor){
                 return $doctor->id;
             })
@@ -36,10 +49,8 @@ class DoctorController extends Controller
             ->addColumn('email', function(Doctor $doctor){
                 return $doctor->type->email;
             })
-            ->addColumn('pharmacy_id', function(Doctor $doctor){
-                $pharmacy = $doctor->pharmacy;
-                $pharmacy = $pharmacy ? $pharmacy->type->name : "";
-                return $pharmacy;
+            ->addColumn('created_at', function(Doctor $doctor){
+                return $doctor->type->created_at;
             })
             ->addColumn('action', function(Doctor $doctor){
                 $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
@@ -50,9 +61,17 @@ class DoctorController extends Controller
                 $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
                 $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
                 return $button;
-                
-            })
-            ->toJson();
+            });
+
+            if(! $user->hasrole('pharmacy')){
+                $data->addColumn('pharmacy_id', function(Doctor $doctor){
+                    $pharmacy = $doctor->pharmacy;
+                    $pharmacy = $pharmacy ? $pharmacy->type->name : "";
+                    return $pharmacy;
+                });
+            }
+
+            return $data->toJson();
     }
 
 
@@ -83,9 +102,6 @@ class DoctorController extends Controller
     function create()
     {
         $pharmacies = Pharmacy::all();
-        // foreach ($pharmacies as $value) {
-        //    dd($value->id);
-        // }
         return view('doctors.create', [
             "pharmacies" => $pharmacies,
         ]);
@@ -102,6 +118,11 @@ class DoctorController extends Controller
             $pathPeices = explode('/', $path);
             array_shift($pathPeices);
             $path = implode('/', $pathPeices);
+        }
+
+        $authUser = Auth::user();
+        if($authUser->hasrole('pharmacy')){
+            $request->pharmacy_id = $authUser->typeable->id;
         }
 
         $user =User::create([

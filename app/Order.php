@@ -21,4 +21,8 @@ class Order extends Model
     {
         return $this->belongsToMany(Medicine::class)->withTimestamps();
     }
+    public function images()
+    {
+        return $this->hasMany('App/OrderImage');
+    }
 }
