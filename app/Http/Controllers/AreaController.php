@@ -10,8 +10,27 @@ class AreaController extends Controller
 {
     public function index()
     {
+        if(request()->ajax()){
+            return $this->indexDataTable();
+        }
         $areas = Area::all();
         return view('areas.index');
+    }
+
+    function indexDataTable()
+    {
+        $areas = Area::query();
+        return DataTables()::of($areas)
+        ->addColumn('action', function(Area $area) {
+
+            $button = '<a name="show" id="'.$area->id.'" class="show btn btn-success btn-sm" href="/areas/'.$area->id.'">Show</a>';
+            $button .= '<a name="edit" id="'.$area->id.'" class="edit btn btn-primary btn-sm" href="/areas/'.$area->id.'/edit">Edit</a>';
+            // $button .= '&nbsp;&nbsp;';
+            $button .= '<button type="button" name="delete" id="'.$area->id.'" class="delete btn btn-danger btn-sm">Delete</button>';
+            return $button;
+            
+        })
+        ->toJson();
     }
 
     public function show()
