@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Order;
+use App\User;
 use App\Pharmacy;
 use Illuminate\Http\Request;
 use DB;
@@ -21,6 +22,8 @@ class RevenueController extends Controller
         // $id = Auth::id();
         // dd($id);
         $pharmacies=Pharmacy::all();
+        // $x=Pharmacy::find(1)->pharmacy_name->name;
+        // dd($x);
         // dd($pharmacies);
         return view('revenue.index',[
             'pharmacies' => $pharmacies,

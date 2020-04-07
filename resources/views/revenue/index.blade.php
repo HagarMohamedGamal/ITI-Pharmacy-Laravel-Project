@@ -7,6 +7,7 @@
               <thead>
                 <tr>
                   <th scope="col">Pharmacy ID</th>
+                  <th scope="col">Pharmacy Name</th>
                   <th scope="col">Total Orders</th>
                   <th scope="col">TotalRevenue</th>
                 </tr>
@@ -15,6 +16,7 @@
                 @foreach($pharmacies as $pharmacy)
                 <tr>
                     <td>{{ $pharmacy->id}}</td>
+                    <td>{{ $pharmacy->pharmacy_name->name}}</td>
                     <td>{{ $pharmacy->orders->count() }}</td>
                     <td>{{ $pharmacy->orders->sum("price") }}</td>
 
