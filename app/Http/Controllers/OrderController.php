@@ -98,7 +98,7 @@ class OrderController extends Controller
   public function show(Request $request)
   {
     $order = Order::find($request->order);
-    $this->authorize('show', $order);
+    $this->authorize('view', $order);
     $ordersId = $request->order;
     $order = Order::find($ordersId);
     return view('orders.show', [
