@@ -23,6 +23,7 @@ class OrderSeeder extends Seeder
                 'creator_type'=>Str::random(10),
                 'pharmacy_id' => rand(1, 10),
                 'Actions' => Str::random(10),
+                'price'=> 0
             ]);
        }
     }
