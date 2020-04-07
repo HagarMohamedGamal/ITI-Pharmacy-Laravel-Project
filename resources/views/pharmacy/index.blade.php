@@ -60,7 +60,7 @@
            processing: true,
            serverSide: true,
            responsive: true,
-           ajax: "{{ url('/pharmacies/indexList') }}",
+           ajax: "{{ url('/pharmacies') }}",
            columns: [
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },

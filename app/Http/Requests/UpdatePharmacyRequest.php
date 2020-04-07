@@ -42,8 +42,8 @@ class UpdatePharmacyRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'A name is required',
-            'name.min'  => 'A name must be larger than 2 chars',
+            'name.required' => 'name is required',
+            'name.min'  => 'name must be larger than 2 chars',
         ];
     }
 }

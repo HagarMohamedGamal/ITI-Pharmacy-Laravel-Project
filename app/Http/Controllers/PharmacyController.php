@@ -18,15 +18,15 @@ class PharmacyController extends Controller
 {
     public function index()
     {
-       
+        if(request()->ajax()){
+            return $this->indexDataTable();
+        }
         return view('pharmacy.index');
     }
 // ===========================================================
 
-    public function indexList()
+    public function indexDataTable()
     {
-        if(request()->ajax())
-        {
         $pharmacies = Pharmacy::query();
           return DataTables()::of($pharmacies)
                 ->addColumn('name', function(Pharmacy $pharmacy) {
@@ -45,7 +45,6 @@ class PharmacyController extends Controller
                     
                 })
                 ->toJson();
-        }
     }
 // ===========================================================    
 

@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Client;
+use App\User;
 use App\Http\Resources\ClientResource;
 use App\Http\Requests\StoreClientRequest;
+use App\Http\Requests\UpdateClientRequest;
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
@@ -27,57 +30,80 @@ class ClientController extends Controller
 
     public function store(StoreClientRequest $request)
     {
-        return new ClientResource(
-            Client::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
-                'avatar' => $request->avatar,
-                'national_id' => $request->national_id,
-                'avatar' => $request->avatar,
-                'gender' => $request->gender,
-                'birth_day' => $request->birth_day,
-                'mobile' => $request->mobile,
 
+        $client = $request->only(['name', 'email','password' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
+        $avatar = isset($client['avatar'])? $client['avatar'] : "";
+        if ($avatar) 
+        {
+            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $new_name);
+        }
+        else
+        {
+            $new_name = "default.jpg";
+        }
+       
+        $user = User::create([
+            'name'=> $client['name'],
+            'email'=> $client['email'],
+            'password' => Hash::make($client['password']),
 
-            ])
-        );
+        ]);
+        $clientUser = Client::create([
+            'national_id' => $client['national_id'],
+            'avatar' => $client['avatar'],
+            'gender' => $client['gender'],
+            'birth_day' => $client['birth_day'],
+            'mobile' => $client['mobile'],
+        ]);
+
+        $user = $user->refresh();
+        $clientUser=$clientUser->refresh();
+
+        $clientUser->type()->save($user);
+        $user->assignRole('client');
+
+        return new ClientResource($clientUser);
     }
 
 
-    public function edit($id)
+    public function update(UpdateClientRequest $request)
     {
-        $where = array('id' => $id);
+        $client = $request->only(['name', 'email' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
+        $avatar = isset($client['avatar'])? $client['avatar'] : "";
+        if ($avatar) 
+        {
+            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $new_name);
+        }
+        else
+        {
+            $new_name = "default.jpg";
+        }
+       
+       $updateclient = Client::find($request->client);
+        User::find($updateclient->type->id)->update([
+            'name'=> $client['name'],
+            'email'=> $client['email'],
 
-        $data['client'] = Client::where($where)->first();
+        ]);
+        $updateclient->update([
+            'national_id' => $client['national_id'],
+            'avatar' => $client['avatar'],
+            'gender' => $client['gender'],
+            'birth_day' => $client['birth_day'],
+            'mobile' => $client['mobile'],
+        ]);
 
-        return $data;
+        
+        return new ClientResource($updateclient);
     }
 
 
 
 
 
-
-    public function update(Request $request, $id)
-    {
-
-
-        $client = $request->only(['name', 'password', 'national_id', 'avatar', 'birth_day','mobile','gender']);
-
-
-        Client::where('id', $id)->update($client);
-         return response()->json([
-
-        'success' => 'Record update successfully!'
-
-    ]);
-    }
-
-
-
-
-    public function destroy($id)
+    public function destroy($client)
     {
 
 

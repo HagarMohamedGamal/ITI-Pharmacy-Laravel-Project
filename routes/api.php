@@ -20,10 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/clients', 'API\ClientController@index');
 Route::get('/clients/{client}', 'API\ClientController@show');
 Route::post('/clients', 'API\ClientController@store');
-Route::put('/clients/{id}', 'API\ClientController@update');
-Route::delete('clients/{id}', 'API\ClientController@destroy');
+Route::put('/clients/{client}', 'API\ClientController@update');
+Route::delete('clients/{client}', 'API\ClientController@destroy');
 
 
+
+Auth::routes(['verify' => true]);
 
 
 
