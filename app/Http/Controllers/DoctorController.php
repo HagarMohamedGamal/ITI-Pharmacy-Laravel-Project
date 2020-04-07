@@ -25,7 +25,6 @@ class DoctorController extends Controller
     }
     function indexDataTable()
     {
-        if (request()->ajax()) {
             $doctors = Doctor::query();
             return DataTables()::of($doctors)
             ->addColumn('id', function(Doctor $doctor){
@@ -38,7 +37,8 @@ class DoctorController extends Controller
                 return $doctor->type->email;
             })
             ->addColumn('pharmacy_id', function(Doctor $doctor){
-                $pharmacy = $doctor->pharmacy->type->name;
+                $pharmacy = $doctor->pharmacy;
+                $pharmacy = $pharmacy ? $pharmacy->type->name : "";
                 return $pharmacy;
             })
             ->addColumn('action', function(Doctor $doctor){
@@ -48,12 +48,11 @@ class DoctorController extends Controller
                 $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
                 // $button .= '&nbsp;&nbsp;';
                 $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
-                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
+                $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
                 return $button;
                 
             })
             ->toJson();
-        }
     }
 
 
@@ -141,7 +140,7 @@ class DoctorController extends Controller
     }
 
     //  Update Doctor
-    function update(UpdateDoctorRequest $request)
+    function update(Request $request)
     {
         if (request()->ajax()) {
             $doctor = Doctor::find($request->doctor);
