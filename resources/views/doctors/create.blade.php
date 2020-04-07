@@ -30,11 +30,14 @@
             <label for="exampleFormControlInput2">password</label>
             <input type="text" name="password" class="form-control" id="exampleFormControlInput2" value="{{isset($doctor)?$doctor->type->email:''}}">
         </div>
+        @role('pharmacy')
+        @else
         <select class="form-control" name="pharmacy_id">
             @foreach($pharmacies as $pharmacy)
             <option value="{{$pharmacy->id}}" {{(isset($doctor))?($doctor->pharmacy_id == $pharmacy->id)? 'selected':'' : ''}}>{{$pharmacy->type->name}}</option>
             @endforeach
         </select>
+        @endrole
         <div class="form-group">
             <label for="exampleFormControlInput4">national id</label>
             <input type="text" name="national_id" class="form-control" id="exampleFormControlInput4" value="{{isset($doctor)?$doctor->national_id:''}}">
