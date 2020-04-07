@@ -60,6 +60,7 @@ class DoctorController extends Controller
     function show($doctorId)
     {
         $doctor = Doctor::find($doctorId);
+        $this->authorize('view', $doctor);
         if($doctor->avatar)
             $doctor->avatar = Storage::url($doctor->avatar);
         return view('doctors.show', [
@@ -71,6 +72,7 @@ class DoctorController extends Controller
     function destroy(Request $request)
     {
         $doctor = Doctor::find($request->doctor);
+        $this->authorize('delete', $doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
         return response()->json([
@@ -82,6 +84,9 @@ class DoctorController extends Controller
     function create()
     {
         $pharmacies = Pharmacy::all();
+        // foreach ($pharmacies as $value) {
+        //    dd($value->id);
+        // }
         return view('doctors.create', [
             "pharmacies" => $pharmacies,
         ]);
@@ -126,6 +131,8 @@ class DoctorController extends Controller
     //  Edit Doctor View
     function edit($doctorId)
     {
+        $doctor = Doctor::find($doctorId);
+        $this->authorize('update', $doctor);
         $pharmacies = Pharmacy::all();
         return view('doctors.create', [
             "doctor" => Doctor::find($doctorId),

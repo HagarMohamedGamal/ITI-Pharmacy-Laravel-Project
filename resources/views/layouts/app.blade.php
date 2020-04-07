@@ -24,6 +24,7 @@
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/fontawesome-free/css/all.min.css")}}">
+  <link rel="stylesheet" href="{{asset("/bower_components/admin-lte/plugins/select2/css/select2.css")}}">
   <!-- IonIcons -->
   <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
@@ -209,84 +210,96 @@ to get the desired effect
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-          <li class="nav-item">
-            <a href="{{route("admin")}}" class="nav-link active">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Home</p>
-            </a>
-          </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon far fa-plus-square"></i>
-              <p>
-                Items
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{route('pharmacies.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pharmacies</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('doctors.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Doctors</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('medicines.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Medicine</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('areas.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Area</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('useraddresses.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>User Addresses</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('orders.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Orders</p>
-                </a>
-              </li>
-            </ul>
-        </li>
-          <li class="nav-item">
-            <a href="{{ asset("/bower_components/admin-lte/pages/forms/general.html")}}" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>
-                Forms
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ asset("/bower_components/admin-lte/pages/tables/data.html")}}" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Tables
-              </p>
-            </a>
-          </li>
-          <li class="nav-header">EXAMPLES</li>
-          <li class="nav-item">
-            <a href="{{ asset("/bower_components/admin-lte/pages/examples/contacts.html")}}" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Contacts</p>
-            </a>
-          </li>
                  
             <li class="nav-item">
+              <a href="{{route("admin")}}" class="nav-link active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Home</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-plus-square"></i>
+                <p>
+                  Items
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                @role('super-admin')
+                <li class="nav-item">
+                  <a href="{{route('pharmacies.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Pharmacies</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+
+                @hasanyrole('pharmacy|super-admin')
+                <li class="nav-item">
+                  <a href="{{route('doctors.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Doctors</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+
+                @hasanyrole('pharmacy|super-admin|doctor')
+                <li class="nav-item">
+                  <a href="{{route('medicines.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Medicine</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('orders.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Orders</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+
+                @role('super-admin')
+                <li class="nav-item">
+                  <a href="{{route('areas.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Area</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('useraddresses.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>User Addresses</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+
+
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{{ asset("/bower_components/admin-lte/pages/forms/general.html")}}" class="nav-link">
+                <i class="nav-icon fas fa-edit"></i>
+                <p>
+                  Forms
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ asset("/bower_components/admin-lte/pages/tables/data.html")}}" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>
+                  Tables
+                </p>
+              </a>
+            </li>
+            <li class="nav-header">EXAMPLES</li>
+            <li class="nav-item">
+              <a href="{{ asset("/bower_components/admin-lte/pages/examples/contacts.html")}}" class="nav-link">
               <a href="{{ route('password.request') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Reset Password</p>
@@ -356,6 +369,7 @@ to get the desired effect
 
   <!-- jQuery -->
   <script src="{{ asset("/bower_components/admin-lte/plugins/jquery/jquery.min.js")}}"></script>
+  <script src="{{ asset("/bower_components/admin-lte/plugins/select2/js/select2.js")}}"></script>
   <!-- Bootstrap -->
   <script src="{{ asset("/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
   <!-- DataTables -->

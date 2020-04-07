@@ -2,18 +2,18 @@
 @section('content')
 <div class="container">
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-12">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-12">
 
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-              <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">DataTable with default features</h3>
+            <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
             <table class="table table-bordered" id="example1">
               <thead>
                   <tr>
@@ -26,16 +26,16 @@
                   </tr>
               </thead>
             </table>
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
+          <!-- /.card-body -->
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
 
 </div>
 

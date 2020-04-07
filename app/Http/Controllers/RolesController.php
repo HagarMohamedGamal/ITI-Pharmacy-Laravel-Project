@@ -55,7 +55,7 @@ class RolesController extends Controller
             'email_verified_at' => now()->toDateTimeString(),
 
         ]);
-
+        
         $user->refresh();
         $user->assignRole('super-admin');
         Auth::login($user);

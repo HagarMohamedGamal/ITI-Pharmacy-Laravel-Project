@@ -10,10 +10,12 @@ $(function () {
                 data: 'id', name: 'id'
             },
             {
+
                 data: 'name', name: 'name'
             },
             {
                 data: 'email', name: 'email'
+
             },
             {
                 data: 'national_id', name: 'national_id'
