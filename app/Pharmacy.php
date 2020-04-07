@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pharmacy extends Model
-{
+{   
     use SoftDeletes;
     protected $fillable = [ 'national_id', 'avatar', 'area_id', 'priority'];
     public $timestamps = false;
@@ -26,5 +26,12 @@ class Pharmacy extends Model
     {
         return $this->hasMany('App\Doctor');
     }
+
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
+
+    
    
 }

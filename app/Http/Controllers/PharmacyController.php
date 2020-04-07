@@ -18,6 +18,7 @@ class PharmacyController extends Controller
 {
     public function index()
     {
+       
         return view('pharmacy.index');
     }
 // ===========================================================
@@ -51,6 +52,7 @@ class PharmacyController extends Controller
     public function show(Request $request)
     {
         $pharmacy = Pharmacy::find($request->pharmacy);
+        $this->authorize('view', $pharmacy);
         return view('pharmacy.show', [
             'pharmacy' => $pharmacy
         ]);
@@ -109,8 +111,10 @@ class PharmacyController extends Controller
 
     public function edit(Request $request)
     {
-        $pharmacies = Pharmacy::all();
         $pharmacy = Pharmacy::find($request->pharmacy);
+        $this->authorize('view', $pharmacy);
+        $pharmacies = Pharmacy::all();
+        
         return view('pharmacy.edit', [
             'pharmacy' => $pharmacy,
             'pharmacies' => $pharmacies
@@ -153,6 +157,7 @@ class PharmacyController extends Controller
 
     public function destroy(Request $request)
     {
+        
         $pharmacyId = $request->pharmacy;
         $pharmacy = Pharmacy::withTrashed()
                 ->where('id', $request->pharmacy)

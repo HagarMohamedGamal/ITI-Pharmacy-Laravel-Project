@@ -13,7 +13,6 @@
             <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
           </div>
           <!-- /.card-header -->
-
 <form id="update_ban" method="POST" enctype="multipart/form-data">
       @method('PUT')
       @csrf
@@ -31,6 +30,7 @@
               </thead>
             </table>
           </div>
+
 </form>
           <!-- /.card-body -->
         </div>
@@ -63,7 +63,7 @@
    </div>
  </div>
 </div>
-
+<script src="{{asset('/js/doctors.js')}}"></script>
 
 
 

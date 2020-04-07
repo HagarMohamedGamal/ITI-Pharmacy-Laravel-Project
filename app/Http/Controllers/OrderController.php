@@ -55,6 +55,8 @@ class OrderController extends Controller
 
   public function edit($id)
   {
+    $order = Order::find($id);
+    $this->authorize('update', $order);
     if (request()->ajax()) {
       $data = Order::findOrFail($id);
       return response()->json(['data' => $data]);
@@ -69,7 +71,8 @@ class OrderController extends Controller
 
   public function update(Request $request)
   {
-
+    $order = Order::find($request->user_id);
+    $this->authorize('update', $order);
     $request->validate([
       'is_insured' => 'boolean',
     ]);
@@ -94,6 +97,8 @@ class OrderController extends Controller
 
   public function show(Request $request)
   {
+    $order = Order::find($request->order);
+    $this->authorize('show', $order);
     $ordersId = $request->order;
     $order = Order::find($ordersId);
     return view('orders.show', [
@@ -104,6 +109,9 @@ class OrderController extends Controller
   public function destroy()
   {
     $request = request();
+    $order = Order::find($request->order);
+    $this->authorize('delete', $order);
+    
     $orderId = $request->order;
     $order = Order::find($orderId);
     $order->delete();
