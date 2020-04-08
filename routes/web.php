@@ -26,7 +26,6 @@ Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
     'middleware' =>['role:super-admin|admin|pharmacy', 'auth'],
-
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
     Route::get('/create', 'DoctorController@create')->name('doctors.create');
@@ -71,7 +70,7 @@ Route::group([
 Route::group([
     'name' => 'useraddresses',
     'prefix' => 'useraddresses',
-    'middleware' => ['role:super-admin|admin|client'],
+    'middleware' => ['role:super-admin|admin|client|doctor|pharmacy'],
 ], function () {
     Route::get('/', 'UserAddressController@index')->name('useraddresses.index');
     Route::get('/create', 'UserAddressController@create')->name('useraddresses.create');
@@ -79,6 +78,7 @@ Route::group([
     Route::get('/{useraddress}/edit', 'UserAddressController@edit')->name('useraddresses.edit');
     Route::put('/{useraddress}', 'UserAddressController@update')->name('useraddresses.update');
     Route::post('/', 'UserAddressController@store')->name('useraddresses.store');
+    Route::post('/user', 'UserAddressController@user')->name('useraddresses.user');
     Route::delete('/{useraddress}', 'UserAddressController@destroy')->name('useraddresses.destroy');
 });
 
@@ -97,7 +97,6 @@ Route::group([
     Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
     Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
     Route::get('/{pharmacy}', 'PharmacyController@show')->name('pharmacies.show');
-
 });
 Route::put(
     '/pharmacies/{pharmacy}',
@@ -111,7 +110,7 @@ Route::get(
 Route::group([
     'name' => 'orders',
     'prefix' => 'orders',
-    //'middleware' => ['role_or_permission:super-admin|admin|doctor|pharmacy|create order |update order', 'auth'],
+    'middleware' => ['role_or_permission:super-admin|admin|doctor|pharmacy', 'auth'],
 ], function () {
     Route::delete('/{order}', 'OrderController@destroy')->name('orders.destroy');
     Route::get('/', 'OrderController@index')->name('orders.index');
@@ -128,17 +127,16 @@ Route::group([
 Route::group([
     'name' => 'medicines',
     'prefix' => 'medicines',
-    // 'middleware' => ['role:super-admin|admin|doctor|pharmacy','auth'],
+    'middleware' => ['role:super-admin|admin|doctor|pharmacy', 'auth'],
 ], function () {
     Route::get('/get-medicines', 'MedicineController@getMedicines')->name('get-medicines-datatable');
     Route::delete('/{medicine}/delete', 'MedicineController@destroy')->name('medicines.destroy');
     Route::get('/', 'MedicineController@index')->name('medicines.index');
-//    Route::get('/create', 'MedicineController@create')->name('medicines.create');
+    //    Route::get('/create', 'MedicineController@create')->name('medicines.create');
     Route::post('/store', 'MedicineController@store')->name('medicines.store');
     Route::get('/{medicine}/edit', 'MedicineController@edit')->name('medicines.edit');
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
     Route::post('/{medicine}/update', 'MedicineController@update')->name('medicines.update');
-
 });
 Auth::routes(['verify' => true]);
 
@@ -150,13 +148,17 @@ Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 
-Route::get('/revenue', 'RevenueController@index')->name('revenue.index')->middleware(['role:super-admin|admin','auth']);
-Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
-// test only 
-Route::get('/create2','OrderController@create2')->name('create2');
-Route::post('/auto','OrderController@auto')->name('auto');
+Route::get('/revenue', 'RevenueController@index')->name('revenue.index')->middleware(['role:super-admin|admin', 'auth']);
+Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy', 'auth']);
 
 // ordermedicine
-Route::post('/medicineorder/','MedicineOrderController@store')->name('medicineorder.store');
-Route::post('/medicineauto/', 'MedicineController@auto')->name('medicine.auto');
-Route::post('/medicineorder/{order}', 'MedicineOrderController@update')->name('medicine.update');
+Route::group(
+    [
+        'middleware' => ['role:super-admin|admin|doctor|pharmacy', 'auth'],
+    ],
+    function () {
+        Route::post('/medicineorder/', 'MedicineOrderController@store')->name('medicineorder.store');
+        Route::post('/medicineauto/', 'MedicineController@auto')->name('medicine.auto');
+        Route::post('/medicineorder/{order}', 'MedicineOrderController@update')->name('medicine.update');
+    }
+);

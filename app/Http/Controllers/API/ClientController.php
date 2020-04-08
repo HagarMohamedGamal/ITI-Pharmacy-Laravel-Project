@@ -60,6 +60,12 @@ class ClientController extends Controller
             ]);
         }
 
+        $userLoginDate = auth()->user();
+        if($userLoginDate->hasrole('client')){
+            $userLoginDate->typeable->last_login = Carbon::now();
+            $userLoginDate->typeable->save();
+        };
+
         return [
             'Access Tocken' => $user->createToken($request->device_name)->plainTextToken,
             'Data' => new ClientResource(

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Order;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Doctor;
 
 class OrderPolicy
 {
@@ -68,8 +69,17 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order)
     {
-        return ($user->typeable_id === $order->pharmacy_id) ||
-         ($user->typeable_id === $order->doctor_id) ||
+
+        if($user->hasRole('doctor'))
+        {
+           
+            $doctor = Doctor::where('id', $user->typeable_id)->first();
+            
+        }
+        else 
+        $doctor = null;
+
+        return ($user->typeable_id === $order->pharmacy_id) || ($doctor->pharmacy_id === $order->pharmacy_id) ||
           ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin');
     }
 
