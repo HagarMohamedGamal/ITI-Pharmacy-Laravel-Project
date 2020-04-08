@@ -19,10 +19,23 @@ class Order extends Model
 
     public function medicines()
     {
-        return $this->belongsToMany(Medicine::class)->withTimestamps();
+        return $this->belongsToMany(Medicine::class)->withPivot('quantity')->withTimestamps();
     }
     public function images()
     {
         return $this->hasMany('App/OrderImage');
     }
+    // public function user()
+    // {
+    //     return $this->belongsTo('App/Client');
+    // }
+    // public function doctor()
+    // {
+    //     return $this->belongsTo('App/Doctor');
+    // }
+    // public function pharmacy()
+    // {
+    //     return $this->belongsTo('App/Pharmacy');
+    // }
+
 }

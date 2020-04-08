@@ -19,7 +19,7 @@ class OrderSeeder extends Seeder
                 'useraddress_id' => rand(1, 10),
                 'doctor_id' => rand(1, 10),
                 'is_insured'=>(bool)random_int(0, 1),
-                'status'=>Str::random(10),
+                'status'=>'new',
                 'creator_type'=>Str::random(10),
                 'pharmacy_id' => rand(1, 10),
                 'Actions' => Str::random(10),
