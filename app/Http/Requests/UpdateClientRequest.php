@@ -27,9 +27,9 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        // $client= Client::where('id', Request()->client);
-        // if($client->count()>0)
-        // {
+        $client= User::find(Request()->client);
+        if($client)
+        {
             $client= User::find(Request()->client);
             return [
                 'name' => 'required|min:2',
@@ -50,8 +50,8 @@ class UpdateClientRequest extends FormRequest
                 'birth_day' => 'required|Date',
                 'mobile' => 'required|numeric',
             ]; 
-        // }
-        // return [];
+        }
+        return [];
     }
 
     public function messages()
