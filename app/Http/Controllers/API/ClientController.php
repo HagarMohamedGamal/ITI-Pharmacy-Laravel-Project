@@ -116,10 +116,11 @@ class ClientController extends Controller
     public function update(UpdateClientRequest $request, $client)
     {
         $exist = User::where('id', $client);
+        // dd($client);
         if ($exist->count()>0) 
         {
-            $client = $request->only(['name', 'email' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
-            $avatar = isset($client['avatar'])? $client['avatar'] : "";
+            $clientUser = $request->only(['name', 'email' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
+            $avatar = isset($clientUser['avatar'])? $clientUser['avatar'] : "";
             if ($avatar) 
             {
                 $new_name = time() . '_' . $avatar->getClientOriginalExtension();
@@ -131,18 +132,19 @@ class ClientController extends Controller
             }
 
            $user = User::find($client);
+        //    dd($client);
            $updateclient = Client::find($user->typeable->id);
             $user->update([
-                'name'=> $client['name'],
-                'email'=> $client['email'],
+                'name'=> $clientUser['name'],
+                'email'=> $clientUser['email'],
 
             ]);
             $updateclient->update([
-                'national_id' => $client['national_id'],
+                'national_id' => $clientUser['national_id'],
                 'avatar' => $new_name,
-                'gender' => $client['gender'],
-                'birth_day' => $client['birth_day'],
-                'mobile' => $client['mobile'],
+                'gender' => $clientUser['gender'],
+                'birth_day' => $clientUser['birth_day'],
+                'mobile' => $clientUser['mobile'],
             ]);
 
             return new ClientResource($updateclient);
