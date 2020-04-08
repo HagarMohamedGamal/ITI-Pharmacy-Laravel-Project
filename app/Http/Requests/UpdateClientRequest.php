@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
 use App\Client;
 use App\User;
 
@@ -26,28 +27,31 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        $client= Client::find(Request()->client);
-        // $user = User::find($client->type->id);
-        // dd($user);
-        return [
-            'name' => 'required|min:2',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($client->type->id),
-            ],
-            'national_id' => [
-                Rule::unique('clients')->ignore(Request()->client),
-                'min:10'
-            ],
-            'avatar' => 'image|mimes:jpg,jpeg',
-            'gender' => [
+        $client= Client::where('id', Request()->client);
+        if($client->count()>0)
+        {
+            $client= Client::find(Request()->client);
+            return [
+                'name' => 'required|min:2',
+                'email' => [
                     'required',
-                    Rule::in(['male', 'female']),
+                    'email',
+                    Rule::unique('users')->ignore($client->type->id),
                 ],
-            'birth_day' => 'required|Date',
-            'mobile' => 'required|numeric',
-        ];
+                'national_id' => [
+                    Rule::unique('clients')->ignore(Request()->client),
+                    'min:10'
+                ],
+                'avatar' => 'image|mimes:jpg,jpeg',
+                'gender' => [
+                        'required',
+                        Rule::in(['male', 'female']),
+                    ],
+                'birth_day' => 'required|Date',
+                'mobile' => 'required|numeric',
+            ]; 
+        }
+        return [];
     }
 
     public function messages()

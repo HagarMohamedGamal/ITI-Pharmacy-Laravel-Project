@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,20 +18,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/clients', 'API\ClientController@index');
-Route::get('/clients/{client}', 'API\ClientController@show');
-Route::post('/clients', 'API\ClientController@store');
-Route::put('/clients/{client}', 'API\ClientController@update');
-Route::delete('clients/{client}', 'API\ClientController@destroy');
+
+Route::post('clients/login', 'API\ClientController@login');
+Route::post('/clients/register', 'API\ClientController@register');
+Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum','verified']);
+Route::put('/clients/{client}', 'API\ClientController@update')->middleware('auth:sanctum');
+Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware('auth:sanctum');
+Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:sanctum');
 
 
 
-Auth::routes(['verify' => true]);
+Route::get('email/verify/{id}', 'VerificationApiController@verify')->name('verificationapi.verify');
+Route::get('email/resend', 'VerificationApiController@resend')->name('verificationapi.resend');
 
 
+
+
+
+    
 
 
 
