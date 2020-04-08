@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Medicine;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreMedicineRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MedicineController extends Controller
@@ -17,6 +18,18 @@ class MedicineController extends Controller
 
     }
 
+    public function auto(Request $request)
+    {
+        $query =$request->input('query');
+        $data = DB::table('medicines')->where('name','LIKE',"%{$query}%")->get();
+        if($data->isNotEmpty())
+        {
+            return response()->json( $data);
+        }
+        return response()->json(['error' => 'Error msg'], 404);
+
+
+    }
 
     public function getMedicines(Request $request)
     {
