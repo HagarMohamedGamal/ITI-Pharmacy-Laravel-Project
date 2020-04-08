@@ -14,18 +14,18 @@ class RolesController extends Controller
     public function create()
     {
         // hashing till the line 
-        $mainRole = Role::where('name', 'super-admin')->first();
-        if (!$mainRole) {
-            $roleDoctor = Role::create(['name' => 'doctor']);
-            $rolePharmacy = Role::create(['name' => 'pharmacy']);
-            $roleClient = Role::create(['name' => 'client']);
-            $roleAdmin = Role::create(['name' => 'admin']);
-            $roleSuperAdmin = Role::create(['name' => 'super-admin']);
-            $permUpdateDoctor = Permission::create(['name' => 'update doctor']);
-            $permUpdatePharmacy = Permission::create(['name' => 'update pharmacy']);
-            $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
-            $permUpdatePharmacy->assignRole($rolePharmacy);
-        }
+        // $mainRole = Role::where('name', 'super-admin')->first();
+        // if (!$mainRole) {
+        //     $roleDoctor = Role::create(['name' => 'doctor']);
+        //     $rolePharmacy = Role::create(['name' => 'pharmacy']);
+        //     $roleClient = Role::create(['name' => 'client']);
+        //     $roleAdmin = Role::create(['name' => 'admin']);
+        //     $roleSuperAdmin = Role::create(['name' => 'super-admin']);
+        //     $permUpdateDoctor = Permission::create(['name' => 'update doctor']);
+        //     $permUpdatePharmacy = Permission::create(['name' => 'update pharmacy']);
+        //     $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
+        //     $permUpdatePharmacy->assignRole($rolePharmacy);
+        // }
         // ------------------------------------------------------------------
 
         // // $permCreateDoctor = Permission::create(['name'=>'create doctor']);
@@ -37,28 +37,44 @@ class RolesController extends Controller
         // // $permDeletePharmacy = Permission::create(['name'=> 'delete pharmacy ']);
 
         // // $roleDoctor->givePermissionTo($permUpdateDoctor, $rolePharmacy);
-        
-        $user = User::where('name', 'admin')->first();
-        if($user)
-            $user->delete();
 
-        $user = Auth::user();
+        // $user = User::where('name', 'admin')->first();
+        // if($user)
+        //     $user->delete();
 
-        if ($user) {
-            Auth::logout();
+        // $user = Auth::user();
+
+        // if ($user) {
+        //     Auth::logout();
+        // }
+
+        // $user = User::create([
+        //     'name' => 'admin',
+        //     'email' => 'admin@admin.com',
+        //     'password' => Hash::make('012345'),
+        //     'email_verified_at' => now()->toDateTimeString(),
+
+        // ]);
+
+        // $user->refresh();
+        // $user->assignRole('super-admin');
+        // Auth::login($user);
+
+        $users = User::where('typeable_type', 'App\Client')->get();
+       
+        foreach ($users as $user) {
+            $user->assignRole('client');
         }
 
-        $user = User::create([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('012345'),
-            'email_verified_at' => now()->toDateTimeString(),
+        $users = User::where('typeable_type', 'App\Doctor')->get();
+        foreach ($users as $user) {
+            $user->assignRole('doctor');
+        }
 
-        ]);
-        
-        $user->refresh();
-        $user->assignRole('super-admin');
-        Auth::login($user);
+        $users = User::where('typeable_type', 'App\Pharmacy')->get();
+        foreach ($users as $user) {
+            $user->assignRole('pharmacy');
+        }
 
         return redirect('/');
     }

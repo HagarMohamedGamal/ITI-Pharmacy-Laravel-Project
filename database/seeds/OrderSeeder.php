@@ -15,14 +15,14 @@ class OrderSeeder extends Seeder
        for ($i=0; $i < 100; $i++)
        {
             DB::table('orders')->insert([
-                'user_id' => rand(1,10),
-                'useraddress_id' => rand(1, 10),
-                'doctor_id' => rand(1, 10),
+                'user_id' => rand(21,30),
+                'useraddress_id' => rand(1, 4),
+                'doctor_id' => rand(21, 30),
                 'is_insured'=>(bool)random_int(0, 1),
                 'status'=>'new',
-                'creator_type'=>Str::random(10),
-                'pharmacy_id' => rand(1, 10),
-                'Actions' => Str::random(10),
+                'creator_type'=>'null',
+                'pharmacy_id' => rand(41, 50),
+                'Actions' => 'null',
                 'price'=> 0
             ]);
        }

@@ -34,6 +34,15 @@ class UserAddressController extends Controller
             ->toJson();
     }
 
+    public function user(Request $request){
+
+        if (request()->ajax()) {
+            $user = $request->input('user_id');
+            $data = UserAddress::where('client_id', $user)->get();
+            return response()->json($data);
+        }
+
+    }
 
     public function show()
     {
@@ -78,6 +87,9 @@ class UserAddressController extends Controller
 
     public function store(UserAddressRequest $request)
     {
+        
+
+
         $request = $request->only([
             'area_id', 'street_name', 'build_no',
             'floor_no', 'flat_no', 'is_main', 'client_id'

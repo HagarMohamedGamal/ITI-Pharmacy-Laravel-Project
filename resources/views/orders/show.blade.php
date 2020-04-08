@@ -8,14 +8,14 @@
       <span class="font-weight-bold">Order Info</span>
     </div>
     <div class="card-body">
-      <p class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
+      <p hidden class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
       <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
-      <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor}}</p>
+      <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
       <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
       <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
       <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
       <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
-      <p class=" card-text"><span class="font-weight-bold">action:-</span> {{$order->Actions}}</p>
+      <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
       <p class=" card-text"><span class="font-weight-bold">is insured:-</span> {{$order->is_insured == 1 ? 'YES':'NO'}}</p>
       <p class=" card-text"><span class="font-weight-bold">created at:-</span> {{$order->created_at}}</p>
       <p class=" card-text"><span class="font-weight-bold">updated at:-</span> {{$order->updated_at}}</p>
@@ -36,7 +36,12 @@
 
     <button class="text-center btn btn-danger finish"> finish</button>
     @endif
-
+    @if($order->medicines->isNotEmpty()&& $order->status=="Confirmed")
+    <form action="/order/{{$order->id}}">
+      <input  class="text-center btn btn-success" value="Deliver to user">
+      @method('put')
+    </form>
+    @endif
   </div>
 
 </div>
@@ -75,7 +80,7 @@
           <div class="pricediv form-group">
             <label class="control-label col-md-4">Price </label>
             <div class="col-md-8">
-              <input type="text" name="Price" id="Price" class="form-control" />
+              <input type="text" name="price" id="price" class="form-control" />
             </div>
           </div>
           <br />
