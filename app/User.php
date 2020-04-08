@@ -2,12 +2,13 @@
 
 namespace App;
 
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\GreetVerification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\InactiveUserNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -42,6 +43,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function greetingUser(){
         $this->notify(new GreetVerification);
+    }
+
+    public function alterUser(){
+        $this->notify(new InactiveUserNotification);
     }
 
     /**
