@@ -5,6 +5,7 @@ namespace App;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\GreetVerification;
+use App\Notifications\VerifyApiEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\InactiveUserNotification;
@@ -57,6 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphTo();
     }
 
-    
+    public function sendApiEmailVerificationNotification()
+    {
+        $this->notify(new VerifyApiEmail); // my notification
+    }
 
 }

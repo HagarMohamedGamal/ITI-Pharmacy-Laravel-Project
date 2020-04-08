@@ -16,10 +16,10 @@ class ClientResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'user info' => new UserResource(
                 $this->type
             ),
+            'id' => $this->id,
             'avatar'=>$this->avatar,
             'national_id'=>$this->national_id,
             'gender'=>$this->gender,
