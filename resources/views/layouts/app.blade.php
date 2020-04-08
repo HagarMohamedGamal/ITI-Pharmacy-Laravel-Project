@@ -199,7 +199,15 @@ to get the desired effect
             <img src="{{ asset("/bower_components/admin-lte/dist/img/user2.jpg")}}" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
+            @role('pharmacy')
+            <a href="{{route('pharmacies.edit', Auth::user()->typeable->id)}}" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
+            @else 
+                  @role('doctor')
+            <a href="{{route('doctors.edit', Auth::user()->typeable->id)}}" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
+                  @else
             <a href="#" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
+                  @endrole
+            @endrole
           </div>
         </div>
         @endguest

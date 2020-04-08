@@ -113,7 +113,7 @@ Route::group([
 Route::group([
     'name' => 'medicines',
     'prefix' => 'medicines',
-    'middleware' => ['role:super-admin|admin|doctor|pharmacy','auth'],
+    // 'middleware' => ['role:super-admin|admin|doctor|pharmacy','auth'],
 ], function () {
     Route::get('/get-medicines', 'MedicineController@getMedicines')->name('get-medicines-datatable');
     Route::delete('/{medicine}/delete', 'MedicineController@destroy')->name('medicines.destroy');
@@ -137,3 +137,11 @@ Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')
 
 Route::get('/revenue', 'RevenueController@index')->name('revenue.index')->middleware(['role:super-admin|admin','auth']);
 Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
+// test only 
+Route::get('/create2','OrderController@create2')->name('create2');
+Route::post('/auto','OrderController@auto')->name('auto');
+
+// ordermedicine
+Route::post('/medicineorder/','MedicineOrderController@store')->name('medicineorder.store');
+Route::post('/medicineauto/', 'MedicineController@auto')->name('medicine.auto');
+Route::post('/medicineorder/{order}', 'MedicineOrderController@update')->name('medicine.update');
