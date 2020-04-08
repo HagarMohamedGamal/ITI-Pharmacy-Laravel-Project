@@ -3,27 +3,30 @@
 @section('content')
 
 <div class="container-fluid">
-
+  @role('doctor')
   <div align="right">
-    <button type="button" name="create_record" id="create_record" class="btn btn-success btn-sm">Create Record</button>
+    <a type="button" href="/orders/create" class="btn btn-success btn-sm">New Order</a>
   </div>
+  @endrole
   <br />
   <div class="table-responsive">
     <table class="table table-bordered table-striped" id="order_table">
       <thead>
         <tr>
-          <th width="15%">user_id</th>
-          <th width="15%">doctor_id</th>
-          <th width="20%">status</th>
-          <th width="20%">creator_type</th>
+          <th width="20%">user</th>
+          <th width="15%">price</th>
+          <th width="15%">status</th>
+          
+          <th width="20%">pharmacy</th>
+          
           <th width="30%">Action</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
-          <th width="15%"></th>
-          <th width="15%"></th>
           <th width="20%"></th>
+          <th width="15%"></th>
+          <th width="15%"></th>
           <th width="20%"></th>
           <th width="30%"></th>
 
@@ -34,7 +37,7 @@
   <br />
   <br />
 </div>
-<div id="formModal" class="modal fade" role="dialog">
+<!-- <div id="formModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -87,14 +90,7 @@
               <input type="text" name="pharmacy_id" id="pharmacy_id" class="form-control" />
             </div>
           </div>
-            <div class="form-group">
-                <label class="control-label col-md-4">Medicines </label>
-                <select class="form-control select2" multiple="multiple" required id="medicine_select" name="medicine_select[]">
-                        @foreach($medicines as $medicine)
-                            <option value="{{$medicine['id']}}">{{$medicine['name']}}</option>
-                        @endforeach
-                </select>
-            </div>
+         
           <div class="form-group">
             <label class="control-label col-md-4">Actions </label>
             <div class="col-md-8">
@@ -111,7 +107,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <div id="confirmModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -120,7 +116,7 @@
         <h2 class="modal-title">Confirmation</h2>
       </div>
       <div class="modal-body">
-        <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+        <h4 align="center" style="margin:0;">Are you sure you want to remove this order?</h4>
       </div>
       <div class="modal-footer">
         <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
@@ -133,8 +129,7 @@
 
 <script>
   $(document).ready(function() {
-       $(".select2").select2({
-       });
+    $(".select2").select2({});
 
     $('#order_table').DataTable({
       processing: true,
@@ -145,31 +140,33 @@
 
       columns: [{
 
-          data: 'user_id',
-          name: 'user_id',
+          data: 'user.type.name',
+          // name: 'user_id',
 
         },
         {
-          data: 'doctor_id',
-          name: 'doctor_id',
+
+          data: 'price',
+          // name: 'creator_type'
         },
         {
           data: 'status',
-          name: 'status'
+          // name: 'doctor_id',
         },
         {
-
-          data: 'creator_type',
-          name: 'creator_type'
+          data: 'pharmacy.type.name',
+          name: 'pharmacy'
         },
+
         {
           data: 'action',
           name: 'action',
           orderable: false,
-          searchable:false,
+          searchable: false,
         }
       ]
     });
+
     $('#order_table tfoot th').each(function() {
       var title = $(this).text();
       $(this).html('<input type="text" placeholder="Search ' + title + '" />');
@@ -191,84 +188,84 @@
       });
     });
 
-    $('#create_record').click(function() {
-      $('.modal-title').text("Add New Record");
-      $('#action_button').val("Add");
-      $('#action').val("Add");
-      $('#formModal').modal('show');
-    });
+    // $('#create_record').click(function() {
+    //   $('.modal-title').text("Add New Record");
+    //   $('#action_button').val("Add");
+    //   $('#action').val("Add");
+    //   $('#formModal').modal('show');
+    // });
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
 
-    $('#sample_form').on('submit', function(event) {
-      event.preventDefault();
-      if ($('#action').val() == 'Add') {
-        $.ajax({
-          url: "{{ route('orders.store') }}",
-          method: "POST",
-          data: new FormData(this),
-          contentType: false,
-          cache: false,
-          processData: false,
-          dataType: "json",
-          success: function(data) {
-            var html = '';
-            if (data.errors) {
-              html = '<div class="alert alert-danger">';
-              for (var count = 0; count < data.errors.length; count++) {
-                html += '<p>' + data.errors[count] + '</p>';
-              }
-              html += '</div>';
-            }
-            if (data.success) {
-              html = '<div class="alert alert-success">' + data.success + '</div>';
-              $('#sample_form')[0].reset();
-              $('#order_table').DataTable().ajax.reload();
-            }
-            $('#form_result').html(html);
-          }
-        })
-      }
+    // $('#sample_form').on('submit', function(event) {
+    //   event.preventDefault();
+    //   if ($('#action').val() == 'Add') {
+    //     $.ajax({
+    //       url: "{{ route('orders.store') }}",
+    //       method: "POST",
+    //       data: new FormData(this),
+    //       contentType: false,
+    //       cache: false,
+    //       processData: false,
+    //       dataType: "json",
+    //       success: function(data) {
+    //         var html = '';
+    //         if (data.errors) {
+    //           html = '<div class="alert alert-danger">';
+    //           for (var count = 0; count < data.errors.length; count++) {
+    //             html += '<p>' + data.errors[count] + '</p>';
+    //           }
+    //           html += '</div>';
+    //         }
+    //         if (data.success) {
+    //           html = '<div class="alert alert-success">' + data.success + '</div>';
+    //           $('#sample_form')[0].reset();
+    //           $('#order_table').DataTable().ajax.reload();
+    //         }
+    //         $('#form_result').html(html);
+    //       }
+    //     })
+    //   }
 
-      if ($('#action').val() == "Edit") {
-        // id = $('#hidden_id').val();
-        $.ajax({
-          url: "/orders",
-          type: "PUT",
-          data: new FormData(this),
-          contentType: false,
-          cache: false,
-          processData: false,
-          dataType: "json",
-
-
-          success: function(data) {
-            var html = '';
-            if (data.errors) {
-              html = '<div class="alert alert-danger">';
-              for (var count = 0; count < data.errors.length; count++) {
-                html += '<p>' + data.errors[count] + '</p>';
-              }
-              html += '</div>';
-            }
-            if (data.success) {
-              html = '<div class="alert alert-success">' + data.success + '</div>';
-              $('#sample_form')[0].reset();
-              $('#store_image').html('');
-              $('#order_table').DataTable().ajax.reload();
-            }
-            $('#form_result').html(html);
-          }
-
-        });
-      }
+    //   if ($('#action').val() == "Edit") {
+    //     // id = $('#hidden_id').val();
+    //     $.ajax({
+    //       url: "/orders",
+    //       type: "PUT",
+    //       data: new FormData(this),
+    //       contentType: false,
+    //       cache: false,
+    //       processData: false,
+    //       dataType: "json",
 
 
+    //       success: function(data) {
+    //         var html = '';
+    //         if (data.errors) {
+    //           html = '<div class="alert alert-danger">';
+    //           for (var count = 0; count < data.errors.length; count++) {
+    //             html += '<p>' + data.errors[count] + '</p>';
+    //           }
+    //           html += '</div>';
+    //         }
+    //         if (data.success) {
+    //           html = '<div class="alert alert-success">' + data.success + '</div>';
+    //           $('#sample_form')[0].reset();
+    //           $('#store_image').html('');
+    //           $('#order_table').DataTable().ajax.reload();
+    //         }
+    //         $('#form_result').html(html);
+    //       }
 
-    });
+    //     });
+    //   }
+
+
+
+    // });
     $(document).on('click', '.edit', function() {
       var id = $(this).attr('id');
       $('#form_result').html('');
@@ -285,7 +282,7 @@
           $('#pharmacy_id').val(html.data.pharmacy_id);
           $('#Actions').val(html.data.Actions);
           console.log(html.medicine_ids);
-          $('#medicine_select').val( html.medicine_ids).trigger('change');
+          $('#medicine_select').val(html.medicine_ids).trigger('change');
           $('#hidden_id').val(html.data.id);;
           $('.modal-title').text("Edit New Record");
           $('#action_button').val("Edit");
