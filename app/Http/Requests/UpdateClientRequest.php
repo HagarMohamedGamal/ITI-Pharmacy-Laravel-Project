@@ -4,8 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Client;
+use App\User;
 
-class StoreClientRequest extends FormRequest
+class UpdateClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +26,20 @@ class StoreClientRequest extends FormRequest
      */
     public function rules()
     {
+        $client= Client::find(Request()->client);
+        // $user = User::find($client->type->id);
+        // dd($user);
         return [
             'name' => 'required|min:2',
-            'email' => 'unique:App\User,email|required|email',
-            'password' => 'required|min:6',
-            'national_id' => 'unique:App\Pharmacy,national_id|min:10',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($client->type->id),
+            ],
+            'national_id' => [
+                Rule::unique('clients')->ignore(Request()->client),
+                'min:10'
+            ],
             'avatar' => 'image|mimes:jpg,jpeg',
             'gender' => [
                     'required',
@@ -42,9 +53,8 @@ class StoreClientRequest extends FormRequest
     public function messages()
     {
         return [
-            'name' => 'Please the enter name'
-
+            'name.required' => 'name xxx is required',
+            'name.min'  => 'name must be larger than 2 chars',
         ];
     }
-
 }

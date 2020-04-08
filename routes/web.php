@@ -25,7 +25,7 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
-    'middleware' =>['role:super-admin|admin|pharmacy', 'auth', 'verified'],
+    'middleware' =>['role:super-admin|admin|pharmacy', 'auth'],
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
 
@@ -34,12 +34,8 @@ Route::group([
     Route::post('/', 'DoctorController@store')->name('doctors.store');
     Route::delete('/{doctor}', 'DoctorController@destroy')->name('doctors.destroy');
 });
-Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit');
-// ->middleware(['
-//     role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
-Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update');
-// ->middleware(['
-//     role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth', 'verified']);
+Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
+Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
 
 
 Route::group([
@@ -75,15 +71,13 @@ Route::group([
 Route::group([
     'name' => 'pharmacies',
     'prefix' => 'pharmacies',
-    //'middleware' => ['role:super-admin|admin', 'auth', 'verified'],
+    'middleware' => ['role:super-admin|admin', 'auth'],
 ], function () {
     Route::get('/', 'PharmacyController@index')->name('pharmacies.index');
     Route::get('/create', 'PharmacyController@create')->name('pharmacies.create');
     Route::post('/', 'PharmacyController@store')->name('pharmacies.store');
     Route::delete('/{pharmacy}', 'PharmacyController@destroy')->name('pharmacies.destroy');
 
-    Route::get('indexList', 'PharmacyController@indexList');
-    
     Route::get('/{pharmacy}/softdelete', 'PharmacyController@softdelete')->name('pharmacies.softdelete');
     Route::get('/readsoftdelete', 'PharmacyController@readsoftdelete')->name('pharmacies.readsoftdelete');
     Route::get('{pharmacy}/restore', 'PharmacyController@restore')->name('pharmacies.restore');
@@ -93,11 +87,11 @@ Route::group([
 Route::put(
     '/pharmacies/{pharmacy}',
     'PharmacyController@update'
-)->name('pharmacies.update')->middleware(['auth', 'verified']);
+)->name('pharmacies.update')->middleware(['auth']);
 Route::get(
     '/pharmacies/{pharmacy}/edit',
     'PharmacyController@edit'
-)->name('pharmacies.edit')->middleware(['role_or_permission:super-admin|admin|update pharmacy', 'auth', 'verified']);
+)->name('pharmacies.edit')->middleware(['role_or_permission:super-admin|admin|update pharmacy', 'auth']);
 
 Route::group([
     'name' => 'orders',

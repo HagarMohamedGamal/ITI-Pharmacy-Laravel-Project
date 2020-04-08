@@ -13,8 +13,27 @@ class UserAddressController extends Controller
     public function index()
     {
         $userAddresses = UserAddress::all();
+        if(request()->ajax()){
+            return $this->indexDataTable();
+        }
         return view('userAddresses.index');
     }
+    function indexDataTable()
+    {
+
+            $userAddresses = UserAddress::query();
+            return DataTables()::of($userAddresses)
+            ->addColumn('action', function(UserAddress $userAddresse){
+
+                $button = '<a name="show" id="'.$userAddresse->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/useraddresses/'.$userAddresse->id.'"><i class="fas fa-eye m-2"></i></a>';
+                $button .= '<a name="edit" id="'.$userAddresse->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/useraddresses/'.$userAddresse->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
+                $button .= '<button type="button" name="delete" id="'.$userAddresse->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
+                    return $button;
+                
+            })
+            ->toJson();
+    }
+
 
     public function show()
     {

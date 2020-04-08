@@ -53,7 +53,7 @@ class PharmacyPolicy
      */
     public function update(User $user, Pharmacy $pharmacy)
     {
-       return ($user->typeable_id === $pharmacy->id)||$user->hasRole('super_admin');
+       return ($user->typeable_id === $pharmacy->id)||$user->hasRole('super-admin');
     }
 
     /**

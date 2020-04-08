@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Order;
 use App\Pharmacy;
+use App\User;
 use DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,10 +23,11 @@ class RevenueControllerForPharmacy extends Controller
         $id = Auth::id();
         // dd($id);
         $pharmacy=Pharmacy::find($id);
-        // dd($pharmacies);
+        $pharmacy_name=User::find($id)->name;
+        // dd($pharmacy);
         return view('revenuePerPharmacy.index',[
             'pharmacy' => $pharmacy,
-            // 'ordersCount' => $ordersCount,
+            'pharmacy_name' => $pharmacy_name,
             // 'totalIncome' => $totalIncome,
         ]);
     }

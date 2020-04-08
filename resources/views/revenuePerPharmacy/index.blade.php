@@ -7,6 +7,7 @@
               <thead>
                 <tr>
                   <th scope="col">Pharmacy ID</th>
+                  <th scope="col">Pharmacy Name</th>
                   <th scope="col">Total Orders</th>
                   <th scope="col">TotalRevenue</th>
                 </tr>
@@ -14,6 +15,7 @@
               <tbody>
                 <tr>
                     <td>{{ $pharmacy->id}}</td>
+                    <td>{{ $pharmacy_name}}</td>
                     <td>{{ $pharmacy->orders->count() }}</td>
                     <td>{{ $pharmacy->orders->sum("price") }}</td>
                 </tr>

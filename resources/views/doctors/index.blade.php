@@ -24,7 +24,11 @@
                     <th>name</th>
                     <th>email</th>
                     <th>national id</th>
+                    @role('pharmacy')
+                    @else
                     <th>pharmacy name</th>
+                    @endrole
+                    <th>created at</th>
                     <th>action</th>
                   </tr>
                 </thead>
@@ -63,45 +67,82 @@
     </div>
   </div>
 </div>
-<!-- <script src="{{asset('/js/doctors.js')}}"></script> -->
 
 
 
 <script type="text/javascript">
   $(function() {
-    table = $("#doctorIndextable").DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: {
-        url: '/doctors'
-      },
-      columns: [{
-          data: 'id',
-          name: 'id'
+    if ("{{auth()->user()->hasrole('pharmacy')}}") {
+      table = $("#doctorIndextable").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: '/doctors'
         },
-        {
-          data: 'name',
-          name: 'name'
+        columns: [{
+            data: 'id',
+            name: 'id'
+          },
+          {
+            data: 'name',
+            name: 'name'
+          },
+          {
+            data: 'email',
+            name: 'email'
+          },
+          {
+            data: 'national_id',
+            name: 'national_id'
+          },
+          {
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'action',
+            name: 'action'
+          },
+        ]
+      });
+    } else {
+      table = $("#doctorIndextable").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: '/doctors'
         },
-        {
-          data: 'email',
-          name: 'email'
-        },
-        {
-          data: 'national_id',
-          name: 'national_id'
-        },
-        {
-          data: 'pharmacy_id',
-          name: 'pharmacy_id'
-        },
-        {
-          data: 'action',
-          name: 'action'
-        },
-      ]
-    });
-
+        columns: [{
+            data: 'id',
+            name: 'id'
+          },
+          {
+            data: 'name',
+            name: 'name'
+          },
+          {
+            data: 'email',
+            name: 'email'
+          },
+          {
+            data: 'national_id',
+            name: 'national_id'
+          },
+          {
+            data: 'pharmacy_id',
+            name: 'pharmacy_id'
+          },
+          {
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'action',
+            name: 'action'
+          },
+        ]
+      });
+    }
 
 
 
