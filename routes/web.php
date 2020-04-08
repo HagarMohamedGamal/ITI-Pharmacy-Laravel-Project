@@ -135,10 +135,10 @@ Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 
-Route::get('/revenue', 'RevenueController@index')->name('revenue.index')/*->middleware(['role:super-admin|admin','auth'])*/;
+Route::get('/revenue', 'RevenueController@index')->name('revenue.index')->middleware(['role:super-admin|admin','auth']);
 Route::get('ajaxdata/getAllData', 'RevenueController@getalldata')->name('ajaxdata.getAllData');
 
-Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')/*->middleware(['role:pharmacy','auth'])*/;
+Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
 Route::get('ajaxdata/getdata', 'RevenueControllerForPharmacy@getdata')->name('ajaxdata.getdata');
 
 // test only 
