@@ -27,19 +27,20 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        $client= Client::where('id', Request()->client);
-        if($client->count()>0)
+        $exist= User::where('id', Request()->client);
+        if($exist->count()>0)
         {
-            $client= Client::find(Request()->client);
+            $user= User::find(Request()->client);
+            $client= Client::find($user->typeable->id);
             return [
                 'name' => 'required|min:2',
                 'email' => [
                     'required',
                     'email',
-                    Rule::unique('users')->ignore($client->type->id),
+                    Rule::unique('users')->ignore($user->id),
                 ],
                 'national_id' => [
-                    Rule::unique('clients')->ignore(Request()->client),
+                    // Rule::unique('clients')->ignore($client->id),
                     'min:10'
                 ],
                 'avatar' => 'image|mimes:jpg,jpeg',

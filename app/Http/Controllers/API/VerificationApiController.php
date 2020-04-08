@@ -29,8 +29,9 @@ class VerificationApiController extends Controller
 		$userID = $request['id'];
 		$user = User::findOrFail($userID);
 		$date = date("Y-m-d g:i:s");
-		$user->email_verified_at = $date; // to enable the “email_verified_at field of that user be a current time stamp by mimicing the must verify email feature
+		$user->email_verified_at = $date; 
 		$user->save();
+		dd($user);
 		return response()->json('Email verified!');
 	}
 	/**
@@ -41,16 +42,26 @@ class VerificationApiController extends Controller
 	*/
 	public function resend(Request $request)
 	{
-		if ($request->user()->hasVerifiedEmail()) {
+		$user = User::find($request->id);
+		if ($user->email_verified_at) {
 		return response()->json('User already have verified email!', 422);
 		// return redirect($this->redirectPath());
 	}
-		$request->user()->sendEmailVerificationNotification();
+		$user->sendEmailVerificationNotification();
 		return response()->json('The notification has been resubmitted');
 		// return back()->with('resent', true);
 	}
 
 
 
-	
+	public function verifyLink(Request $request)
+	{
+		$userID = $request->id;
+		$user = User::find($userID);
+        $user->sendApiEmailVerificationNotification();
+        return [
+        	'Data' => $user,
+        	'Verfication Email' => 'If you didn\'t receive any verification Email click http://pharmacy.test/api/email/resend/'.$userID
+        ];
+	}
 }

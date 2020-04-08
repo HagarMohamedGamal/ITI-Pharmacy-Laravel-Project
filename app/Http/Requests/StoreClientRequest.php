@@ -42,7 +42,7 @@ class StoreClientRequest extends FormRequest
     public function messages()
     {
         return [
-            'name' => 'Please the enter name'
+            'name' => 'enter name is required > 2 chars'
 
         ];
     }

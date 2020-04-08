@@ -107,15 +107,16 @@ class ClientController extends Controller
         $success['message'] = 'Please confirm yourself by clicking on verify user button sent to you on your email';
         return response()->json([
             'success' => $success,
+            'verification Link' => 'http://pharmacy.test/api/email/verifyLink/'.$user->id,
             'Data' => new ClientResource($clientUser)
         ], $this->successStatus);
         return new ClientResource($clientUser);
     }
 
 
-    public function update(UpdateClientRequest $request, $client)
+    public function update(UpdateClientRequest $request)
     {
-        $exist = User::where('id', $client);
+        $exist = User::where('id', $request->client);
         if ($exist->count()>0) 
         {
             $client = $request->only(['name', 'email' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
@@ -130,7 +131,7 @@ class ClientController extends Controller
                 $new_name = "default.jpg";
             }
 
-           $user = User::find($client);
+           $user = User::find($request->client);
            $updateclient = Client::find($user->typeable->id);
             $user->update([
                 'name'=> $client['name'],

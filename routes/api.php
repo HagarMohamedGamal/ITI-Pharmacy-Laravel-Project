@@ -24,15 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('clients/login', 'API\ClientController@login');
 Route::post('/clients/register', 'API\ClientController@register');
-Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum','verified']);
-Route::put('/clients/{client}', 'API\ClientController@update')->middleware('auth:sanctum');
-Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware('auth:sanctum');
-Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:sanctum');
+Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum','APIverified']);
+Route::put('/clients/{client}', 'API\ClientController@update')->middleware(['auth:sanctum','verified']);
+Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware(['auth:sanctum','verified']);
+Route::get('/clients/{client}', 'API\ClientController@show')->middleware(['auth:sanctum','verified']);
 
 
 
-Route::get('email/verify/{id}', 'VerificationApiController@verify')->name('verificationapi.verify');
-Route::get('email/resend', 'VerificationApiController@resend')->name('verificationapi.resend');
+Route::get('email/verifyLink/{id}', 'API\VerificationApiController@verifyLink')->name('verificationapi.verifyLink');
+Route::get('email/verify/{id}', 'API\VerificationApiController@verify')->name('verificationapi.verify');
+Route::get('email/resend/{id}', 'API\VerificationApiController@resend')->name('verificationapi.resend');
 
 
 
