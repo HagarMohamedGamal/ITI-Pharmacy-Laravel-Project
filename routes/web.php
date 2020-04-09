@@ -25,10 +25,9 @@ Route::get('/admin', function () {
 Route::group([
     'name' => 'doctors',
     'prefix' => 'doctors',
-    'middleware' => ['role:super-admin|admin|pharmacy', 'auth'],
+    'middleware' =>['role:super-admin|admin|pharmacy', 'auth'],
 ], function () {
     Route::get('/', 'DoctorController@index')->name('doctors.index');
-
     Route::get('/create', 'DoctorController@create')->name('doctors.create');
     Route::get('/{doctor}', 'DoctorController@show')->name('doctors.show');
     Route::post('/', 'DoctorController@store')->name('doctors.store');
@@ -36,6 +35,21 @@ Route::group([
 });
 Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
 Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
+
+Route::group([
+    'name' => 'clients',
+    'prefix' => 'clients',
+    'middleware' =>['role:super-admin|admin', 'auth'],
+
+], function () {
+    Route::get('/', 'ClientController@index')->name('clients.index');
+    Route::get('/create', 'ClientController@create')->name('clients.create');
+    Route::get('/{client}', 'ClientController@show')->name('clients.show');
+    Route::post('/', 'ClientController@store')->name('clients.store');
+    Route::delete('/{client}', 'ClientController@destroy')->name('clients.destroy');
+});
+Route::get('/clients/{client}/edit', 'ClientController@edit')->name('clients.edit')->middleware(['role_or_permission:super-admin|admin', 'auth']);
+Route::put('/clients/{client}', 'ClientController@update')->name('clients.update')->middleware(['role_or_permission:super-admin|admin', 'auth']);
 
 
 Route::group([
@@ -130,7 +144,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/roles', 'RolesController@create');
 
-Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
+Route::get('stripe/{order}', 'OrderController@pay')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 

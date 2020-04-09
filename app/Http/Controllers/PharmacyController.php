@@ -37,10 +37,10 @@ class PharmacyController extends Controller
                 })
                 ->addColumn('action', function(Pharmacy $pharmacy) {
 
-                    $button = '<a name="show" id="'.$pharmacy->id.'" class="show btn btn-success btn-sm" href="/pharmacies/'.$pharmacy->id.'">Show</a>';
-                    $button .= '<a name="edit" id="'.$pharmacy->id.'" class="edit btn btn-primary btn-sm" href="/pharmacies/'.$pharmacy->id.'/edit">Edit</a>';
+                    $button = '<a name="show" id="'.$pharmacy->id.'" class="show btn btn-success btn-sm p-0" href="/pharmacies/'.$pharmacy->id.'" style="border-radius: 20px;"><i class="fas fa-eye m-2"></i></a>';
+                    $button .= '<a name="edit" id="'.$pharmacy->id.'" class="edit btn btn-primary btn-sm p-0" href="/pharmacies/'.$pharmacy->id.'/edit" style="border-radius: 20px;"><i class="fas fa-edit m-2"></i></a>';
                     // $button .= '&nbsp;&nbsp;';
-                    $button .= '<button type="button" name="delete" id="'.$pharmacy->id.'" class="delete btn btn-danger btn-sm">Delete</button>';
+                    $button .= '<button type="button" name="delete" id="'.$pharmacy->id.'" class="delete btn btn-danger btn-sm p-0" style="border-radius: 20px;"><i class="fas fa-trash m-2"></i></button>';
                     return $button;
                     
                 })
@@ -156,10 +156,9 @@ class PharmacyController extends Controller
 
     public function destroy(Request $request)
     {
-        
         $pharmacyId = $request->pharmacy;
         $pharmacy = Pharmacy::withTrashed()
-                ->where('id', $request->pharmacy)
+                ->where('id', $pharmacyId)
                 ->get()->first();
         $pharmacy->forceDelete();
         return response()->json([

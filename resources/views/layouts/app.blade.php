@@ -286,6 +286,30 @@ to get the desired effect
                 @else
                 @endhasanyrole
 
+                @role('pharmacy')
+                <li class="nav-item">
+                  <a href="{{route('revenue1.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Revenue</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
+                @role('super-admin')
+                <li class="nav-item">
+                  <a href="{{route('clients.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Clients</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('revenue.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Revenue</p>
+                  </a>
+                </li>
+                @else
+                @endhasanyrole
 
               </ul>
             </li>

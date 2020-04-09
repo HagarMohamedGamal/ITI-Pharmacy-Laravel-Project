@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\User;
 
-class UpdateClientRequest extends FormRequest
+class UpdateClientRequestWeb extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,19 +27,19 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        $client= User::find(Request()->client);
-        if($client)
-        {
-            $client= User::find(Request()->client);
+        // $client= Client::where('id', Request()->client);
+        // if($client->count()>0)
+        // {
+            $client= Client::find(Request()->client);
             return [
                 'name' => 'required|min:2',
                 'email'=> [
                     'email',
                     'required',
-                    Rule::unique('users')->ignore($client->id)
+                    Rule::unique('users')->ignore($client->type->id)
                 ],
                 'national_id' => [
-                    Rule::unique('clients')->ignore($client->typeable->id),
+                    Rule::unique('clients')->ignore(Request()->client),
                     'min:10'
                 ],
                 'avatar' => 'image|mimes:jpg,jpeg',
@@ -50,8 +50,8 @@ class UpdateClientRequest extends FormRequest
                 'birth_day' => 'required|Date',
                 'mobile' => 'required|numeric',
             ]; 
-        }
-        return [];
+        // }
+        // return [];
     }
 
     public function messages()

@@ -12,5 +12,6 @@ $factory->define(App\Client::class, function (Faker $faker) {
             'gender' => $faker->title($gender = 'male'|'female') ,
             'birth_day' => $faker->date($format = 'Y-m-d', $max = 'now'),
             'mobile'  => $faker->randomNumber($nbDigits = NULL, $strict = false),
+            'last_login' => now(),
     ];
 });

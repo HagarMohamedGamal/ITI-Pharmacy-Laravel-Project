@@ -17,7 +17,7 @@
             @method('PUT')
             @csrf
             <div class="card-body">
-              <table class="table table-bordered" id="doctorIndextable">
+              <table class="table table-bordered" id="clientIndextable">
                 <thead>
                   <tr>
                     <th>id</th>
@@ -25,10 +25,6 @@
                     <th>name</th>
                     <th>email</th>
                     <th>national id</th>
-                    @role('pharmacy')
-                    @else
-                    <th>pharmacy name</th>
-                    @endrole
                     <th>created at</th>
                     <th>action</th>
                   </tr>
@@ -73,52 +69,11 @@
 
 <script type="text/javascript">
   $(function() {
-    if ("{{auth()->user()->hasrole('pharmacy')}}") {
-      table = $("#doctorIndextable").DataTable({
+      table = $("#clientIndextable").DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-          url: '/doctors'
-        },
-        columns: [{
-            data: 'id',
-            name: 'id'
-          },
-          {
-            data: 'avatar',
-            name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::to('/') }}/avatars/" + data + " width='70' class='img-thumbnail' />";
-                } 
-          },
-          {
-            data: 'name',
-            name: 'name'
-          },
-          {
-            data: 'email',
-            name: 'email'
-          },
-          {
-            data: 'national_id',
-            name: 'national_id'
-          },
-          {
-            data: 'created_at',
-            name: 'created_at'
-          },
-          {
-            data: 'action',
-            name: 'action'
-          },
-        ]
-      });
-    } else {
-      table = $("#doctorIndextable").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-          url: '/doctors'
+          url: '/clients'
         },
         columns: [{
             data: 'id',
@@ -144,10 +99,6 @@
             name: 'national_id'
           },
           {
-            data: 'pharmacy_id',
-            name: 'pharmacy_id'
-          },
-          {
             data: 'created_at',
             name: 'created_at'
           },
@@ -157,13 +108,10 @@
           },
         ]
       });
-    }
-
-
 
 
     $(document).on('click', '.delete', function() {
-      doctor_id = $(this).attr('id');
+      client_id = $(this).attr('id');
 
       const token = $('meta[name="csrf-token"]').attr('content');
       console.log(token);
@@ -173,10 +121,10 @@
     $('#ok_button').click(function() {
       const token = $('meta[name="csrf-token"]').attr('content');
       $.ajax({
-        url: "/doctors/" + doctor_id,
+        url: "/clients/" + client_id,
         type: "delete",
         data: {
-          'id': doctor_id,
+          'id': client_id,
           '_token': token,
         },
         beforeSend: function() {
@@ -186,7 +134,7 @@
           setTimeout(function() {
             $('#confirmModal').modal('hide');
             $('#ok_button').text('OK');
-            $('#doctorIndextable').DataTable().ajax.reload();
+            $('#clientIndextable').DataTable().ajax.reload();
           }, 2000);
         }
       })
