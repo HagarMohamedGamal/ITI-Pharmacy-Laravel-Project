@@ -53,6 +53,7 @@ class OrderController extends Controller
     public function create()
     {
         $clients = Client::all();
+
         return view('orders.create', [
             'clients' => $clients
         ]);
@@ -60,52 +61,46 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->delivering_address);
-        // $request->validate([
-        //   'is_insured' => 'boolean',
-        // ]);
-
+        $user = Auth::user();
         $useradd = UserAddress::find($request->delivering_address);
-        $pharmacy = Pharmacy::where('area_id', $useradd->area_id)->orderby('priority', 'desc')->first();
+        $doctor = null;
+        $status = 'Processing';
 
-        $doctor = Auth::user();
+        if ($user->hasRole('doctor')) {
+            $doctor = Doctor::find($user->typeable_id);
+            $creator = 'doctor';
+            $pharmacy = Pharmacy::find($doctor->pharmacy_id);
+            $doctor = $doctor->id;
+        } elseif ($user->hasRole('pharmacy')) {
+            $creator = 'pharmacy';
+            $pharmacy = Pharmacy::find($user->typeable_id);
+        } else {
+            $creator = 'admin';
+            $pharmacy = Pharmacy::where('area_id', $useradd->area_id)->orderby('priority', 'desc')->first();
+            $status = 'new';
+        }
+
+
+        $doctor = Auth::user()->typeable_id;
+
 
         $order = Order::create([
             'user_id' => $request->user_id,
             'useraddress_id' => $request->delivering_address,
-            'doctor_id' => $doctor->typeable_id,
-            'is_insured' => $request->is_insured,
-            'status' => 'Processing',
+            'doctor_id' => $doctor,
+            'is_insured' => $request->is_insured ? $request->is_insured : 0,
+            'status' => $status,
             'pharmacy_id' => $pharmacy->id,
             'Actions' => '--',
-            'creator_type' => 'Doctor'
+            'creator_type' => $creator
         ]);
-
-
-        // if ($request->has('medicine_select')) {
-        //   $selected_medicines = $request->get('medicine_select');
-        //   $order->medicines()->sync($selected_medicines);
-        // }
 
         return redirect("/orders/$order->id");
     }
 
 
-    public function edit($id)
+    public function edit()
     {
-        $order = Order::find($id);
-        $this->authorize('update', $order);
-        if (request()->ajax()) {
-            $data = Order::findOrFail($id);
-            $medicines_id = $data->medicines()->pluck('id')->toArray();
-            return response()->json(['data' => $data, 'medicine_ids' => $medicines_id]);
-        }
-        // $request = request();
-        // $orderId = $request->order;
-        // $order = Order::find($orderId);
-        // return view('orders.edit', [
-        //   'order' => $order,
-        // ]);
     }
 
     public function update(Request $request)
@@ -127,9 +122,9 @@ class OrderController extends Controller
         $user = Auth::user();
         $order = Order::find($request->order);
         // $this->authorize('view', $order);
-        // if ($user->hasRole('pharmacy'))
-        if ($order->status == 'new')
-            $order->status = 'Processing';
+        if ($user->hasAnyRole('pharmacy , doctor'))
+            if ($order->status == 'new')
+                $order->status = 'Processing';
         $order->save();
 
         $ordersId = $request->order;
@@ -157,7 +152,7 @@ class OrderController extends Controller
         $ordersId = $request->order;
         $order = Order::find($ordersId);
         $amountTotal = DB::table("orders")->select(DB::raw("SUM((medicines.price /100)* medicine_order.quantity) as total_price"))->leftjoin("medicine_order", "medicine_order.order_id", "=", "orders.id")->leftjoin("medicines", "medicine_order.medicine_id", "=", "medicines.id")->where('orders.id', $order->id)->first();
-        $userData = DB::table("users")->select(DB::raw("users.name as username"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
+        $userData = DB::table("users")->select(DB::raw("users.name as username"))->leftjoin("orders", "orders.user_id", "=", "users.id")->where('orders.id', $order->id)->first();
         return view('stripe', [
             'order' => $order->id,
             'amountTotal' => $amountTotal->total_price,
