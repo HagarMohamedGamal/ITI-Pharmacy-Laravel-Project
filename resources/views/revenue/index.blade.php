@@ -15,16 +15,28 @@
                 </tr>
               </thead>
 
+              <tfoot>
+                <tr>
+                  <th ></th>
+                  <th ></th>
+                  <th ></th>
+                  <th ></th>
+
+                </tr>
+              </tfoot>
+
             </table>
       </div>
 
 
       <script type="text/javascript">
-      $(document).ready(function() {
-           $('#reveueTable').DataTable({
+    $(document).ready(function() {
+       $('#reveueTable').DataTable({
               "processing": true,
-              "serverSide": true,
               "responsive": true,
+              "searchable": false,
+
+
               "ajax": "{{ route('ajaxdata.getAllData') }}",
               "columns":[
                   { "data": "id" },
@@ -33,6 +45,25 @@
                   { "data": "totalRevenue" }
               ]
            });
+
+      $('#reveueTable tfoot th').each(function() {
+        var title = $(this).text();
+        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
       });
+      var table = $('#reveueTable').DataTable();
+      table.columns().every(function() {
+        var that = this;
+
+        $('input', this.footer()).on('keyup change clear', function() {
+          if (that.search() !== this.value) {
+            that
+              .search(this.value)
+              .draw();
+          }
+        });
+      });
+      $("#reveueTable_filter").css("visibility","hidden");
+
+    });
       </script>
 @endsection

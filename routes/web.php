@@ -154,7 +154,7 @@ Route::get('ajaxdata/getAllData', 'RevenueController@getalldata')->name('ajaxdat
 Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
 Route::get('ajaxdata/getdata', 'RevenueControllerForPharmacy@getdata')->name('ajaxdata.getdata');
 
-// test only 
+// test only
 Route::get('/create2','OrderController@create2')->name('create2');
 Route::post('/auto','OrderController@auto')->name('auto');
 
