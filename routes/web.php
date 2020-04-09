@@ -144,7 +144,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/roles', 'RolesController@create');
 
-Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
+Route::get('stripe/{order}', 'OrderController@pay')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 
