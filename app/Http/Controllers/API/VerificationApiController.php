@@ -31,7 +31,6 @@ class VerificationApiController extends Controller
 		$date = date("Y-m-d g:i:s");
 		$user->email_verified_at = $date; 
 		$user->save();
-		dd($user);
 		return response()->json('Email verified!');
 	}
 	/**
@@ -59,9 +58,9 @@ class VerificationApiController extends Controller
 		$userID = $request->id;
 		$user = User::find($userID);
         $user->sendApiEmailVerificationNotification();
-        return [
+        return response()->json([
+        	'Verfication Email' => 'If you didn\'t receive any verification Email click http://pharmacy.test/api/email/resend/'.$userID,
         	'Data' => $user,
-        	'Verfication Email' => 'If you didn\'t receive any verification Email click http://pharmacy.test/api/email/resend/'.$userID
-        ];
+            ], 403);
 	}
 }

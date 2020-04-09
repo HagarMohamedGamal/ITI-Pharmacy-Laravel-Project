@@ -20,9 +20,11 @@ class EnsureEmailIsVerifiedAPI
         if (! $request->user() ||
             ($request->user() instanceof MustVerifyEmail &&
             ! $request->user()->hasVerifiedEmail())) {
-            return $request->expectsJson()
-                    ? abort(403, 'Your email address is not verified. click this link to verify your email '.'http://pharmacy.test/api/email/verifyLink/'.$request->user()->id)
-                    : Redirect::route($redirectToRoute ?: 'verification.notice');
+
+            return redirect()->route('verificationapi.verifyLink', $request->user()->id);
+            // return $request->expectsJson()
+            //         ? abort(403, 'Your email address is not verified. click this link to verify your email '.'http://pharmacy.test/api/email/verifyLink/'.$request->user()->id)
+            //         : Redirect::route($redirectToRoute ?: 'verification.notice');
         }
 
         return $next($request);
