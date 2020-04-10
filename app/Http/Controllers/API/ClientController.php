@@ -15,7 +15,7 @@ use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Validation\ValidationException;
-use Auth;
+// use Auth;
 
 class ClientController extends Controller
 {
@@ -116,7 +116,7 @@ class ClientController extends Controller
         $success['message'] = 'Please confirm yourself by clicking on verify user button sent to you on your email';
         return response()->json([
             'success' => $success,
-            'verification Link' => 'http://pharmacy.test/api/email/verifyLink/'.$user->id,
+            'verification Link' => route('verificationapi.verifyLink', $user->id),
             'Data' => new ClientResource($clientUser)
         ], $this->successStatus);
         return new ClientResource($clientUser);
