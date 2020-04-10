@@ -32,27 +32,23 @@ class AreaController extends Controller
         ->toJson();
     }
 
-    public function show()
+    public function show(Area $area)
     {
-        $request = request();
-        $area = Area::find($request->area);
+        
         return view('areas.show', [
             'areas' => $area
         ]);
     }
 
-    public function edit()
+    public function edit(Area $area)
     {
-        $request = request();
-        $area = Area::find($request->area);
         return view('areas.edit', [
             'areas' => $area
         ]);
     }
 
-    public function update()
+    public function update(AreaRequest $request)
     {
-        $request = request();
         $area = Area::find($request->area);
         $area->update([
             'name' => $request->name,
@@ -78,10 +74,9 @@ class AreaController extends Controller
         return redirect()->route('areas.index');
     }
 
-    public function destroy()
+    public function destroy(Area $area)
     {
-        $request = request();
-        $areaid = $request->area;
-        Area::destroy($areaid);
+        $area->delete();
+        return response()->json('deleted');
     }
 }

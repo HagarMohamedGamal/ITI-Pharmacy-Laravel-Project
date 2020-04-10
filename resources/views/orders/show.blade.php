@@ -10,26 +10,26 @@
     <div class="card-body">
       <div class="row">
         <div class="col col-md-4">
-            <p hidden class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
-            <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
-            <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
-            <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
-            <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
-            <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
-            <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
-            <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
-            <p class=" card-text"><span class="font-weight-bold">is insured:-</span> {{$order->is_insured == 1 ? 'YES':'NO'}}</p>
-            <p class=" card-text"><span class="font-weight-bold">created at:-</span> {{$order->created_at}}</p>
-            <p class=" card-text"><span class="font-weight-bold">updated at:-</span> {{$order->updated_at}}</p>
-            <p class=" card-text"><span class="font-weight-bold">Medicines</span> </p>
-            <ul class="list-group" id="medlist">
-              @foreach ($order->medicines as $med)
-              <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
-              @endforeach
-            </ul>
-            @if($order->status=="Processing")
-            <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
-            @endif
+          <p hidden class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
+          <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
+          <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
+          <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
+          <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
+          <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
+          <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
+          <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
+          <p class=" card-text"><span class="font-weight-bold">is insured:-</span> {{$order->is_insured == 1 ? 'YES':'NO'}}</p>
+          <p class=" card-text"><span class="font-weight-bold">created at:-</span> {{$order->created_at}}</p>
+          <p class=" card-text"><span class="font-weight-bold">updated at:-</span> {{$order->updated_at}}</p>
+          <p class=" card-text"><span class="font-weight-bold">Medicines</span> </p>
+          <ul class="list-group" id="medlist">
+            @foreach ($order->medicines as $med)
+            <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
+            @endforeach
+          </ul>
+          @if($order->status=="new")
+          <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
+          @endif
           </div>
         <div class="col col-md-8">
           <h3><strong>Prescription</strong></h3>
@@ -198,7 +198,8 @@
           console.log(!$('#finishdev').hasClass('not allowed'));
 
           if (!$('#finishdev').hasClass('not allowed')) {
-            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish</button>');
+            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish</button><br>'+
+            '<button class="text-center btn-block btn btn-danger notify" id="{{$order->user->type->id}}">Notify User</button>');
           }
           $('#medlist').append('<li class="list-group-item">' +
             name + ' qty ' + quantity + '</li>');
@@ -217,6 +218,7 @@
         })
     });
 
+<<<<<<< HEAD
     $(document).on('click', '.PrescriptionImage', function() {
       $('.prImg').remove();
       $('#Prescription').modal('show');
@@ -224,6 +226,19 @@
       $(image).css({'width': '400px'}).appendTo('.PrescriptionModal');
       // (this).clone().css('width', '400px')
     });
+=======
+  $(document).on('click', '.notify', function() {
+    console.log($('.notify').attr('id'));
+    
+    $.ajax({
+        type: "post",
+        url: "/orders/notifyuser/" + $('.notify').attr('id') + "/" + $('#hidden_id').val(),
+      })
+      .done(function(response) {
+        $('.notify').hide();
+      })
+  });
+>>>>>>> bd1f10c29e780f7489af804d9c52e02cf0ed673c
 
   });
 </script>

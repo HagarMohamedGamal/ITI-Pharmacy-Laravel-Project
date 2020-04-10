@@ -44,25 +44,21 @@ class UserAddressController extends Controller
 
     }
 
-    public function show()
+    public function show(UserAddress $useraddress)
     {
-        $request = request();
-        $addressid = $request->useraddress;
-        $address = UserAddress::find($addressid);
+       
         return view('userAddresses.show', [
-            'address' => $address
+            'address' => $useraddress
         ]);
     }
 
-    public function edit()
+    public function edit(UserAddress $useraddress)
     {
-        $request = request();
+    
         $clients = Client::all();
         $areas = Area::all();
-        $addressid = $request->useraddress;
-        $address = UserAddress::find($addressid);
         return view('userAddresses.edit', [
-            'address' => $address,
+            'address' => $useraddress,
             'clients' => $clients,
             'areas' => $areas,
         ]);
@@ -107,11 +103,10 @@ class UserAddressController extends Controller
         return redirect()->route('useraddresses.index');
     }
 
-    public function destroy()
+    public function destroy(UserAddress $userAddress)
     {
-        $request = request();
-        $addressid = $request->useraddress;
-        UserAddress::destroy($addressid);
+        $userAddress->delete();
+        return response()->json('deleted');
     }
 
     public function create()

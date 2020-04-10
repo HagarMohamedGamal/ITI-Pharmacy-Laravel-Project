@@ -15,7 +15,6 @@ class MedicineOrderController extends Controller
            
             $medicine = Medicine::create([
                 'name' => $request->name,
-                
                 'type' => $request->type,
                 'price' => $request->price
             ]);
