@@ -101,9 +101,11 @@ class OrderController extends Controller
 
   public function show($order)
   {
+		
 	$user = Auth::user();
 
-    $exist = Order::where('id', $order);
+	$exist = Order::where('id', $order);
+	
     if ($exist->count()>0) 
     {
 		$order = Order::find($order);

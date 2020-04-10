@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Client;
 use App\Doctor;
+use App\Http\Requests\StoreOrderRequest;
 use App\Medicine;
 use App\Order;
 use App\Pharmacy;
@@ -13,6 +14,7 @@ use App\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use DB;
 
 class OrderController extends Controller
 {
@@ -23,16 +25,16 @@ class OrderController extends Controller
             $user = Auth::user();
 
             if ($user->hasRole('super-admin'))
-                $orders = Order::with(['pharmacy.type', 'user.type'])->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->latest()->get();
             elseif ($user->hasRole('pharmacy'))
-                $orders = Order::with(['pharmacy.type', 'user.type'])->where('pharmacy_id', $user->typeable_id)->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->where('pharmacy_id', $user->typeable_id)->latest()->get();
             elseif ($user->hasRole('doctor')) {
                 $doctor = Doctor::where('id', $user->typeable_id)->first();
-                $orders = Order::with(['pharmacy.type', 'user.type'])->where('pharmacy_id', $doctor->pharmacy_id)->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->where('pharmacy_id', $doctor->pharmacy_id)->latest()->get();
             } else
                 $orders = null;
 
-            return datatables()->of($orders)
+            $table= datatables()::of($orders)
                 ->addColumn('action', function ($data) {
                     $button = '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm">Delete</button>';
                     $button .= '<a type="button" href="/orders/' . $data->id . '" name="show" id="' . $data->id . '" class=" btn btn-primary btn-sm">show</a>';
@@ -41,9 +43,21 @@ class OrderController extends Controller
                         $button .= '<a type="button" href="/stripe/' . $data->id . '" name="pay" id="' . $data->id . '" class=" btn btn-danger btn-sm">pay online</a>';
                     }
                     return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+                });
+
+            if ($user->hasRole('super-admin')) {
+                $table->addColumn('pharmacy', function ( $data) {
+
+                    return  $data->pharmacy ? $data->pharmacy->type->name : "";
+                });
+                $table->addColumn('creator', function ($data) {
+
+                    return  $data->creator_type ;
+                });
+
+
+            }
+            return $table->toJson();
         }
 
 
@@ -59,7 +73,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
         $user = Auth::user();
         $useradd = UserAddress::find($request->delivering_address);
@@ -117,33 +131,29 @@ class OrderController extends Controller
         return redirect()->route('orders.index');
     }
 
-    public function show(Request $request)
+    public function show(Order $order)
     {
         $user = Auth::user();
-        $order = Order::find($request->order);
+
+
         // $this->authorize('view', $order);
         if ($user->hasAnyRole('pharmacy , doctor', 'super-admin'))
             if ($order->status=="New")
                 $order->status = 'Processing';
         $order->save();
 
-        $ordersId = $request->order;
-        $order = Order::find($ordersId);
+
         return view('orders.show', [
             'order' => $order,
         ]);
     }
 
-    public function destroy()
+    public function destroy(Order $order)
     {
-        $request = request();
-        $order = Order::find($request->order);
-        $this->authorize('delete', $order);
 
-        $orderId = $request->order;
-        $order = Order::find($orderId);
+        $this->authorize('delete', $order);
         $order->delete();
-        // return redirect()->route('orders.index');
+
     }
 
     public function pay(Request $request)
@@ -152,11 +162,12 @@ class OrderController extends Controller
         $ordersId = $request->order;
         $order = Order::find($ordersId);
         $amountTotal = DB::table("orders")->select(DB::raw("SUM((medicines.price /100)* medicine_order.quantity) as total_price"))->leftjoin("medicine_order", "medicine_order.order_id", "=", "orders.id")->leftjoin("medicines", "medicine_order.medicine_id", "=", "medicines.id")->where('orders.id', $order->id)->first();
-        $userData = DB::table("users")->select(DB::raw("users.name as username"))->leftjoin("orders", "orders.user_id", "=", "users.id")->where('orders.id', $order->id)->first();
+        $userData = DB::table("users")->select(DB::raw("users.name as username , users.id as userId,users.email as email_user"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
         return view('stripe', [
             'order' => $order->id,
             'amountTotal' => $amountTotal->total_price,
-            'user' => $userData->username
+            'user' => $userData->email_user,
+            'userId' => $userData->userId
         ]);
     }
 }

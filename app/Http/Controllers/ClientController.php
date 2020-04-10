@@ -26,6 +26,7 @@ class ClientController extends Controller
 
     public function show($clientId)
     {
+       
         $client = Client::find($clientId);
         $this->authorize('view', $client);
         if($client->avatar)
