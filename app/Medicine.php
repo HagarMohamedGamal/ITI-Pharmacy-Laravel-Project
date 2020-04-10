@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Medicine extends Model
 {
-    protected $fillable = ['name', 'quantity', 'type', 'price'];
+    protected $fillable = ['name', 'type', 'price'];
     
     public function getPriceAttribute(){
         return $this->attributes['price'] /100;

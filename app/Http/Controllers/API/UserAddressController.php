@@ -22,7 +22,7 @@ class UserAddressController extends Controller
 
     public function show(UserAddress $useraddress)
     {
-
+        $this->authorize()
         return new UserAddressResource($useraddress);
     }
 

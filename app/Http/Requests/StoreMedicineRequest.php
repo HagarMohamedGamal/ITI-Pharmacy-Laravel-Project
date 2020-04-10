@@ -19,7 +19,7 @@ class StoreMedicineRequest extends FormRequest
             'name'=> 'required|min:2',
             'type'=> 'required|min:2',
             'price'=> 'required|numeric',
-            'quantity'=> 'required|numeric'
+            
 
         ];
     }
