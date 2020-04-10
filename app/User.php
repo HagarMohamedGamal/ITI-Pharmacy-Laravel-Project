@@ -3,9 +3,10 @@
 namespace App;
 
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\VerifyApiEmail;
+use App\Notifications\notifyUserOrder;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\GreetVerification;
-use App\Notifications\VerifyApiEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\InactiveUserNotification;
@@ -63,4 +64,18 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyApiEmail); // my notification
     }
 
+    public function notifyOrder($orderId)
+    {
+        $this->notify(new notifyUserOrder($orderId)); // my notification
+    }
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    // protected $dateFormat = 'Y-m-d';
+    protected $dates = [
+        'created_at',
+    ];
 }

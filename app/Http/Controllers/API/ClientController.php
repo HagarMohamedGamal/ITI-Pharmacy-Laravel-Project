@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Client;
+use Auth;
 use App\User;
+use App\Client;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Hash;
+
 use App\Http\Resources\ClientResource;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
-use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Foundation\Auth\VerifiesEmails;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Validation\ValidationException;
-use Carbon\Carbon;
 use Auth;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class ClientController extends Controller
 {
@@ -104,6 +103,7 @@ class ClientController extends Controller
             'gender' => $client['gender'],
             'birth_day' => $client['birth_day'],
             'mobile' => $client['mobile'],
+            'last_login' => now(),
         ]);
 
         $user = $user->refresh();

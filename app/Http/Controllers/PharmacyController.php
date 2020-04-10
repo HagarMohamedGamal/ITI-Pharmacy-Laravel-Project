@@ -61,11 +61,10 @@ class PharmacyController extends Controller
 
     public function create()
     {
-        // $areas = Area::all();
-        // return view('pharmacy.create', [
-        //     'areas' => $areas
-        // ]);
-        return view('pharmacy.create');
+        $areas = Area::all();
+        return view('pharmacy.create', [
+            'areas' => $areas
+        ]);
     }
 
 

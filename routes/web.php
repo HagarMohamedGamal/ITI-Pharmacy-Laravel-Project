@@ -35,6 +35,7 @@ Route::group([
 });
 Route::get('/doctors/{doctor}/edit', 'DoctorController@edit')->name('doctors.edit')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
 Route::put('/doctors/{doctor}', 'DoctorController@update')->name('doctors.update')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
+Route::post('/doctors/updateajax/{doctor}', 'DoctorController@updateajax')->name('doctors.updateajax')->middleware(['role_or_permission:super-admin|admin|pharmacy|update doctor', 'auth']);
 
 Route::group([
     'name' => 'clients',
@@ -119,6 +120,7 @@ Route::group([
     Route::get('{order}', 'OrderController@show')->name('orders.show');
     Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
     Route::put('/', 'OrderController@update')->name('orders.update');
+    Route::post('/notifyuser/{id}/{orderId}', 'OrderController@notifyuser')->name('orders.notifyuser');
 });
 
 // Route::resource('orders', 'OrderController');

@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Area;
+use App\User;
+use App\Order;
 use App\Client;
 use App\Doctor;
-use App\Http\Requests\StoreOrderRequest;
 use App\Medicine;
-use App\Order;
 use App\Pharmacy;
-use App\User;
 use App\UserAddress;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreOrderRequest;
 
 class OrderController extends Controller
 {
@@ -168,6 +168,13 @@ class OrderController extends Controller
             'amountTotal' => $amountTotal->total_price,
             'user' => $userData->email_user,
             'userId' => $userData->userId
+        ]);
+    }
+
+    public function notifyuser($userId, $orderId){
+        User::find($userId)->notifyOrder($orderId);
+        return response()->json([
+            'success' => 'User Notified',
         ]);
     }
 }
