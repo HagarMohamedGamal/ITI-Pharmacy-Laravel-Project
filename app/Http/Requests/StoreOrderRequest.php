@@ -24,8 +24,8 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'delivering_address'=> 'required',
-            'user_id'=> 'required'
+            'delivering_address'=> 'exists:user_addresses,id|required',
+            'user_id'=> 'required|exists:clients,id'
         ];
     }
 }

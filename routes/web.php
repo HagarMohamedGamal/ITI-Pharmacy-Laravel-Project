@@ -139,11 +139,10 @@ Route::group([
     Route::get('/{medicine}', 'MedicineController@show')->name('medicines.show');
     Route::post('/{medicine}/update', 'MedicineController@update')->name('medicines.update');
 });
-Auth::routes(['verify' => true]);
+
+Auth::routes(['verify' => true , 'register'=>false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/roles', 'RolesController@create');
 
 Route::get('stripe/{order}', 'OrderController@pay')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
@@ -154,11 +153,6 @@ Route::get('ajaxdata/getAllData', 'RevenueController@getalldata')->name('ajaxdat
 
 Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
 Route::get('ajaxdata/getdata', 'RevenueControllerForPharmacy@getdata')->name('ajaxdata.getdata');
-
-// test only
-Route::get('/create2','OrderController@create2')->name('create2');
-Route::post('/auto','OrderController@auto')->name('auto');
-
 
 // ordermedicine
 Route::group(

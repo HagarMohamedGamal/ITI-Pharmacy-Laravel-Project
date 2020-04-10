@@ -46,9 +46,8 @@ class MedicineController extends Controller
 
 
 
-    public function show(Request $request)
+    public function show(Medicine $medicine)
     {
-        $medicine = Medicine::find($request->medicine);
         return view('medicines.show', [
             'medicine' => $medicine
         ]);
@@ -70,7 +69,6 @@ class MedicineController extends Controller
 
         Medicine::create([
             'name' => $medicine['name'],
-            'quantity' => $medicine['quantity'],
             'price' => $medicine['price'],
             'type' => $medicine['type'],
 
@@ -93,10 +91,6 @@ class MedicineController extends Controller
                 <div class="form-group">
                     <label for="Name">Type:</label>
                     <input class="form-control" name="type" id="editType" value="'.$data->type.'">
-                </div>
-                <div class="form-group">
-                    <label for="Name">Quantity:</label>
-                    <input class="form-control" name="quantity" id="editQuantity" value="'.$data->quantity.'">
                 </div>';
 
         return response()->json(['html'=>$html]);
@@ -118,9 +112,9 @@ class MedicineController extends Controller
         return response()->json(['success' => 'success']);
     }
 
-    public function destroy($id)
+    public function destroy(Medicine $medicine)
     {
-        Medicine::where('id',$id)->delete();
+       $medicine->delete();
 
         return response()->json(['success' => 'success']);
     }
