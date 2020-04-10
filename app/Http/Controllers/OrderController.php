@@ -48,6 +48,11 @@ class OrderController extends Controller
                     
                     return  $data->pharmacy ? $data->pharmacy->type->name : "";
                 });
+                $table->addColumn('creator', function ($data) {
+
+                    return  $data->creator_type ;
+                });
+
                 
             }
             return $table->toJson();
@@ -124,10 +129,10 @@ class OrderController extends Controller
         return redirect()->route('orders.index');
     }
 
-    public function show(Request $request)
+    public function show(Order $order)
     {
         $user = Auth::user();
-        $order = Order::find($request->order);
+        
        
         // $this->authorize('view', $order);
         if ($user->hasAnyRole('pharmacy , doctor'))
@@ -135,23 +140,18 @@ class OrderController extends Controller
                 $order->status = 'Processing';
         $order->save();
 
-        $ordersId = $request->order;
-        $order = Order::find($ordersId);
+       
         return view('orders.show', [
             'order' => $order,
         ]);
     }
 
-    public function destroy()
+    public function destroy(Order $order)
     {
-        $request = request();
-        $order = Order::find($request->order);
+       
         $this->authorize('delete', $order);
-
-        $orderId = $request->order;
-        $order = Order::find($orderId);
         $order->delete();
-        // return redirect()->route('orders.index');
+        
     }
 
     public function pay(Request $request)

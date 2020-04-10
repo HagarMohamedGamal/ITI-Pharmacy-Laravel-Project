@@ -3,11 +3,12 @@
 @section('content')
 
 <div class="container-fluid">
-  @role('doctor')
+
+  @hasanyrole('doctor|super-admin|pharmacy')
   <div align="right">
     <a type="button" href="/orders/create" class="btn btn-success btn-sm">New Order</a>
   </div>
-  @endrole
+  @endhasanyrole
   <br />
   <div class="table-responsive">
     <table class="table table-bordered table-striped" style="width:100%" id="order_table">
@@ -18,9 +19,10 @@
           <th>Address</th>
           <th>Creation Date</th>
           <th>Doctor</th>
-          <!-- @role('super-admin')
+          @role('super-admin')
           <th>pharmacy</th>
-          @endrole -->
+          <th>creator</th>
+          @endrole
           <th>Insured</th>
           <th>status</th>
           <th>Action</th>
@@ -67,82 +69,153 @@
 <script>
   $(document).ready(function() {
     $(".select2").select2({});
-
-    $('#order_table').DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: {
-        url: "{{route('orders.index')}}",
-      },
-
-      columns: [{
-
-          data: 'id',
-          name: 'id',
-
-        }, {
-
-          data: 'user.type.name',
-          name: 'user.type.name',
-
+    if ("{{auth()->user()->hasRole('super-admin')}}") {
+      $('#order_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{route('orders.index')}}",
         },
-        {
 
-          data: "Address",
-          name: 'Address',
-          render: function(data, type, row) {
-            return row.address.area.address + ' ,' + row.address.area.name + ' ,' + row.address.street_name;
+        columns: [{
+
+            data: 'id',
+            name: 'id',
+
+          }, {
+
+            data: 'user.type.name',
+            name: 'user.type.name',
+
           },
+          {
 
+            data: "Address",
+            name: 'Address',
+            render: function(data, type, row) {
+              return row.address.area.address + ' ,' + row.address.area.name + ' ,' + row.address.street_name;
+            },
 
-
-        },
-        {
-
-          data: 'created_at',
-          name: 'created_at'
-        },
-        {
-          data: 'doctor.type.name',
-          name: 'doctor.type.name',
-          render: function(data, type, row) {
-            return row.doctor ? row.doctor.type.name : "";
-          },
-
-        },
-        // {
-        //   data: 'pharmacy',
-        //   name: 'pharmacy',
-        //   "visible": false,
-        // },
-        {
-          data: 'is_insured',
-          name: 'Insured',
-          render: function(data, type, row) {
-            return (row.is_insured == "1") ? 'yes' : 'no';
 
 
           },
+          {
 
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'doctor.type.name',
+            name: 'doctor.type.name',
+            render: function(data, type, row) {
+              return row.doctor ? row.doctor.type.name : "";
+            },
+
+          },
+          {
+            data: 'pharmacy',
+            name: 'pharmacy',
+
+          },
+          {
+            data: 'creator',
+            name: 'creator',
+
+          },
+          {
+            data: 'is_insured',
+            name: 'Insured',
+            render: function(data, type, row) {
+              return (row.is_insured == "1") ? 'yes' : 'no';
+
+
+            },
+
+          },
+          {
+            data: 'status',
+            name: 'status'
+          },
+
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+          }
+        ]
+      });
+    }
+
+    if (!"{{auth()->user()->hasRole('super-admin')}}") {
+      $('#order_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{route('orders.index')}}",
         },
-        {
-          data: 'status',
-          name: 'status'
-        },
 
-        {
-          data: 'action',
-          name: 'action',
-          orderable: false,
-          searchable: false,
-        }
-      ]
-    });
+        columns: [{
 
-    // var table = $('#order_table').DataTable();
-    // if ("{{auth()->user()->hasRole('super-admin')}}") {
-    //   table.column(5).visible(true);
-    // }
+            data: 'id',
+            name: 'id',
+
+
+          }, {
+
+            data: 'user.type.name',
+            name: 'user.type.name',
+
+          },
+          {
+
+            data: "Address",
+            name: 'Address',
+            render: function(data, type, row) {
+              return row.address.area.address + ' ,' + row.address.area.name + ' ,' + row.address.street_name;
+            },
+
+
+
+          },
+          {
+
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'doctor.type.name',
+            name: 'doctor.type.name',
+            render: function(data, type, row) {
+              return row.doctor ? row.doctor.type.name : "";
+            },
+
+          },
+
+          {
+            data: 'is_insured',
+            name: 'Insured',
+            render: function(data, type, row) {
+              return (row.is_insured == "1") ? 'yes' : 'no';
+
+
+            },
+
+          },
+          {
+            data: 'status',
+            name: 'status'
+          },
+
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+          }
+        ]
+      });
+    }
 
     $('#order_table tfoot th').each(function() {
       var title = $(this).text();
