@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Client;
 use App\Doctor;
+use App\Http\Requests\StoreOrderRequest;
 use App\Medicine;
 use App\Order;
 use App\Pharmacy;
@@ -71,7 +72,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
         $user = Auth::user();
         $useradd = UserAddress::find($request->delivering_address);
