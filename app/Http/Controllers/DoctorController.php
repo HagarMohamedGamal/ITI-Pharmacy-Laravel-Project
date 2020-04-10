@@ -72,7 +72,7 @@ class DoctorController extends Controller
         $user = User::create($user)->refresh();
         $doctor=Doctor::create($doctor)->refresh();
         $doctor->type()->save($user);
-        $pharmacy = Pharmacy::find($request->pharmacy_id);
+        $pharmacy = Pharmacy::find($doctor['pharmacy_id']);
         $pharmacy->doctors()->save($doctor);
         $user->assignRole('doctor');
         return redirect()->route('doctors.index');
@@ -83,49 +83,40 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::find($doctorId);
         $this->authorize('update', $doctor);
-        $pharmacies = Pharmacy::all();
         return view('doctors.create', [
-            "doctor" => Doctor::find($doctorId),
-            "pharmacies" => $pharmacies,
+            "doctor" => $doctor,
+            "pharmacies" => Pharmacy::all(),
         ]);
     }
 
     //  Update Doctor
-    function update(Request $request)
+    function update(Request $request, $doctorId)
     {
+        $user = $request->only(['name', 'email', 'password']);
+        $user['password'] = Hash::make($request['password']);
+        $doctor = $request->only(['national_id', 'pharmacy_id', 'avatar', 'is_baned']);
+        $avatar = $request->file('avatar');
+
         if (request()->ajax()) {
-            $doctor = Doctor::find($request->doctor);
+            $doctor = Doctor::find($doctorId);
             $this->banDoctor($doctor);
             return response()->json([
                 'is_baned' => $doctor->isBanned(),
             ]);
         }
-        $uploadedFile = $request->file('avatar');
-        if($uploadedFile){
-            $filename =  time().'_'.$uploadedFile->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs("public/avatars", $filename);
-            $pathPeices = explode('/', $path);
-            array_shift($pathPeices);
-            $path = implode('/', $pathPeices);
+        if($avatar){
+            $doctor['avatar'] = 'images/'.time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('storage/images'), $doctor['avatar']);
         }
-        $doctor = Doctor::find($request->doctor);
-        User::find($doctor->type->id)->update(
-            [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request['password']),
-            ]
-        );
-        Doctor::find($request->doctor)->update(
-            [
-                'national_id' => $request->national_id,
-                'avatar' => $uploadedFile ? $path : "",
-                'pharmacy_id' => $request->pharmacy_id,
-                'is_baned' => $request->is_baned
-            ]
-        );
-        $pharmacy = Pharmacy::find($request->pharmacy_id);
-        $pharmacy->doctors()->save($doctor);
+        else
+        {
+            $doctor['avatar'] = "default.jpg";
+        }
+        $doctorData = Doctor::find($doctorId);
+        User::find($doctorData->type->id)->update($user);
+        $doctorData->update($doctor);
+        Pharmacy::find($doctor['pharmacy_id'])
+        ->doctors()->save($doctorData);
         return redirect()->route('doctors.index');
     }
 
@@ -153,10 +144,8 @@ class DoctorController extends Controller
             })
             ->addColumn('action', function(Doctor $doctor){
                 $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
-
                 $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
                 $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
-                // $button .= '&nbsp;&nbsp;';
                 $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
                 $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
                 return $button;
@@ -169,7 +158,6 @@ class DoctorController extends Controller
                     return $pharmacy;
                 });
             }
-
             return $data->toJson();
     }
 

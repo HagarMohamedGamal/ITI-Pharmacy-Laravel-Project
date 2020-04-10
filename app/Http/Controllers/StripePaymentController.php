@@ -12,6 +12,8 @@ use Session;
 
 use Stripe;
 
+use DB;
+
 
 
 class StripePaymentController extends Controller
@@ -53,8 +55,18 @@ class StripePaymentController extends Controller
     {
 
         $order_id=$request->order_id;
-        $amount = DB::table("orders") ->select(DB::raw("SUM((medicines.price /100)* medicine_order.quantity) as total_price")) ->leftjoin("medicine_order","medicine_order.order_id","=","orders.id")->leftjoin("medicines","medicine_order.medicine_id","=","medicines.id")->where('orders.id',$request->order_id)->first();
+         $amount = DB::table("medicines") ->select(DB::raw("SUM((medicines.price)* medicine_order.quantity) as total_price"))
+            ->leftjoin("medicine_order","medicine_order.medicine_id","=","medicines.id")->where('medicine_order.order_id',$request->order_id)->first();
+            $userObj = DB::table('users')->where('id', '=', $request->userId)->first();
+
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $token = $_POST['stripeToken'];
+
+        $customer = \Stripe\Customer::create(array(
+            "email" => $userObj->email,
+            "card" => $token,
+        ));
 
         Stripe\Charge::create ([
 
@@ -62,9 +74,10 @@ class StripePaymentController extends Controller
 
             "currency" => "usd",
 
-            "source" => $request->stripeToken,
+            "description" => "Order ID IS " .$request->order_id ,
 
-            "description" => "Test payment from itsolutionstuff.com."
+            "customer" =>  $customer->id
+
 
         ]);
 

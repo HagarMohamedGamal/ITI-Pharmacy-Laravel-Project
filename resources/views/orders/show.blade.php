@@ -25,7 +25,7 @@
         <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
         @endforeach
       </ul>
-      @if($order->status=="Processing")
+      @if($order->status=="new")
       <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
       @endif
     </div>
@@ -163,7 +163,8 @@
           console.log(!$('#finishdev').hasClass('not allowed'));
 
           if (!$('#finishdev').hasClass('not allowed')) {
-            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish</button>');
+            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish</button><br>'+
+            '<button class="text-center btn-block btn btn-danger notify" id="{{$order->user->type->id}}">Notify User</button>');
           }
           $('#medlist').append('<li class="list-group-item">' +
             name + ' qty ' + quantity + '</li>');
@@ -181,6 +182,18 @@
           $('.finish').hide();
         })
     });
+
+  $(document).on('click', '.notify', function() {
+    console.log('xxx',$('.notify').attr('id'));
+    
+    $.ajax({
+        type: "post",
+        url: "/orders/notifyuser/" + $('.notify').attr('id'),
+      })
+      .done(function(response) {
+        $('.notify').hide();
+      })
+  });
 
   });
 </script>

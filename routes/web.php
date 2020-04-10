@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layouts.app');
 });
 
 Route::get('/admin', function () {
@@ -119,6 +119,7 @@ Route::group([
     Route::get('{order}', 'OrderController@show')->name('orders.show');
     Route::get('{order}/edit', 'OrderController@edit')->name('orders.edit');
     Route::put('/', 'OrderController@update')->name('orders.update');
+    Route::post('/notifyuser/{id}', 'OrderController@notifyuser')->name('orders.notifyuser');
 });
 
 // Route::resource('orders', 'OrderController');

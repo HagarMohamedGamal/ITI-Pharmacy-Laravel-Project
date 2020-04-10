@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreClientRequest extends FormRequest
+class StoreClientOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,26 +25,20 @@ class StoreClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:2',
-            'email' => 'unique:App\User,email|required|email',
-            'password' => 'required|min:6',
-            'national_id' => 'unique:App\Pharmacy,national_id|min:10',
-            'avatar' => 'image|mimes:jpg,jpeg',
-            'gender' => [
+            'delivering_address_id' => 'required|Numeric',
+            'image.*' => 'required|image|mimes:jpg,jpeg',
+            'is_insured' => [
                     'required',
-                    Rule::in(['male', 'female']),
-                ],
-            'birth_day' => 'required|Date',
-            'mobile' => 'required|numeric',
+                    Rule::in([1, 0]),
+                ]
         ];
     }
 
     public function messages()
     {
         return [
-            'name' => 'enter name is required > 2 chars'
+            'is_insured' => 'is_insured must be 0 or 1'
 
         ];
     }
-
 }

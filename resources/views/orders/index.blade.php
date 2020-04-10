@@ -3,32 +3,41 @@
 @section('content')
 
 <div class="container-fluid">
-  @role('doctor')
+
+  @hasanyrole('doctor|super-admin|pharmacy')
   <div align="right">
     <a type="button" href="/orders/create" class="btn btn-success btn-sm">New Order</a>
   </div>
-  @endrole
+  @endhasanyrole
   <br />
   <div class="table-responsive">
-    <table class="table table-bordered table-striped" id="order_table">
+    <table class="table table-bordered table-striped" style="width:100%" id="order_table">
       <thead>
         <tr>
-          <th width="20%">user</th>
-          <th width="15%">price</th>
-          <th width="15%">status</th>
-
-          <th width="20%">pharmacy</th>
-
-          <th width="30%">Action</th>
+          <th>ID</th>
+          <th>user</th>
+          <th>Address</th>
+          <th>Creation Date</th>
+          <th>Doctor</th>
+          @role('super-admin')
+          <th>pharmacy</th>
+          <th>creator</th>
+          @endrole
+          <th>Insured</th>
+          <th>status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
-          <th width="20%"></th>
-          <th width="15%"></th>
-          <th width="15%"></th>
-          <th width="20%"></th>
-          <th width="30%"></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
 
         </tr>
       </tfoot>
@@ -37,77 +46,7 @@
   <br />
   <br />
 </div>
-<!-- <div id="formModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add New Record</h4>
-      </div>
-      <div class="modal-body">
-        <span id="form_result"></span>
-        <form method="post" id="sample_form" class="form-horizontal form-inline" enctype="multipart/form-data">
-          @csrf
-          <div class="form-group">
-            <label class="control-label col-md-4">user_id</label>
-            <div class="col-md-8">
-              <input type="text" name="user_id" id="user_id" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">useraddress_id </label>
-            <div class="col-md-8">
-              <input type="text" name="useraddress_id" id="useraddress_id" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">doctor_id </label>
-            <div class="col-md-8">
-              <input type="text" name="doctor_id" id="doctor_id" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">is_insured </label>
-            <div class="col-md-8">
-              <input type="text" name="is_insured" id="is_insured" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">status </label>
-            <div class="col-md-8">
-              <input type="text" name="status" id="status" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">creator_type </label>
-            <div class="col-md-8">
-              <input type="text" name="creator_type" id="creator_type" class="form-control" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-4">pharmacy_id </label>
-            <div class="col-md-8">
-              <input type="text" name="pharmacy_id" id="pharmacy_id" class="form-control" />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label class="control-label col-md-4">Actions </label>
-            <div class="col-md-8">
-              <input type="text" name="Actions" id="Actions" class="form-control" />
-            </div>
-          </div>
-          <br />
-          <div class="form-group" align="center">
-            <input type="hidden" name="action" id="action" />
-            <input type="hidden" name="hidden_id" id="hidden_id" />
-            <input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add" />
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> -->
 <div id="confirmModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -130,46 +69,157 @@
 <script>
   $(document).ready(function() {
     $(".select2").select2({});
-
-    $('#order_table').DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: {
-        url: "{{route('orders.index')}}",
-      },
-
-      columns: [{
-
-          data: 'user.type.name',
-          // name: 'user_id',
-
-        },
-        {
-
-          data: 'price',
-          // name: 'creator_type'
-        },
-        {
-          data: 'status',
-          // name: 'doctor_id',
-        },
-        {
-          data: 'pharmacy.type.name',
-          name: 'pharmacy'
+    if ("{{auth()->user()->hasRole('super-admin')}}") {
+      $('#order_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{route('orders.index')}}",
         },
 
-        {
-          data: 'action',
-          name: 'action',
-          orderable: false,
-          searchable: false,
-        }
-      ]
-    });
+        columns: [{
+
+            data: 'id',
+            name: 'id',
+
+          }, {
+
+            data: 'user.type.name',
+            name: 'user.type.name',
+
+          },
+          {
+
+            data: "Address",
+            name: 'Address',
+            render: function(data, type, row) {
+              return row.address.area.address + ' ,' + row.address.area.name + ' ,' + row.address.street_name;
+            },
+
+
+
+          },
+          {
+
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'doctor.type.name',
+            name: 'doctor.type.name',
+            render: function(data, type, row) {
+              return row.doctor ? row.doctor.type.name : "";
+            },
+
+          },
+          {
+            data: 'pharmacy',
+            name: 'pharmacy',
+
+          },
+          {
+            data: 'creator',
+            name: 'creator',
+
+          },
+          {
+            data: 'is_insured',
+            name: 'Insured',
+            render: function(data, type, row) {
+              return (row.is_insured == "1") ? 'yes' : 'no';
+
+
+            },
+
+          },
+          {
+            data: 'status',
+            name: 'status'
+          },
+
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+          }
+        ]
+      });
+    }
+
+    if (!"{{auth()->user()->hasRole('super-admin')}}") {
+      $('#order_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{route('orders.index')}}",
+        },
+
+        columns: [{
+
+            data: 'id',
+            name: 'id',
+
+
+          }, {
+
+            data: 'user.type.name',
+            name: 'user.type.name',
+
+          },
+          {
+
+            data: "Address",
+            name: 'Address',
+            render: function(data, type, row) {
+              return row.address.area.address + ' ,' + row.address.area.name + ' ,' + row.address.street_name;
+            },
+
+
+
+          },
+          {
+
+            data: 'created_at',
+            name: 'created_at'
+          },
+          {
+            data: 'doctor.type.name',
+            name: 'doctor.type.name',
+            render: function(data, type, row) {
+              return row.doctor ? row.doctor.type.name : "";
+            },
+
+          },
+
+          {
+            data: 'is_insured',
+            name: 'Insured',
+            render: function(data, type, row) {
+              return (row.is_insured == "1") ? 'yes' : 'no';
+
+
+            },
+
+          },
+          {
+            data: 'status',
+            name: 'status'
+          },
+
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+          }
+        ]
+      });
+    }
 
     $('#order_table tfoot th').each(function() {
       var title = $(this).text();
-      $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+      $(this).html('<input type="text" size="10" placeholder="Search ' + title + '" />');
     });
 
     // DataTable
@@ -188,84 +238,13 @@
       });
     });
 
-    // $('#create_record').click(function() {
-    //   $('.modal-title').text("Add New Record");
-    //   $('#action_button').val("Add");
-    //   $('#action').val("Add");
-    //   $('#formModal').modal('show');
-    // });
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
 
-    // $('#sample_form').on('submit', function(event) {
-    //   event.preventDefault();
-    //   if ($('#action').val() == 'Add') {
-    //     $.ajax({
-    //       url: "{{ route('orders.store') }}",
-    //       method: "POST",
-    //       data: new FormData(this),
-    //       contentType: false,
-    //       cache: false,
-    //       processData: false,
-    //       dataType: "json",
-    //       success: function(data) {
-    //         var html = '';
-    //         if (data.errors) {
-    //           html = '<div class="alert alert-danger">';
-    //           for (var count = 0; count < data.errors.length; count++) {
-    //             html += '<p>' + data.errors[count] + '</p>';
-    //           }
-    //           html += '</div>';
-    //         }
-    //         if (data.success) {
-    //           html = '<div class="alert alert-success">' + data.success + '</div>';
-    //           $('#sample_form')[0].reset();
-    //           $('#order_table').DataTable().ajax.reload();
-    //         }
-    //         $('#form_result').html(html);
-    //       }
-    //     })
-    //   }
-
-    //   if ($('#action').val() == "Edit") {
-    //     // id = $('#hidden_id').val();
-    //     $.ajax({
-    //       url: "/orders",
-    //       type: "PUT",
-    //       data: new FormData(this),
-    //       contentType: false,
-    //       cache: false,
-    //       processData: false,
-    //       dataType: "json",
-
-
-    //       success: function(data) {
-    //         var html = '';
-    //         if (data.errors) {
-    //           html = '<div class="alert alert-danger">';
-    //           for (var count = 0; count < data.errors.length; count++) {
-    //             html += '<p>' + data.errors[count] + '</p>';
-    //           }
-    //           html += '</div>';
-    //         }
-    //         if (data.success) {
-    //           html = '<div class="alert alert-success">' + data.success + '</div>';
-    //           $('#sample_form')[0].reset();
-    //           $('#store_image').html('');
-    //           $('#order_table').DataTable().ajax.reload();
-    //         }
-    //         $('#form_result').html(html);
-    //       }
-
-    //     });
-    //   }
-
-
-
-    // });
     $(document).on('click', '.edit', function() {
       var id = $(this).attr('id');
       $('#form_result').html('');

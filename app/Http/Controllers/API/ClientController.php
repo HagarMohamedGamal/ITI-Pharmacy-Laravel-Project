@@ -15,6 +15,7 @@ use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Validation\ValidationException;
+use Auth;
 
 class ClientController extends Controller
 {
@@ -59,6 +60,7 @@ class ClientController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+        Auth::login($user);
 
         $userLoginDate = $user;
         if($userLoginDate->hasrole('client')){
@@ -114,16 +116,16 @@ class ClientController extends Controller
         $success['message'] = 'Please confirm yourself by clicking on verify user button sent to you on your email';
         return response()->json([
             'success' => $success,
+            'verification Link' => 'http://pharmacy.test/api/email/verifyLink/'.$user->id,
             'Data' => new ClientResource($clientUser)
         ], $this->successStatus);
         return new ClientResource($clientUser);
     }
 
 
-    public function update(UpdateClientRequest $request, $client)
+    public function update(UpdateClientRequest $request)
     {
-        $exist = User::where('id', $client);
-        // dd($client);
+        $exist = User::where('id', $request->client);
         if ($exist->count()>0) 
         {
             $clientUser = $request->only(['name', 'email' ,'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
@@ -138,8 +140,7 @@ class ClientController extends Controller
                 $new_name = "default.jpg";
             }
 
-           $user = User::find($client);
-        //    dd($client);
+           $user = User::find($request->client);
            $updateclient = Client::find($user->typeable->id);
             $user->update([
                 'name'=> $clientUser['name'],
@@ -167,14 +168,14 @@ class ClientController extends Controller
 
 
 
-
-
     public function destroy($client)
     {
-        User::find($client)->delete($client);
+        $clientId = User::find($client)->typeable->id;
+        Client::find($clientId)->delete();
+        User::find($client)->delete();
         return response()->json([
             'success' => 'Client deleted successfully!'
-        ]);
+        ], 200);
     }
 
 }

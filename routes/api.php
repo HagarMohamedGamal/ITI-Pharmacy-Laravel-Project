@@ -25,7 +25,7 @@ Route::put('/clients/forgetpassword', 'API\VerificationApiController@reset');
 
 Route::post('clients/login', 'API\ClientController@login');
 Route::post('/clients/register', 'API\ClientController@register');
-Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum','verified']);
+Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum', 'verified']);
 Route::put('/clients/{client}', 'API\ClientController@update')->middleware('auth:sanctum');
 Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware('auth:sanctum');
 Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:sanctum');
@@ -35,12 +35,22 @@ Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:s
 Route::get('email/verify/{id}', 'API\VerificationApiController@verify')->name('verificationapi.verify');
 Route::get('email/resend', 'API\VerificationApiController@resend')->name('verificationapi.resend');
 
+Route::group([
+    'name' => 'useraddresses',
+    'prefix' => 'useraddresses',
+    'middleware' => ['auth:sanctum'],
+], function () {
+    Route::get('/', 'API\UserAddressController@index')->name('useraddresses.index');
 
+    Route::get('/{useraddress}', 'API\UserAddressController@show')->name('useraddresses.show');
 
+    Route::put('/', 'API\UserAddressController@update')->name('useraddresses.update');
+    Route::post('/', 'API\UserAddressController@store')->name('useraddresses.store');
+    Route::delete('/{useraddress}', 'UserAddressController@destroy')->name('useraddresses.destroy');
+});
 
-
-    
-
-
-
-
+// Route::get('/orders', 'API\OrderController@index')->middleware('auth:sanctum');
+Route::post('/orders', 'API\OrderController@store')->middleware('auth:sanctum');
+Route::put('/orders/{order}', 'API\OrderController@update')->middleware('auth:sanctum');
+Route::get('/orders/{order}', 'API\OrderController@show')->middleware('auth:sanctum');
+Route::delete('/orders/{order}', 'API\OrderController@destroy')->middleware('auth:sanctum');

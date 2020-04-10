@@ -14,14 +14,6 @@ class VerificationApiController extends Controller
 {
 	use VerifiesEmails;
 	/**
-	 * Show the email verification notice.
-	 *
-	 */
-	public function show()
-	{
-		//
-	}
-	/**
 	 * Mark the authenticated user's email address as verified.
 	 *
 	 * @param \Illuminate\Http\Request $request
@@ -32,7 +24,7 @@ class VerificationApiController extends Controller
 		$userID = $request['id'];
 		$user = User::findOrFail($userID);
 		$date = date("Y-m-d g:i:s");
-		$user->email_verified_at = $date; // to enable the “email_verified_at field of that user be a current time stamp by mimicing the must verify email feature
+		$user->email_verified_at = $date; 
 		$user->save();
 		$user->greetingUser();
 		return response()->json('Email verified!');
@@ -45,14 +37,15 @@ class VerificationApiController extends Controller
 	 */
 	public function resend(Request $request)
 	{
-		if ($request->user()->hasVerifiedEmail()) {
-			return response()->json('User already have verified email!', 422);
-			// return redirect($this->redirectPath());
-		}
-		$request->user()->sendEmailVerificationNotification();
-		return response()->json('The notification has been resubmitted');
-		// return back()->with('resent', true);
+
+		$user = User::find($request->id);
+		if ($user->email_verified_at) {
+		return response()->json('User already have verified email!', 422);
 	}
+		$user->sendEmailVerificationNotification();
+		return response()->json('The notification has been resubmitted');
+	}
+
 
 	/**
 	 * change password.
@@ -73,5 +66,17 @@ class VerificationApiController extends Controller
 			return response()->json('Confirmed password does not match the field password!', 304);
 		}
 		return response()->json('Enter Valid Email', 404);
+	}
+
+
+	public function verifyLink(Request $request)
+	{
+		$userID = $request->id;
+		$user = User::find($userID);
+        $user->sendApiEmailVerificationNotification();
+        return response()->json([
+        	'Verfication Email' => 'If you didn\'t receive any verification Email click http://pharmacy.test/api/email/resend/'.$userID,
+        	'Data' => $user,
+            ], 403);
 	}
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderImagesTable extends Migration
+class ModifyOrderIdColoumnInOrderImages extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateOrderImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_images', function (Blueprint $table) {
-            $table->id();
-            $table->string('image');
-            $table->unsignedInteger('order_id');
-            $table->timestamps();
+        Schema::table('order_images', function (Blueprint $table) {
+            
+            $table->unsignedInteger('order_id')->nullable()->change();
         });
     }
 
@@ -28,6 +26,8 @@ class CreateOrderImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_images');
+        Schema::table('order_images', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -313,22 +313,22 @@ to get the desired effect
 
               </ul>
             </li>
-            <li class="nav-item">
+            <!--li class="nav-item">
               <a href="{{ asset("/bower_components/admin-lte/pages/forms/general.html")}}" class="nav-link">
                 <i class="nav-icon fas fa-edit"></i>
                 <p>
                   Forms
                 </p>
               </a>
-            </li>
-            <li class="nav-item">
+            </li-->
+            <!--li class="nav-item">
               <a href="{{ asset("/bower_components/admin-lte/pages/tables/data.html")}}" class="nav-link">
                 <i class="nav-icon fas fa-table"></i>
                 <p>
                   Tables
                 </p>
               </a>
-            </li>
+            </li-->
             <li class="nav-header">EXAMPLES</li>
             <li class="nav-item">
               <a href="{{ asset("/bower_components/admin-lte/pages/examples/contacts.html")}}" class="nav-link">
