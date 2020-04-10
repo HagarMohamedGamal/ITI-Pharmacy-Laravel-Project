@@ -70,6 +70,7 @@
 
 
                             <input  type="number" name="order_id" value="{{$order}}" class="form-control" hidden/>
+                            <input  type="number" name="userId" value="{{$userId}}" class="form-control" hidden/>
 
                             <div class='form-row row'>
 
@@ -99,17 +100,13 @@
 
                             </div>
 
-                            <div class='form-row row'>
-
-                                <div class='col-xs-12 form-group card required'>
-
-                                    <label class='control-label'>User Name</label>
-                                    <input  type="text" name="user" value="{{$user}}" class='form-control card-number' size='20' disabled/>
-
-                                </div>
-
+                            
+                        <div class='form-row row'>
+                            <div class='col-xs-12 form-group card required'>
+                                <label class='control-label'>User Email</label>
+                                <input  type="text" name="user" value="{{$user}}" class='form-control card-number' size='20' disabled/>
                             </div>
-
+                        </div>
 
 
                             <div class='form-row row'>
