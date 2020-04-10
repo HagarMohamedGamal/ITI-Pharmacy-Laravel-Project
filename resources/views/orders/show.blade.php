@@ -8,26 +8,41 @@
       <span class="font-weight-bold">Order Info</span>
     </div>
     <div class="card-body">
-      <p hidden class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
-      <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
-      <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
-      <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
-      <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
-      <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
-      <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
-      <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
-      <p class=" card-text"><span class="font-weight-bold">is insured:-</span> {{$order->is_insured == 1 ? 'YES':'NO'}}</p>
-      <p class=" card-text"><span class="font-weight-bold">created at:-</span> {{$order->created_at}}</p>
-      <p class=" card-text"><span class="font-weight-bold">updated at:-</span> {{$order->updated_at}}</p>
-      <p class=" card-text"><span class="font-weight-bold">Medicines</span> </p>
-      <ul class="list-group" id="medlist">
-        @foreach ($order->medicines as $med)
-        <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
-        @endforeach
-      </ul>
-      @if($order->status=="Processing")
-      <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
-      @endif
+      <div class="row">
+        <div class="col col-md-4">
+            <p hidden class=" card-text"><span class="font-weight-bold">id:-</span> {{$order->id}}</p>
+            <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
+            <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
+            <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
+            <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
+            <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
+            <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
+            <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
+            <p class=" card-text"><span class="font-weight-bold">is insured:-</span> {{$order->is_insured == 1 ? 'YES':'NO'}}</p>
+            <p class=" card-text"><span class="font-weight-bold">created at:-</span> {{$order->created_at}}</p>
+            <p class=" card-text"><span class="font-weight-bold">updated at:-</span> {{$order->updated_at}}</p>
+            <p class=" card-text"><span class="font-weight-bold">Medicines</span> </p>
+            <ul class="list-group" id="medlist">
+              @foreach ($order->medicines as $med)
+              <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
+              @endforeach
+            </ul>
+            @if($order->status=="Processing")
+            <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
+            @endif
+          </div>
+        <div class="col col-md-8">
+          <h3><strong>Prescription</strong></h3>
+          <div class="row">
+            @foreach ($order->images as $image)
+            <div class="col col-md-6">
+              <img class="{{$image->id}} PrescriptionImage" style="cursor: pointer;" src="{{ URL::to('/') }}/images/{{$image->image}}">
+            </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+
     </div>
     <div id="finishdev" class=" {{$order->medicines->isNotEmpty()? 'not allowed':''}}">
 
@@ -94,6 +109,26 @@
     </div>
   </div>
 </div>
+
+
+
+<div id="Prescription" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Prescription</h4>
+      </div>
+      <div class="modal-body PrescriptionModal">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <script>
   $(document).ready(function() {
     $('.pricediv').hide();
@@ -180,6 +215,14 @@
           $('#addmedbtn').hide();
           $('.finish').hide();
         })
+    });
+
+    $(document).on('click', '.PrescriptionImage', function() {
+      $('.prImg').remove();
+      $('#Prescription').modal('show');
+      image= "<img class='prImg' src='"+$(this)[0].src+"'>";
+      $(image).css({'width': '400px'}).appendTo('.PrescriptionModal');
+      // (this).clone().css('width', '400px')
     });
 
   });
