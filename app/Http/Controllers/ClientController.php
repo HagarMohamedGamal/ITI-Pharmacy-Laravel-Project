@@ -24,10 +24,10 @@ class ClientController extends Controller
         return view('clients.index');
     }
 
-    public function show($clientId)
+    public function show(Client $client)
     {
        
-        $client = Client::find($clientId);
+        
         $this->authorize('view', $client);
         if($client->avatar)
             $client->avatar = Storage::url($client->avatar);
@@ -74,18 +74,17 @@ class ClientController extends Controller
         return redirect()->route('clients.index');
     }
 
-    function edit($clientId)
-    {
-        $client = Client::find($clientId);
+    function edit(Client $client)
+    {    
         return view('clients.create', [
-            "client" => Client::find($clientId),
+            "client" => $client,
         ]);
     }
 
     public function update(UpdateClientRequestWeb $request, $client)
     {
         $client = $request->only(['name', 'email', 'national_id', 'avatar', 'gender', 'birth_day', 'mobile']);
-        // dd($client);
+        
         $avatar = isset($client['avatar']) ? $client['avatar'] : "";
         if ($avatar) {
             $new_name = time() . '_' . $avatar->getClientOriginalExtension();
@@ -110,20 +109,14 @@ class ClientController extends Controller
         return redirect()->route('clients.index');
     }
 
-    public function destroy($client)
+    public function destroy(Client $client)
     {
-        $client = Client::find($client);
-        if ($client) {
+ 
             User::find($client->type->id)->delete();
             $client->delete();
             return response()->json([
                 'success' => 'Client deleted successfully!'
             ]);
-        } else {
-            return response()->json([
-                'error' => 'there is no such id!'
-            ]);
-        }
     }
 
 
