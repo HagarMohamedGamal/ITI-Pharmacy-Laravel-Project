@@ -201,12 +201,12 @@ to get the desired effect
           <div class="info">
             @role('pharmacy')
             <a href="{{route('pharmacies.edit', Auth::user()->typeable->id)}}" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
-            @else 
-                  @role('doctor')
+            @else
+            @role('doctor')
             <a href="{{route('doctors.edit', Auth::user()->typeable->id)}}" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
-                  @else
+            @else
             <a href="#" class="d-block"><strong>{{ Auth::user()->name }}</strong></a>
-                  @endrole
+            @endrole
             @endrole
           </div>
         </div>
@@ -218,7 +218,7 @@ to get the desired effect
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-                 
+
             <li class="nav-item">
               <a href="{{route("admin")}}" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
@@ -288,7 +288,7 @@ to get the desired effect
 
                 @role('pharmacy')
                 <li class="nav-item">
-                  <a href="{{route('revenue1.index')}}" class="nav-link">
+                  <a href="{{route('revenueForPharmacy.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Revenue</p>
                   </a>
@@ -332,100 +332,99 @@ to get the desired effect
             <li class="nav-header">EXAMPLES</li>
             <li class="nav-item">
               <a href="{{ asset("/bower_components/admin-lte/pages/examples/contacts.html")}}" class="nav-link">
-              <a href="{{ route('password.request') }}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Reset Password</p>
+                <a href="{{ route('password.request') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reset Password</p>
+                </a>
+            </li>
+
+            @guest
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('login') }}">
+                <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
               </a>
             </li>
-            
-                  @guest
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('login') }}">
-                      <i class="far fa-circle nav-icon"></i>{{ __('Login') }}
-                  </a>
-              </li>
-                  @if (Route::has('register'))
-                      <li class="nav-item">
-                          <a class="nav-link" href="{{ route('register') }}">
-                          <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
-                          </a>
-                      </li>
-                  @endif
+            @if (Route::has('register'))
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('register') }}">
+                <i class="far fa-circle nav-icon"></i>{{ __('Register') }}
+              </a>
+            </li>
+            @endif
 
-                  @else
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('logout') }}"
-                     onclick="event.preventDefault();
+            @else
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
                                    document.getElementById('logout-form').submit();">
-                      
-                      <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
-                  </a>
 
-                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                      @csrf
-                  </form>
-              </li>
-                  @endguest
+                <i class="far fa-circle nav-icon"></i>{{ __('Logout') }}
+              </a>
+
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+              </form>
+            </li>
+            @endguest
 
 
-        </li>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-  @yield('content')
-    </div>
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-
-    <!-- Main Footer -->
-    <footer class="main-footer">
-      <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
-      All rights reserved.
-      <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.0.2
+            </li>
+        </nav>
+        <!-- /.sidebar-menu -->
       </div>
-    </footer>
-  </div>
-  <!-- ./wrapper -->
+      <!-- /.sidebar -->
+    </aside>
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        @yield('content')
+      </div>
 
-  <!-- REQUIRED SCRIPTS -->
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
 
-  <!-- jQuery -->
-  <script src="{{ asset("/bower_components/admin-lte/plugins/jquery/jquery.min.js")}}"></script>
-  <script src="{{ asset("/bower_components/admin-lte/plugins/select2/js/select2.js")}}"></script>
-  <!-- Bootstrap -->
-  <script src="{{ asset("/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
-  <!-- DataTables -->
-  <script src="{{ asset("/bower_components/admin-lte/plugins/datatables/jquery.dataTables.js")}}"></script>
-  <script src="{{ asset("/bower_components/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.js")}}"></script>
-  <!-- AdminLTE -->
-  <script src="{{ asset("/bower_components/admin-lte/dist/js/adminlte.js")}}"></script>
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+          <b>Version</b> 3.0.2
+        </div>
+      </footer>
+    </div>
+    <!-- ./wrapper -->
 
-  <!-- OPTIONAL SCRIPTS -->
-  <script src="{{ asset("/bower_components/admin-lte/plugins/chart.js/Chart.min.js")}}"></script>
-  <script src="{{ asset("/bower_components/admin-lte/dist/js/pages/dashboard3.js")}}"></script>
-  <script>
-    // $(function () {
-    //   // $("#example1").DataTable();
-    //   $('#example2').DataTable({
-    //     "paging": true,
-    //     "lengthChange": false,
-    //     "searching": false,
-    //     "ordering": true,
-    //     "info": true,
-    //     "autoWidth": false,
-    //   });
-    // });
-  </script>
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script src="{{ asset("/bower_components/admin-lte/plugins/jquery/jquery.min.js")}}"></script>
+    <script src="{{ asset("/bower_components/admin-lte/plugins/select2/js/select2.js")}}"></script>
+    <!-- Bootstrap -->
+    <script src="{{ asset("/bower_components/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
+    <!-- DataTables -->
+    <script src="{{ asset("/bower_components/admin-lte/plugins/datatables/jquery.dataTables.js")}}"></script>
+    <script src="{{ asset("/bower_components/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.js")}}"></script>
+    <!-- AdminLTE -->
+    <script src="{{ asset("/bower_components/admin-lte/dist/js/adminlte.js")}}"></script>
+
+    <!-- OPTIONAL SCRIPTS -->
+    <script src="{{ asset("/bower_components/admin-lte/plugins/chart.js/Chart.min.js")}}"></script>
+    <script src="{{ asset("/bower_components/admin-lte/dist/js/pages/dashboard3.js")}}"></script>
+    <script>
+      // $(function () {
+      //   // $("#example1").DataTable();
+      //   $('#example2').DataTable({
+      //     "paging": true,
+      //     "lengthChange": false,
+      //     "searching": false,
+      //     "ordering": true,
+      //     "info": true,
+      //     "autoWidth": false,
+      //   });
+      // });
+    </script>
 
 </body>
 

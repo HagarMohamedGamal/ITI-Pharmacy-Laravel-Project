@@ -16,9 +16,9 @@
           <th width="20%">user</th>
           <th width="15%">price</th>
           <th width="15%">status</th>
-          
+
           <th width="20%">pharmacy</th>
-          
+
           <th width="30%">Action</th>
         </tr>
       </thead>
@@ -90,7 +90,7 @@
               <input type="text" name="pharmacy_id" id="pharmacy_id" class="form-control" />
             </div>
           </div>
-         
+
           <div class="form-group">
             <label class="control-label col-md-4">Actions </label>
             <div class="col-md-8">

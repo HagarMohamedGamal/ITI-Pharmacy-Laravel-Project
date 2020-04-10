@@ -21,6 +21,7 @@
 
       <script type="text/javascript">
       $(document).ready(function() {
+       
            $('#reveueTable').DataTable({
               "processing": true,
               "serverSide": true,

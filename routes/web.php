@@ -144,7 +144,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/roles', 'RolesController@create');
 
-Route::get('stripe', 'StripePaymentController@stripe')->middleware('auth');
+Route::get('stripe/{order}', 'OrderController@pay')->middleware('auth');
 Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post')->middleware('auth');
 
 
@@ -154,7 +154,7 @@ Route::get('ajaxdata/getAllData', 'RevenueController@getalldata')->name('ajaxdat
 Route::get('/revenue1', 'RevenueControllerForPharmacy@index')->name('revenueForPharmacy.index')->middleware(['role:pharmacy','auth']);
 Route::get('ajaxdata/getdata', 'RevenueControllerForPharmacy@getdata')->name('ajaxdata.getdata');
 
-// test only 
+// test only
 Route::get('/create2','OrderController@create2')->name('create2');
 Route::post('/auto','OrderController@auto')->name('auto');
 

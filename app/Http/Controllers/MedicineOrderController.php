@@ -42,7 +42,7 @@ class MedicineOrderController extends Controller
     public function update($id)
     {
         $order = Order::find($id);
-        // dd($order);
+        
         $order->status = 'waiting';
         $order->save();
         return redirect('/orders');

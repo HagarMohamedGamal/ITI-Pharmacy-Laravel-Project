@@ -53,8 +53,8 @@ class RevenueController extends Controller
                  return $pharmacy->id ;
              })
              ->addColumn('name', function(Pharmacy $pharmacy) {
-                  $id = $pharmacy->id;
-                 return User::find($id)->name;
+                //   $id = $pharmacy->id;
+                 return $pharmacy->type->name;
              })
              ->addColumn('totalOrders', function(Pharmacy $pharmacy) {
                   // $id = Auth::id();
