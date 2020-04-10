@@ -53,39 +53,27 @@ class DoctorController extends Controller
 
     function store(StoreDoctorRequest $request)
     {
+        $user = $request->only(['name', 'email', 'password']);
+        $user['password'] = Hash::make($request['password']);
+        $doctor = $request->only(['national_id', 'pharmacy_id', 'avatar', 'is_baned']);
         $avatar = $request->file('avatar');
         if($avatar){
-            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
-            $avatar->move(public_path('images'), $new_name);
+            $doctor['avatar'] = 'images/'.time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('storage/images'), $doctor['avatar']);
         }
         else
         {
-            $new_name = "default.jpg";
+            $doctor['avatar'] = "default.jpg";
         }
-
         $authUser = Auth::user();
         if($authUser->hasrole('pharmacy')){
-            $request->pharmacy_id = $authUser->typeable->id;
+            $doctor['pharmacy_id'] = $authUser->typeable->id;
         }
-
-        $user =User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request['password']),
-        ]);
-        $user= $user->refresh();
-
-        $doctor=Doctor::create([
-            'national_id' => $request->national_id,
-            'avatar' => $new_name,
-            'pharmacy_id' => $request->pharmacy_id,
-            'is_baned' => $request->is_baned
-        ]);
-        $doctor = $doctor->refresh();
+        $user = User::create($user)->refresh();
+        $doctor=Doctor::create($doctor)->refresh();
+        $doctor->type()->save($user);
         $pharmacy = Pharmacy::find($request->pharmacy_id);
         $pharmacy->doctors()->save($doctor);
-
-        $doctor->type()->save($user);
         $user->assignRole('doctor');
         return redirect()->route('doctors.index');
     }

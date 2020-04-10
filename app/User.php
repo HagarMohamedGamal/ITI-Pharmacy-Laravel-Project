@@ -63,4 +63,13 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyApiEmail); // my notification
     }
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    // protected $dateFormat = 'Y-m-d';
+    protected $dates = [
+        'created_at',
+    ];
 }
