@@ -97,13 +97,6 @@ class DoctorController extends Controller
         $doctor = $request->only(['national_id', 'pharmacy_id', 'avatar', 'is_baned']);
         $avatar = $request->file('avatar');
 
-        if (request()->ajax()) {
-            $doctor = Doctor::find($doctorId);
-            $this->banDoctor($doctor);
-            return response()->json([
-                'is_baned' => $doctor->isBanned(),
-            ]);
-        }
         if($avatar){
             $doctor['avatar'] = 'images/'.time() . '_' . $avatar->getClientOriginalExtension();
             $avatar->move(public_path('storage/images'), $doctor['avatar']);
@@ -120,6 +113,15 @@ class DoctorController extends Controller
         return redirect()->route('doctors.index');
     }
 
+    function updateajax($doctor){
+        if (request()->ajax()) {
+            $doctor = Doctor::find($doctor);
+            $this->banDoctor($doctor);
+            return response()->json([
+                'is_baned' => $doctor->isBanned(),
+            ]);
+        }
+    }
         
     function indexDataTable()
     {
@@ -147,7 +149,7 @@ class DoctorController extends Controller
                 $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
                 $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
                 $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
-                $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
+                $button .= '<button type="button" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
                 return $button;
             });
 
