@@ -23,16 +23,16 @@ class OrderController extends Controller
             $user = Auth::user();
 
             if ($user->hasRole('super-admin'))
-                $orders = Order::with(['pharmacy.type', 'user.type'])->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->latest()->get();
             elseif ($user->hasRole('pharmacy'))
-                $orders = Order::with(['pharmacy.type', 'user.type'])->where('pharmacy_id', $user->typeable_id)->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->where('pharmacy_id', $user->typeable_id)->latest()->get();
             elseif ($user->hasRole('doctor')) {
                 $doctor = Doctor::where('id', $user->typeable_id)->first();
-                $orders = Order::with(['pharmacy.type', 'user.type'])->where('pharmacy_id', $doctor->pharmacy_id)->latest()->get();
+                $orders = Order::with(['pharmacy.type', 'address', 'address.area','doctor.type', 'user.type'])->where('pharmacy_id', $doctor->pharmacy_id)->latest()->get();
             } else
                 $orders = null;
 
-            return datatables()->of($orders)
+            $table= datatables()::of($orders)
                 ->addColumn('action', function ($data) {
                     $button = '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm">Delete</button>';
                     $button .= '<a type="button" href="/orders/' . $data->id . '" name="show" id="' . $data->id . '" class=" btn btn-primary btn-sm">show</a>';
@@ -41,9 +41,16 @@ class OrderController extends Controller
                         $button .= '<a type="button" href="/stripe/' . $data->id . '" name="pay" id="' . $data->id . '" class=" btn btn-danger btn-sm">pay online</a>';
                     }
                     return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+                });
+               
+            if ($user->hasRole('super-admin')) {
+                $table->addColumn('pharmacy', function ( $data) {
+                    
+                    return  $data->pharmacy ? $data->pharmacy->type->name : "";
+                });
+                
+            }
+            return $table->toJson();
         }
 
 
@@ -121,6 +128,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::find($request->order);
+       
         // $this->authorize('view', $order);
         if ($user->hasAnyRole('pharmacy , doctor'))
             if ($order->status == 'new')

@@ -123,12 +123,15 @@ class OrderController extends Controller
 
   public function show($order)
   {
+		
 	$user = Auth::user();
 
-    $exist = Order::where('id', $order);
+	$exist = Order::where('id', $order);
+	
     if ($exist->count()>0) 
     {
 		$order = Order::find($order);
+			dd($order->address());
     	if($order->user_id == $user->id)
     	{
 	    	return response()->json([
