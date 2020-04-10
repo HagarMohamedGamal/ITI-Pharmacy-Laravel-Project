@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 use Auth;
 
 class ClientController extends Controller
@@ -60,7 +61,7 @@ class ClientController extends Controller
             ]);
         }
 
-        $userLoginDate = auth()->user();
+        $userLoginDate = $user;
         if($userLoginDate->hasrole('client')){
             $userLoginDate->typeable->last_login = Carbon::now();
             $userLoginDate->typeable->save();

@@ -26,7 +26,7 @@ class StoreClientOrderRequest extends FormRequest
     {
         return [
             'delivering_address_id' => 'required|Numeric',
-            'image.*' => 'required|image|mimes:jpg,jpeg,png',
+            'image.*' => 'required|image|mimes:jpg,jpeg',
             'is_insured' => [
                     'required',
                     Rule::in([1, 0]),
