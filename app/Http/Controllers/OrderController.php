@@ -14,6 +14,7 @@ use App\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use DB;
 
 class OrderController extends Controller
 {
@@ -43,10 +44,10 @@ class OrderController extends Controller
                     }
                     return $button;
                 });
-               
+
             if ($user->hasRole('super-admin')) {
                 $table->addColumn('pharmacy', function ( $data) {
-                    
+
                     return  $data->pharmacy ? $data->pharmacy->type->name : "";
                 });
                 $table->addColumn('creator', function ($data) {
@@ -54,7 +55,7 @@ class OrderController extends Controller
                     return  $data->creator_type ;
                 });
 
-                
+
             }
             return $table->toJson();
         }
@@ -133,15 +134,15 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $user = Auth::user();
-        
-       
+
+
         // $this->authorize('view', $order);
         if ($user->hasAnyRole('pharmacy , doctor'))
             if ($order->status == 'new')
                 $order->status = 'Processing';
         $order->save();
 
-       
+
         return view('orders.show', [
             'order' => $order,
         ]);
@@ -149,10 +150,10 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-       
+
         $this->authorize('delete', $order);
         $order->delete();
-        
+
     }
 
     public function pay(Request $request)
@@ -161,7 +162,7 @@ class OrderController extends Controller
         $ordersId = $request->order;
         $order = Order::find($ordersId);
         $amountTotal = DB::table("orders")->select(DB::raw("SUM((medicines.price /100)* medicine_order.quantity) as total_price"))->leftjoin("medicine_order", "medicine_order.order_id", "=", "orders.id")->leftjoin("medicines", "medicine_order.medicine_id", "=", "medicines.id")->where('orders.id', $order->id)->first();
-         $userData = DB::table("users")->select(DB::raw("users.name as username , users.id as userId,users.email as email_user"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
+        $userData = DB::table("users")->select(DB::raw("users.name as username , users.id as userId,users.email as email_user"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
         return view('stripe', [
             'order' => $order->id,
             'amountTotal' => $amountTotal->total_price,

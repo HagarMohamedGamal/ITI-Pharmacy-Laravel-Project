@@ -12,6 +12,8 @@ use Session;
 
 use Stripe;
 
+use DB;
+
 
 
 class StripePaymentController extends Controller
