@@ -136,7 +136,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
 
-        // $this->authorize('view', $order);
+        $this->authorize('view', $order);
         if ($user->hasAnyRole('pharmacy , doctor', 'super-admin'))
             if ($order->status=="New")
                 $order->status = 'Processing';

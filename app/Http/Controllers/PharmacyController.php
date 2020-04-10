@@ -51,6 +51,7 @@ class PharmacyController extends Controller
     public function show(Request $request)
     {
         $pharmacy = Pharmacy::find($request->pharmacy);
+       
         $this->authorize('view', $pharmacy);
         return view('pharmacy.show', [
             'pharmacy' => $pharmacy

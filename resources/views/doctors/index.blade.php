@@ -9,7 +9,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">DataTable with default features</h3>
+            <h3 class="card-title">Doctors DataTable</h3>
             <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
           </div>
           <!-- /.card-header -->
@@ -33,6 +33,7 @@
                     <th>action</th>
                   </tr>
                 </thead>
+                
               </table>
             </div>
 
@@ -59,7 +60,7 @@
         <h2 class="modal-title">Confirmation</h2>
       </div>
       <div class="modal-body">
-        <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+        <h4 align="center" style="margin:0;">Are you sure you want to remove this doctor?</h4>
       </div>
       <div class="modal-footer">
         <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
@@ -74,7 +75,7 @@
 <script type="text/javascript">
   $(function() {
     if ("{{auth()->user()->hasrole('pharmacy')}}") {
-      table = $("#doctorIndextable").DataTable({
+       $("#doctorIndextable").DataTable({
         processing: true,
         serverSide: true,
         ajax: {
@@ -82,14 +83,18 @@
         },
         columns: [{
             data: 'id',
-            name: 'id'
+            name: 'id',
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'avatar',
             name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::to('/') }}/avatars/" + data + " width='70' class='img-thumbnail' />";
-                } 
+            render: function(data, type, full, meta) {
+              return "<img src={{ URL::to('/') }}/avatars/" + data + " width='70' class='img-thumbnail' />";
+            },
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'name',
@@ -109,12 +114,14 @@
           },
           {
             data: 'action',
-            name: 'action'
+            name: 'action',
+            orderable: false,
+            searchable: false,
           },
         ]
       });
     } else {
-      table = $("#doctorIndextable").DataTable({
+       $("#doctorIndextable").DataTable({
         processing: true,
         serverSide: true,
         ajax: {
@@ -122,14 +129,18 @@
         },
         columns: [{
             data: 'id',
-            name: 'id'
+            name: 'id',
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'avatar',
             name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
-                } 
+            render: function(data, type, full, meta) {
+              return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
+            },
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'name',
@@ -153,13 +164,15 @@
           },
           {
             data: 'action',
-            name: 'action'
+            name: 'action',
+            orderable: false,
+            searchable: false,
           },
         ]
       });
     }
 
-
+    
 
 
     $(document).on('click', '.delete', function() {

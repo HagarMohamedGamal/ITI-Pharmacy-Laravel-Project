@@ -9,13 +9,10 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">DataTable with default features</h3>
-            <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
+            <h3 class="card-title">Clients</h3>
+            <a href="{{route('clients.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Client</a>
           </div>
-          <!-- /.card-header -->
-          <form id="update_ban" method="POST" enctype="multipart/form-data">
-            @method('PUT')
-            @csrf
+         
             <div class="card-body">
               <table class="table table-bordered" id="clientIndextable">
                 <thead>
@@ -29,10 +26,11 @@
                     <th>action</th>
                   </tr>
                 </thead>
+                
               </table>
             </div>
 
-          </form>
+         
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
@@ -55,7 +53,7 @@
         <h2 class="modal-title">Confirmation</h2>
       </div>
       <div class="modal-body">
-        <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+        <h4 align="center" style="margin:0;">Are you sure you want to remove this client?</h4>
       </div>
       <div class="modal-footer">
         <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
@@ -69,45 +67,53 @@
 
 <script type="text/javascript">
   $(function() {
-      table = $("#clientIndextable").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-          url: '/clients'
+    table = $("#clientIndextable").DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: '/clients'
+      },
+      columns: [{
+          data: 'id',
+          name: 'id',
+          orderable: false,
+          searchable: false,
         },
-        columns: [{
-            data: 'id',
-            name: 'id'
+        {
+          data: 'avatar',
+          name: 'avatar',
+          render: function(data, type, full, meta) {
+            return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
           },
-          {
-            data: 'avatar',
-            name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
-                } 
-          },
-          {
-            data: 'name',
-            name: 'name'
-          },
-          {
-            data: 'email',
-            name: 'email'
-          },
-          {
-            data: 'national_id',
-            name: 'national_id'
-          },
-          {
-            data: 'created_at',
-            name: 'created_at'
-          },
-          {
-            data: 'action',
-            name: 'action'
-          },
-        ]
-      });
+          orderable: false,
+          searchable: false,
+        },
+        {
+          data: 'name',
+          name: 'name'
+        },
+        {
+          data: 'email',
+          name: 'email'
+        },
+        {
+          data: 'national_id',
+          name: 'national_id'
+        },
+        {
+          data: 'created_at',
+          name: 'created_at'
+        },
+        {
+          data: 'action',
+          name: 'action',
+          orderable: false,
+          searchable: false,
+        },
+      ]
+    });
+
+
 
 
     $(document).on('click', '.delete', function() {

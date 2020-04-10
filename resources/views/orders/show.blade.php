@@ -54,7 +54,7 @@
       </div>
       <div class="modal-body">
         <span id="form_result"></span>
-        <form method="post" id="sample_form" autocomplete="off" class="form-horizontal " enctype="multipart/form-data">
+        <form method="post" id="sample_form" autocomplete="off" class="form-horizontal " >
           @csrf
           <div class="form-group">
             <label class="control-label col-md-4">name</label>

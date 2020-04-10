@@ -35,6 +35,10 @@
           <th></th>
           <th></th>
           <th></th>
+          @role('super-admin')
+          <th></th>
+          <th></th>
+          @endrole
           <th></th>
           <th></th>
           <th></th>
@@ -159,6 +163,8 @@
 
             data: 'id',
             name: 'id',
+            orderable: false,
+            searchable: false,
 
 
           }, {
