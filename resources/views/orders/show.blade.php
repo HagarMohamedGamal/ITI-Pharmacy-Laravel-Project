@@ -184,11 +184,11 @@
     });
 
   $(document).on('click', '.notify', function() {
-    console.log('xxx',$('.notify').attr('id'));
+    console.log($('.notify').attr('id'));
     
     $.ajax({
         type: "post",
-        url: "/orders/notifyuser/" + $('.notify').attr('id'),
+        url: "/orders/notifyuser/" + $('.notify').attr('id') + "/" + $('#hidden_id').val(),
       })
       .done(function(response) {
         $('.notify').hide();

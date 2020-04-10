@@ -16,9 +16,9 @@ class notifyUserOrder extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($orderId)
     {
-        //
+        $this->orderId = $orderId;
     }
 
     /**
@@ -42,7 +42,7 @@ class notifyUserOrder extends Notification
     {
         return (new MailMessage)
                     ->line("you're order is ready.")
-                    ->action('Confirm Order', url('/confirmorder'))
+                    ->action('Confirm Order', url('/api/confirmorder/'.$this->orderId))
                     ->line('Thank you for using our application!');
     }
 

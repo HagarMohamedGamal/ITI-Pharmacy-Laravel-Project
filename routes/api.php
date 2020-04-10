@@ -54,3 +54,4 @@ Route::post('/orders', 'API\OrderController@store')->middleware('auth:sanctum');
 Route::put('/orders/{order}', 'API\OrderController@update')->middleware('auth:sanctum');
 Route::get('/orders/{order}', 'API\OrderController@show')->middleware('auth:sanctum');
 Route::delete('/orders/{order}', 'API\OrderController@destroy')->middleware('auth:sanctum');
+Route::post('/confirmorder/{orderId}', 'API\OrderController@confirmorder')->middleware('auth:sanctum');
