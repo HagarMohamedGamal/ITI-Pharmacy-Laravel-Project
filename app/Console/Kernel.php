@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
-use App\Console\Commands\InactiveUserCommand;
+// use App\Console\Commands\InactiveUserCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        InactiveUserCommand::class,
+        'App\Console\Commands\InactiveUserCommand',
+        'App\Console\Commands\NewOrderCommand',
     ];
 
     /**
@@ -27,7 +28,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('email:inactive-users')
-            ->daily();
+            ->everyFiveMinutes()
+            ->evenInMaintenanceMode()
+            ->runInBackground();
+        $schedule->command('order:new-order')
+            ->everyMinute();
     }
 
     /**

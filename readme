@@ -1,0 +1,2 @@
+add * * * * * cd /path/to/project && php artisan schedule:run >> /dev/null 2>&1
+to "crontab -e" so that scheduling can take effect

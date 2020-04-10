@@ -21,6 +21,7 @@ use App\User;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::put('/clients/forgetpassword', 'API\VerificationApiController@reset');
 
 Route::post('clients/login', 'API\ClientController@login');
 Route::post('/clients/register', 'API\ClientController@register');
@@ -31,8 +32,8 @@ Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:s
 
 
 
-Route::get('email/verify/{id}', 'VerificationApiController@verify')->name('verificationapi.verify');
-Route::get('email/resend', 'VerificationApiController@resend')->name('verificationapi.resend');
+Route::get('email/verify/{id}', 'API\VerificationApiController@verify')->name('verificationapi.verify');
+Route::get('email/resend', 'API\VerificationApiController@resend')->name('verificationapi.resend');
 
 
 

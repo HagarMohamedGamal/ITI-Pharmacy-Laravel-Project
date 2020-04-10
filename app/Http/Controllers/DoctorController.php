@@ -4,17 +4,12 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Doctor;
-use DataTables;
 use App\Pharmacy;
 use Illuminate\Http\Request;
-use App\Http\Requests\DoctorRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreDoctorRequest;
-use App\Http\Requests\UpdateDoctorRequest;
-use Spatie\Permission\Models\Role;
-// use Response;
 
 class DoctorController extends Controller
 {
@@ -37,9 +32,9 @@ class DoctorController extends Controller
         ]);
     }
 
-    function destroy(Request $request)
+    function destroy($doctor)
     {
-        $doctor = Doctor::find($request->doctor);
+        $doctor = Doctor::find($doctor);
         $this->authorize('delete', $doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
@@ -58,13 +53,14 @@ class DoctorController extends Controller
 
     function store(StoreDoctorRequest $request)
     {
-        $uploadedFile = $request->file('avatar');
-        if($uploadedFile){
-            $filename =  time().'_'.$uploadedFile->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs("public/avatars", $filename);
-            $pathPeices = explode('/', $path);
-            array_shift($pathPeices);
-            $path = implode('/', $pathPeices);
+        $avatar = $request->file('avatar');
+        if($avatar){
+            $new_name = time() . '_' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images'), $new_name);
+        }
+        else
+        {
+            $new_name = "default.jpg";
         }
 
         $authUser = Auth::user();
@@ -81,12 +77,11 @@ class DoctorController extends Controller
 
         $doctor=Doctor::create([
             'national_id' => $request->national_id,
-            'avatar' => $uploadedFile ? $path : "",
+            'avatar' => $new_name,
             'pharmacy_id' => $request->pharmacy_id,
             'is_baned' => $request->is_baned
         ]);
         $doctor = $doctor->refresh();
-
         $pharmacy = Pharmacy::find($request->pharmacy_id);
         $pharmacy->doctors()->save($doctor);
 
