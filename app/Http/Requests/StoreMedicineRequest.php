@@ -16,8 +16,8 @@ class StoreMedicineRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=> 'required|min:5',
-            'type'=> 'required|min:5',
+            'name'=> 'required|min:2',
+            'type'=> 'required|min:2',
             'price'=> 'required|numeric',
             'quantity'=> 'required|numeric'
 

@@ -38,7 +38,7 @@ class Order extends Model
         return $this->belongsTo(Pharmacy::class);
     }
     public function address()
-    {   
+    {
         return $this->belongsTo(UserAddress::class, 'useraddress_id');
     }
     public function setCreated_atAttribute($value)
