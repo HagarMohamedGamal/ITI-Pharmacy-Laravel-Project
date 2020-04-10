@@ -15,6 +15,8 @@ class CreateOrderImagesTable extends Migration
     {
         Schema::create('order_images', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
+            $table->unsignedInteger('order_id');
             $table->timestamps();
         });
     }

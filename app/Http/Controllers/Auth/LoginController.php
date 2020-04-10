@@ -30,11 +30,6 @@ class LoginController extends Controller
     // protected $redirectTo = RouteServiceProvider::HOME;
     protected function redirectTo()
     {
-        $user = auth()->user();
-        if($user->hasrole('client')){
-            $user->typeable->last_login = Carbon::now();
-            $user->typeable->save();
-        };
         return '/';
     }
 

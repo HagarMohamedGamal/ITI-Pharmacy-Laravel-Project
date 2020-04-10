@@ -23,19 +23,19 @@ class Order extends Model
     }
     public function images()
     {
-        return $this->hasMany('App/OrderImage');
+        return $this->hasMany(OrderImage::class);
     }
-    // public function user()
-    // {
-    //     return $this->belongsTo('App/Client');
-    // }
-    // public function doctor()
-    // {
-    //     return $this->belongsTo('App/Doctor');
-    // }
-    // public function pharmacy()
-    // {
-    //     return $this->belongsTo('App/Pharmacy');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(Client::class);
+    }
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
+    public function pharmacy()
+    {
+        return $this->belongsTo(Pharmacy::class);
+    }
 
 }

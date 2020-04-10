@@ -20,60 +20,11 @@ class DoctorController extends Controller
 {
     function index()
     {
-        // dd($doctors);
-        // $user = Auth::user();
-        // $users = User::whereHas('roles' , function($q){
-        //     $q->where('name', 'doctor');
-        // })->get();
-        // dd($users);
         if(request()->ajax()){
             return $this->indexDataTable();
         }
         return view('doctors.index');
     }
-    function indexDataTable()
-    {
-        $user = Auth::user();
-        if($user->hasrole('pharmacy')){
-            $doctors = Doctor::query()->where('pharmacy_id', $user->typeable->id);
-        } else{
-            $doctors = Doctor::query();
-        }
-        $data = DataTables()::of($doctors)
-            ->addColumn('id', function(Doctor $doctor){
-                return $doctor->id;
-            })
-            ->addColumn('name', function(Doctor $doctor){
-                return $doctor->type->name;
-            })
-            ->addColumn('email', function(Doctor $doctor){
-                return $doctor->type->email;
-            })
-            ->addColumn('created_at', function(Doctor $doctor){
-                return $doctor->type->created_at;
-            })
-            ->addColumn('action', function(Doctor $doctor){
-                $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
-
-                $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
-                $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
-                // $button .= '&nbsp;&nbsp;';
-                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
-                $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
-                return $button;
-            });
-
-            if(! $user->hasrole('pharmacy')){
-                $data->addColumn('pharmacy_id', function(Doctor $doctor){
-                    $pharmacy = $doctor->pharmacy;
-                    $pharmacy = $pharmacy ? $pharmacy->type->name : "";
-                    return $pharmacy;
-                });
-            }
-
-            return $data->toJson();
-    }
-
 
     function show($doctorId)
     {
@@ -86,7 +37,6 @@ class DoctorController extends Controller
         ]);
     }
 
-
     function destroy(Request $request)
     {
         $doctor = Doctor::find($request->doctor);
@@ -98,7 +48,6 @@ class DoctorController extends Controller
         ]);
     }
 
-    //  Creat Doctor View
     function create()
     {
         $pharmacies = Pharmacy::all();
@@ -107,8 +56,6 @@ class DoctorController extends Controller
         ]);
     }
 
-
-    //  Insert Doctor
     function store(StoreDoctorRequest $request)
     {
         $uploadedFile = $request->file('avatar');
@@ -165,11 +112,7 @@ class DoctorController extends Controller
     {
         if (request()->ajax()) {
             $doctor = Doctor::find($request->doctor);
-            if ($doctor->isBanned()) {
-                $doctor->unban();
-            } else {
-                $doctor->ban();
-            }
+            $this->banDoctor($doctor);
             return response()->json([
                 'is_baned' => $doctor->isBanned(),
             ]);
@@ -203,4 +146,55 @@ class DoctorController extends Controller
         return redirect()->route('doctors.index');
     }
 
+        
+    function indexDataTable()
+    {
+        $user = Auth::user();
+        if($user->hasrole('pharmacy')){
+            $doctors = Doctor::query()->where('pharmacy_id', $user->typeable->id);
+        } else{
+            $doctors = Doctor::query();
+        }
+        $data = DataTables()::of($doctors)
+            ->addColumn('id', function(Doctor $doctor){
+                return $doctor->id;
+            })
+            ->addColumn('name', function(Doctor $doctor){
+                return $doctor->type->name;
+            })
+            ->addColumn('email', function(Doctor $doctor){
+                return $doctor->type->email;
+            })
+            ->addColumn('created_at', function(Doctor $doctor){
+                return $doctor->type->created_at;
+            })
+            ->addColumn('action', function(Doctor $doctor){
+                $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
+
+                $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
+                $button .= '<a name="edit" id="'.$doctor->id.'" style="border-radius: 20px;" class="edit btn btn-primary btn-sm p-0" href="/doctors/'.$doctor->id.'/edit"><i class="fas fa-edit m-2"></i></a>';
+                // $button .= '&nbsp;&nbsp;';
+                $button .= '<button type="button" name="delete" id="'.$doctor->id.'" style="border-radius: 20px;" class="delete btn btn-danger btn-sm p-0"><i class="fas fa-trash m-2"></i></button>';
+                $button .= '<button type="submit" name="ban" id="'.$doctor->id.'" style="border-radius: 20px;" class="ban btn btn-sm '.$ban.' p-0"><i class="fas fa-ban m-2"></i></button>';
+                return $button;
+            });
+
+            if(! $user->hasrole('pharmacy')){
+                $data->addColumn('pharmacy_id', function(Doctor $doctor){
+                    $pharmacy = $doctor->pharmacy;
+                    $pharmacy = $pharmacy ? $pharmacy->type->name : "";
+                    return $pharmacy;
+                });
+            }
+
+            return $data->toJson();
+    }
+
+    function banDoctor($doctor){
+        if ($doctor->isBanned()) {
+            $doctor->unban();
+        } else {
+            $doctor->ban();
+        }
+    }
 }

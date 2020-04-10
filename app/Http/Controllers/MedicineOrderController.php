@@ -10,7 +10,7 @@ class MedicineOrderController extends Controller
 {
     public function store(Request $request)
     {
-        
+      
         if ($request->status == 'new') {
            
             $medicine = Medicine::create([
@@ -31,7 +31,9 @@ class MedicineOrderController extends Controller
         $order = Order::find($request->hidden_id);
         
         $order->medicines()->attach($medicine, ['quantity' => $request->quantity,]);
-
+       
+        $order->price = $order->price + ($medicine->price * $request->quantity);
+        $order->save();
 
 
         return response()->json(['success' => 'Data Added successfully.']);

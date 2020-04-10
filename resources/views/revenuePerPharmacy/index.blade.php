@@ -3,23 +3,35 @@
 
 @section('content')
       <div class="container m-5 mx-auto">
-          <table class="table table-bordered data-table text-center display">
+          <table id="reveueTable" class="table table-bordered data-table text-center display">
               <thead>
                 <tr>
-                  <th scope="col">Pharmacy ID</th>
-                  <th scope="col">Pharmacy Name</th>
-                  <th scope="col">Total Orders</th>
-                  <th scope="col">TotalRevenue</th>
+                  <th scope="col">id</th>
+                  <th scope="col">name</th>
+                  <th scope="col">total Orders</th>
+                  <th scope="col">total Revenue</th>
+
+
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                    <td>{{ $pharmacy->id}}</td>
-                    <td>{{ $pharmacy_name}}</td>
-                    <td>{{ $pharmacy->orders->count() }}</td>
-                    <td>{{ $pharmacy->orders->sum("price") }}</td>
-                </tr>
-              </tbody>
+
             </table>
       </div>
+
+
+      <script type="text/javascript">
+      $(document).ready(function() {
+           $('#reveueTable').DataTable({
+              "processing": true,
+              "serverSide": true,
+              "ajax": "{{ route('ajaxdata.getdata') }}",
+              "columns":[
+                  { "data": "id" },
+                  { "data": "name" },
+                  { "data": "totalOrders" },
+                  { "data": "totalRevenue" }
+              ]
+           });
+      });
+      </script>
 @endsection

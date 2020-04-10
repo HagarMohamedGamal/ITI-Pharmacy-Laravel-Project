@@ -39,6 +39,11 @@ Route::get('email/resend/{id}', 'API\VerificationApiController@resend')->name('v
 
 
 
+// Route::get('/orders', 'API\OrderController@index')->middleware('auth:sanctum');
+Route::post('/orders', 'API\OrderController@store')->middleware('auth:sanctum');
+Route::put('/orders/{order}', 'API\OrderController@update')->middleware('auth:sanctum');
+Route::get('/orders/{order}', 'API\OrderController@show')->middleware('auth:sanctum');
+Route::delete('/orders/{order}', 'API\OrderController@destroy')->middleware('auth:sanctum');
     
 
 

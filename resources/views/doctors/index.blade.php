@@ -21,6 +21,7 @@
                 <thead>
                   <tr>
                     <th>id</th>
+                    <th>avatar</th>
                     <th>name</th>
                     <th>email</th>
                     <th>national id</th>
@@ -84,6 +85,13 @@
             name: 'id'
           },
           {
+            data: 'avatar',
+            name: 'avatar',
+              render: function(data, type, full, meta){
+                return "<img src={{ URL::to('/') }}/avatars/" + data + " width='70' class='img-thumbnail' />";
+                } 
+          },
+          {
             data: 'name',
             name: 'name'
           },
@@ -115,6 +123,13 @@
         columns: [{
             data: 'id',
             name: 'id'
+          },
+          {
+            data: 'avatar',
+            name: 'avatar',
+              render: function(data, type, full, meta){
+                return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
+                } 
           },
           {
             data: 'name',

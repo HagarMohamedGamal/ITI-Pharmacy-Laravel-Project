@@ -27,20 +27,19 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        $exist= User::where('id', Request()->client);
-        if($exist->count()>0)
+        $client= User::find(Request()->client);
+        if($client)
         {
-            $user= User::find(Request()->client);
-            $client= Client::find($user->typeable->id);
+            $client= User::find(Request()->client);
             return [
                 'name' => 'required|min:2',
-                'email' => [
-                    'required',
+                'email'=> [
                     'email',
-                    Rule::unique('users')->ignore($user->id),
+                    'required',
+                    Rule::unique('users')->ignore($client->id)
                 ],
                 'national_id' => [
-                    // Rule::unique('clients')->ignore($client->id),
+                    Rule::unique('clients')->ignore($client->typeable->id),
                     'min:10'
                 ],
                 'avatar' => 'image|mimes:jpg,jpeg',
@@ -58,7 +57,7 @@ class UpdateClientRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'name xxx is required',
+            'name.required' => 'name is required',
             'name.min'  => 'name must be larger than 2 chars',
         ];
     }

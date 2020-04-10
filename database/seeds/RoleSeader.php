@@ -27,11 +27,7 @@ class RoleSeader extends Seeder
         $permUpdateDoctor->syncRoles($roleDoctor, $rolePharmacy);
         $permUpdatePharmacy->assignRole($rolePharmacy);
 
-        // $user = Auth::user();
-
-        // if ($user) {
-        //     Auth::logout();
-        // }
+        
 
         $user = User::create([
             'name' => 'admin',
