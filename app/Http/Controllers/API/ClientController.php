@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Validation\ValidationException;
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class ClientController extends Controller
 {
@@ -59,10 +60,12 @@ class ClientController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+        Auth::login($user);
 
         $userLoginDate = auth()->user();
+        
         if($userLoginDate->hasrole('client')){
-            $userLoginDate->typeable->last_login = Carbon::now();
+            $userLoginDate->typeable->last_login = now();
             $userLoginDate->typeable->save();
         };
 

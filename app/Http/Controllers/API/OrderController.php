@@ -131,7 +131,7 @@ class OrderController extends Controller
     if ($exist->count()>0) 
     {
 		$order = Order::find($order);
-			dd($order->address());
+		
     	if($order->user_id == $user->id)
     	{
 	    	return response()->json([

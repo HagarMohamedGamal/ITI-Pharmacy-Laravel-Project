@@ -161,7 +161,7 @@ class OrderController extends Controller
         $ordersId = $request->order;
         $order = Order::find($ordersId);
         $amountTotal = DB::table("orders")->select(DB::raw("SUM((medicines.price /100)* medicine_order.quantity) as total_price"))->leftjoin("medicine_order", "medicine_order.order_id", "=", "orders.id")->leftjoin("medicines", "medicine_order.medicine_id", "=", "medicines.id")->where('orders.id', $order->id)->first();
-         $userData = DB::table("users")->select(DB::raw("users.name as username , users.id as userId,users.email as email_user"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
+        $userData = DB::table("users")->select(DB::raw("users.name as username , users.id as userId,users.email as email_user"))->leftjoin("orders","orders.user_id","=","users.id")->where('orders.id', $order->id)->first();
         return view('stripe', [
             'order' => $order->id,
             'amountTotal' => $amountTotal->total_price,
