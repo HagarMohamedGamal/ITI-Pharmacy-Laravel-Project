@@ -13,9 +13,7 @@
             <a href="{{route('doctors.create')}}" class="btn btn-info float-right"><i class="fas fa-plus"></i>Create Doctor</a>
           </div>
           <!-- /.card-header -->
-          <form id="update_ban" method="POST" enctype="multipart/form-data">
-            @method('PUT')
-            @csrf
+          <div id="update_ban">
             <div class="card-body">
               <table class="table table-bordered" id="doctorIndextable">
                 <thead>
@@ -36,7 +34,7 @@
               </table>
             </div>
 
-          </form>
+          </div>
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
@@ -87,9 +85,9 @@
           {
             data: 'avatar',
             name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::to('/') }}/avatars/" + data + " width='70' class='img-thumbnail' />";
-                } 
+            render: function(data, type, full, meta) {
+              return "<img src={{ URL::asset('/storage/images') }}/" + data + " width='70' class='img-thumbnail' />";
+            }
           },
           {
             data: 'name',
@@ -127,9 +125,9 @@
           {
             data: 'avatar',
             name: 'avatar',
-              render: function(data, type, full, meta){
-                return "<img src={{ URL::asset('/storage') }}/" + data + " width='70' class='img-thumbnail' />";
-                } 
+            render: function(data, type, full, meta) {
+              return "<img src={{ URL::asset('/storage/images') }}/" + data + " width='70' class='img-thumbnail' />";
+            }
           },
           {
             data: 'name',
@@ -192,30 +190,17 @@
       })
     });
 
-
-
-
-
-
-
     $(document).on('click', '.ban', function() {
       doctor_id = $(this).attr('id');
 
       const token = $('meta[name="csrf-token"]').attr('content');
-      console.log(token);
-    });
-
-    $('#update_ban').on('submit', function(event) {
-      event.preventDefault();
       console.log(doctor_id);
       $.ajax({
-        url: "/doctors/" + doctor_id,
-        method: "POST",
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData: false,
-        dataType: "json",
+        url: "/doctors/updateajax/" + doctor_id,
+        type: "POST",
+        data: {
+          '_token': token,
+        },
         success: function(data) {
           let ban = data.is_baned;
           banclass = ban ? "btn-dark" : "btn-secondary";
