@@ -21,9 +21,9 @@ class DoctorController extends Controller
         return view('doctors.index');
     }
 
-    function show($doctorId)
+    function show(Doctor $doctor)
     {
-        $doctor = Doctor::find($doctorId);
+       
         $this->authorize('view', $doctor);
         if($doctor->avatar)
             $doctor->avatar = Storage::url($doctor->avatar);
@@ -32,9 +32,8 @@ class DoctorController extends Controller
         ]);
     }
 
-    function destroy($doctor)
+    function destroy(Doctor $doctor)
     {
-        $doctor = Doctor::find($doctor);
         $this->authorize('delete', $doctor);
         User::find($doctor->type->id)->delete();
         $doctor->delete();
@@ -79,9 +78,8 @@ class DoctorController extends Controller
     }
 
     //  Edit Doctor View
-    function edit($doctorId)
+    function edit(Doctor $doctor)
     {
-        $doctor = Doctor::find($doctorId);
         $this->authorize('update', $doctor);
         return view('doctors.create', [
             "doctor" => $doctor,
@@ -113,9 +111,9 @@ class DoctorController extends Controller
         return redirect()->route('doctors.index');
     }
 
-    function updateajax($doctor){
+    function updateajax(Doctor $doctor){
         if (request()->ajax()) {
-            $doctor = Doctor::find($doctor);
+            
             $this->banDoctor($doctor);
             return response()->json([
                 'is_baned' => $doctor->isBanned(),
@@ -163,7 +161,7 @@ class DoctorController extends Controller
             return $data->toJson();
     }
 
-    function banDoctor($doctor){
+    function banDoctor(Doctor $doctor){
         if ($doctor->isBanned()) {
             $doctor->unban();
         } else {
