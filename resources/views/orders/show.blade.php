@@ -218,7 +218,7 @@
         })
     });
 
-<<<<<<< HEAD
+
     $(document).on('click', '.PrescriptionImage', function() {
       $('.prImg').remove();
       $('#Prescription').modal('show');
@@ -226,7 +226,7 @@
       $(image).css({'width': '400px'}).appendTo('.PrescriptionModal');
       // (this).clone().css('width', '400px')
     });
-=======
+
   $(document).on('click', '.notify', function() {
     console.log($('.notify').attr('id'));
     
@@ -238,7 +238,6 @@
         $('.notify').hide();
       })
   });
->>>>>>> bd1f10c29e780f7489af804d9c52e02cf0ed673c
 
   });
 </script>
