@@ -31,7 +31,12 @@ class OrderPolicy
      */
     public function view(User $user, Order $order)
     {
-       return ($user->typeable_id === $order->pharmacy_id) || ($user->typeable_id === $order->doctor_id) || $user->hasRole('super-admin');
+        if ($user->hasRole('doctor'))
+        {
+            $doctor = Doctor::find($user->typeable_id);
+            $result = $doctor->pharmacy_id == $order->pharmacy_id ? true : false ;
+        }
+       return ($user->typeable_id === $order->pharmacy_id) || ($user->typeable_id === $order->doctor_id) || $user->hasRole('super-admin') ||$result;
         
     }
 
@@ -55,9 +60,13 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
+        if ($user->hasRole('doctor')) {
+            $doctor = Doctor::find($user->typeable_id);
+            $result = $doctor->pharmacy_id == $order->pharmacy_id ? true : false;
+        }
         return ($user->typeable_id === $order->pharmacy_id) ||
          ($user->typeable_id === $order->doctor_id) ||
-          ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin');
+          ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin')|| $result;
     }
 
     /**
@@ -70,16 +79,12 @@ class OrderPolicy
     public function delete(User $user, Order $order)
     {
 
-        if($user->hasRole('doctor'))
-        {
-           
-            $doctor = Doctor::where('id', $user->typeable_id)->first();
-            
+        if ($user->hasRole('doctor')) {
+            $doctor = Doctor::find($user->typeable_id);
+            $result = $doctor->pharmacy_id == $order->pharmacy_id ? true : false;
         }
-        else 
-        $doctor = null;
 
-        return ($user->typeable_id === $order->pharmacy_id) || ($doctor->pharmacy_id === $order->pharmacy_id) ||
+        return ($user->typeable_id === $order->pharmacy_id) || $result ||
           ($user->typeable_id === $order->user_id) || $user->hasRole('super-admin');
     }
 
