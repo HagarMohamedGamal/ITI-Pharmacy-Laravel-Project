@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
 <h1 id="top">create</h1>
 
          <span id="form_result"></span>
@@ -20,9 +21,15 @@
     <input type="text" class="form-control" name="email">
   </div>
   <div class="form-group">
-    <label for="exampleFormControlSelect1">area_id</label>
-    <input type="text" class="form-control" name="area_id">
+    <label for="sel1">Area:</label>
+    <select class="form-control" id="sel1" name="area_id">
+      @foreach ($areas as $area)
+      <option value={{$area->id}}>{{$area->name}}</option>
+      @endforeach
+    </select>
   </div>
+
+
   <div class="form-group">
     <label for="exampleFormControlTextarea1">priority</label>
     <input type="text" class="form-control" name="priority" rows="3">
@@ -48,7 +55,7 @@
 
 
 </form>
-
+</div>
 <script type="text/javascript">
 
 

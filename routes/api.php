@@ -25,15 +25,16 @@ Route::put('/clients/forgetpassword', 'API\VerificationApiController@reset');
 
 Route::post('clients/login', 'API\ClientController@login');
 Route::post('/clients/register', 'API\ClientController@register');
-Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum', 'verified']);
-Route::put('/clients/{client}', 'API\ClientController@update')->middleware('auth:sanctum');
-Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware('auth:sanctum');
-Route::get('/clients/{client}', 'API\ClientController@show')->middleware('auth:sanctum');
+Route::get('/clients', 'API\ClientController@index')->middleware(['auth:sanctum','APIverified']);
+Route::put('/clients/{client}', 'API\ClientController@update')->middleware(['auth:sanctum','APIverified']);
+Route::delete('/clients/{client}', 'API\ClientController@destroy')->middleware(['auth:sanctum','APIverified']);
+Route::get('/clients/{client}', 'API\ClientController@show')->middleware(['auth:sanctum','APIverified']);
 
 
 
+Route::get('email/verifyLink/{id}', 'API\VerificationApiController@verifyLink')->name('verificationapi.verifyLink');
 Route::get('email/verify/{id}', 'API\VerificationApiController@verify')->name('verificationapi.verify');
-Route::get('email/resend', 'API\VerificationApiController@resend')->name('verificationapi.resend');
+Route::get('email/resend/{id}', 'API\VerificationApiController@resend')->name('verificationapi.resend');
 
 Route::group([
     'name' => 'useraddresses',
@@ -50,8 +51,8 @@ Route::group([
 });
 
 // Route::get('/orders', 'API\OrderController@index')->middleware('auth:sanctum');
-Route::post('/orders', 'API\OrderController@store')->middleware('auth:sanctum');
-Route::put('/orders/{order}', 'API\OrderController@update')->middleware('auth:sanctum');
-Route::get('/orders/{order}', 'API\OrderController@show')->middleware('auth:sanctum');
-Route::delete('/orders/{order}', 'API\OrderController@destroy')->middleware('auth:sanctum');
+Route::post('/orders', 'API\OrderController@store')->middleware(['auth:sanctum','APIverified']);
+Route::put('/orders/{order}', 'API\OrderController@update')->middleware(['auth:sanctum','APIverified']);
+Route::get('/orders/{order}', 'API\OrderController@show')->middleware(['auth:sanctum','APIverified']);
+Route::delete('/orders/{order}', 'API\OrderController@destroy')->middleware(['auth:sanctum','APIverified']);
 Route::post('/confirmorder/{orderId}', 'API\OrderController@confirmorder')->middleware('auth:sanctum');

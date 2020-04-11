@@ -48,9 +48,10 @@ class PharmacyController extends Controller
     }
 // ===========================================================    
 
-    public function show(Request $request)
+    public function show(Pharmacy $pharmacy)
     {
-        $pharmacy = Pharmacy::find($request->pharmacy);
+       
+       
         $this->authorize('view', $pharmacy);
         return view('pharmacy.show', [
             'pharmacy' => $pharmacy
@@ -60,11 +61,10 @@ class PharmacyController extends Controller
 
     public function create()
     {
-        // $areas = Area::all();
-        // return view('pharmacy.create', [
-        //     'areas' => $areas
-        // ]);
-        return view('pharmacy.create');
+        $areas = Area::all();
+        return view('pharmacy.create', [
+            'areas' => $areas
+        ]);
     }
 
 
@@ -97,7 +97,7 @@ class PharmacyController extends Controller
             'priority' => $pharmacy['priority'],
         ]);
 
-        // dd($user);
+        
         $user = $user->refresh();
         $pharmacy=$pharmacy->refresh();
 
@@ -108,9 +108,9 @@ class PharmacyController extends Controller
     }
 
 
-    public function edit(Request $request)
+    public function edit(Pharmacy $pharmacy)
     {
-        $pharmacy = Pharmacy::find($request->pharmacy);
+       
         $this->authorize('update', $pharmacy);
         $pharmacies = Pharmacy::all();
         
@@ -164,14 +164,13 @@ class PharmacyController extends Controller
         return response()->json([
             'success' => 'Record deleted successfully!'
         ]);
-        // ret
+        
     }
 
 
 
-    public function softdelete(Request $request)
-    {
-        $pharmacy = Pharmacy::find($request->pharmacy);
+    public function softdelete(Pharmacy $pharmacy)
+    {    
         $pharmacy->delete();
         return response()->json([
             'success' => 'Record deleted successfully!'

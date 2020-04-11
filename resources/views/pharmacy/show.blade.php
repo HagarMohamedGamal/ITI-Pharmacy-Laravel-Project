@@ -9,10 +9,17 @@
     pharmacy Info
   </div>
   <div class="card-body">
-    <strong class="card-title">name: </strong>
-    <p>{{$pharmacy->type ? $pharmacy->type->name :"no" }}</p>
-    <strong class="card-title">email: </strong>
-    <p>{{$pharmacy->type ? $pharmacy->type->email :"no" }}</p>
+    <div class="row">
+      <div class="col col-md-6">
+        <strong class="card-title">name: </strong>
+        <p>{{$pharmacy->type ? $pharmacy->type->name :"no" }}</p>
+        <strong class="card-title">email: </strong>
+        <p>{{$pharmacy->type ? $pharmacy->type->email :"no" }}</p>
+      </div>
+      <div class="col col-md-6">
+        <img src="{{ URL::to('/') }}/images/{{$pharmacy->avatar}}">
+      </div>
+    </div>
   </div>
 </div>
 

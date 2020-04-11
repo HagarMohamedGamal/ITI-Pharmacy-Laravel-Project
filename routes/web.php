@@ -161,8 +161,8 @@ Route::group(
         'middleware' => ['role:super-admin|admin|doctor|pharmacy', 'auth'],
     ],
     function () {
-        Route::post('/medicineorder/', 'MedicineOrderController@store')->name('medicineorder.store');
-        Route::post('/medicineauto/', 'MedicineController@auto')->name('medicine.auto');
+        Route::post('/medicineorder', 'MedicineOrderController@store')->name('medicineorder.store');
+        Route::post('/medicineauto', 'MedicineController@auto')->name('medicine.auto');
         Route::post('/medicineorder/{order}', 'MedicineOrderController@update')->name('medicine.update');
     }
 );

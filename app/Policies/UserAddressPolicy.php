@@ -30,7 +30,7 @@ class UserAddressPolicy
      */
     public function view(User $user, UserAddress $userAddress)
     {
-       return ($user->typeable_id === $userAddress->client_id);
+       return ($user->typeable_id === $userAddress->client_id)||$user->hasRole('super-admin');
     }
 
     /**
@@ -53,7 +53,7 @@ class UserAddressPolicy
      */
     public function update(User $user, UserAddress $userAddress)
     {
-        return ($user->typeable_id === $userAddress->client_id);
+        return ($user->typeable_id === $userAddress->client_id) || $user->hasRole('super-admin');
     }
 
     /**
@@ -65,7 +65,7 @@ class UserAddressPolicy
      */
     public function delete(User $user, UserAddress $userAddress)
     {
-        return ($user->typeable_id === $userAddress->client_id);
+        return ($user->typeable_id === $userAddress->client_id) || $user->hasRole('super-admin');
     }
 
     /**

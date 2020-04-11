@@ -75,7 +75,7 @@ class VerificationApiController extends Controller
 		$user = User::find($userID);
         $user->sendApiEmailVerificationNotification();
         return response()->json([
-        	'Verfication Email' => 'If you didn\'t receive any verification Email click http://pharmacy.test/api/email/resend/'.$userID,
+        	'Verfication Email' => 'If you didn\'t receive any verification Email click '.route('verificationapi.resend', $user->id),
         	'Data' => $user,
             ], 403);
 	}
