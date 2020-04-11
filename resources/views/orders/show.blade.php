@@ -27,7 +27,7 @@
             <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
             @endforeach
           </ul>
-          @if($order->status=="new")
+          @if($order->status=="New" || $order->status=="Processing")
           <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
           @endif
           </div>
