@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyApiEmail;
 use App\Notifications\notifyUserOrder;
@@ -74,8 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    // protected $dateFormat = 'Y-m-d';
-    protected $dates = [
-        'created_at',
-    ];
+    // protected $dateFormat = 'd m Y';
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->isoFormat('LLL');
+    }
+    // public function setCreatedAtAttribute($value)
+    // {
+    //     $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d\TH:i:s.0000000 Z', $value);
+    // }
+    
 }
