@@ -42,7 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'created_at' => "format('d m Y h:i:s A')",
     ];
 
     public function greetingUser(){
@@ -76,10 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $dateFormat = 'd m Y';
+    // protected $dateFormat = 'd m Y';
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->isoFormat('LLL');
     }
+    // public function setCreatedAtAttribute($value)
+    // {
+    //     $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d\TH:i:s.0000000 Z', $value);
+    // }
     
 }
