@@ -75,6 +75,7 @@
       table = $("#doctorIndextable").DataTable({
         processing: true,
         serverSide: true,
+        searching: true,
         ajax: {
           url: '/doctors'
         },
@@ -130,11 +131,11 @@
             }
           },
           {
-            data: 'name',
+            data: 'type.name',
             name: 'name'
           },
           {
-            data: 'email',
+            data: 'type.email',
             name: 'email'
           },
           {
@@ -146,7 +147,7 @@
             name: 'pharmacy_id'
           },
           {
-            data: 'created_at',
+            data: 'type.created_at',
             name: 'created_at'
           },
           {
@@ -156,9 +157,6 @@
         ]
       });
     }
-
-
-
 
     $(document).on('click', '.delete', function() {
       doctor_id = $(this).attr('id');

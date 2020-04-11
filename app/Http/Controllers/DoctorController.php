@@ -70,10 +70,11 @@ class DoctorController extends Controller
             $doctor['pharmacy_id'] = $authUser->typeable->id;
         }
         $user = User::create($user)->refresh();
-        $doctor=Doctor::create($doctor)->refresh();
-        $doctor->type()->save($user);
+        $doctorNew=Doctor::create($doctor);
+        $doctorNew->refresh();
+        $doctorNew->type()->save($user);
         $pharmacy = Pharmacy::find($doctor['pharmacy_id']);
-        $pharmacy->doctors()->save($doctor);
+        $pharmacy->doctors()->save($doctorNew);
         $user->assignRole('doctor');
         return redirect()->route('doctors.index');
     }
@@ -127,23 +128,11 @@ class DoctorController extends Controller
     {
         $user = Auth::user();
         if($user->hasrole('pharmacy')){
-            $doctors = Doctor::query()->where('pharmacy_id', $user->typeable->id);
+            $doctors = Doctor::with(['type'])->where('pharmacy_id', $user->typeable->id)->get();
         } else{
-            $doctors = Doctor::query();
+            $doctors = Doctor::with(['type'])->get();
         }
         $data = DataTables()::of($doctors)
-            ->addColumn('id', function(Doctor $doctor){
-                return $doctor->id;
-            })
-            ->addColumn('name', function(Doctor $doctor){
-                return $doctor->type->name;
-            })
-            ->addColumn('email', function(Doctor $doctor){
-                return $doctor->type->email;
-            })
-            ->addColumn('created_at', function(Doctor $doctor){
-                return $doctor->type->created_at;
-            })
             ->addColumn('action', function(Doctor $doctor){
                 $ban = (!$doctor->isBanned())? "btn-dark":"btn-secondary";
                 $button = '<a name="show" id="'.$doctor->id.'" style="border-radius: 20px;" class="show btn btn-success btn-sm p-0" href="/doctors/'.$doctor->id.'"><i class="fas fa-eye m-2"></i></a>';
