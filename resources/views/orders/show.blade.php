@@ -168,7 +168,7 @@
           .fail(function(error) {
             console.log('no');
 
-            $('#status').val('new');
+            $('#status').val('New');
             $('.pricediv').show();
 
           });

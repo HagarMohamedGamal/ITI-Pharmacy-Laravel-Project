@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -44,6 +45,10 @@ class Order extends Model
     public function setCreated_atAttribute($value)
     {
         $this->attributes['created_at'] = $value->toDateString();
+    }
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->isoFormat('LLL');
     }
 
 

@@ -19,7 +19,7 @@ class OrderSeeder extends Seeder
                 'useraddress_id' => rand(1, 4),
                 'doctor_id' => rand(1, 10),
                 'is_insured'=>(bool)random_int(0, 1),
-                'status'=>'new',
+                'status'=>'New',
                 'creator_type'=>'null',
                 'pharmacy_id' => rand(1, 10),
                 'Actions' => 'null',

@@ -17,7 +17,7 @@
         <p>{{$pharmacy->type ? $pharmacy->type->email :"no" }}</p>
       </div>
       <div class="col col-md-6">
-        <img src="{{ URL::to('/') }}/images/{{$pharmacy->avatar}}">
+        <img src="{{ URL::to('/') }}/images/{{$pharmacy->avatar}}" style="width: 300px;">
       </div>
     </div>
   </div>

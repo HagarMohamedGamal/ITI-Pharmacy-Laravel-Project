@@ -91,7 +91,7 @@ class OrderController extends Controller
         } else {
             $creator = 'admin';
             $pharmacy = Pharmacy::where('area_id', $useradd->area_id)->orderby('priority', 'desc')->first();
-            $status = 'new';
+            $status = 'New';
         }
 
 

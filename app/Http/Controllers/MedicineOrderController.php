@@ -11,7 +11,7 @@ class MedicineOrderController extends Controller
     public function store(Request $request)
     {
       
-        if ($request->status == 'new') {
+        if ($request->status == 'New') {
            
             $medicine = Medicine::create([
                 'name' => $request->name,
