@@ -10,27 +10,23 @@ class MedicineOrderController extends Controller
 {
     public function store(Request $request)
     {
-      
-        if ($request->status == 'New') {
-           
+
+        if ($request->status == 'add') {
+
             $medicine = Medicine::create([
                 'name' => $request->name,
                 'type' => $request->type,
                 'price' => $request->price
             ]);
-            
-        }
-        else
-        {
-            
-            $medicine=Medicine::where('name', $request->name)->first();
-            
+        } else {
+
+            $medicine = Medicine::where('name', $request->name)->first();
         }
 
         $order = Order::find($request->hidden_id);
-        
+
         $order->medicines()->attach($medicine, ['quantity' => $request->quantity,]);
-       
+
         $order->price = $order->price + ($medicine->price * $request->quantity);
         $order->save();
 
@@ -38,12 +34,23 @@ class MedicineOrderController extends Controller
         return response()->json(['success' => 'Data Added successfully.']);
     }
 
-    public function update($id)
+    public function update(Order $order)
     {
-        $order = Order::find($id);
+
+        if($order->status == "Processing")
+        {
+            $user = $order->user->type;
+            $order->status = 'Waiting';
+            $user->notifyOrder($order->id);
+            $order->save();
+            return response()->json([
+                'success' => 'User Notified',
+            ]);
+        }
+
+           
         
-        $order->status = 'waiting';
-        $order->save();
-        return redirect('/orders');
+        
+        return redirect('/orders/'+$order->id);
     }
 }

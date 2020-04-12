@@ -171,8 +171,8 @@ class OrderController extends Controller
         ]);
     }
 
-    public function notifyuser($userId, $orderId){
-        User::find($userId)->notifyOrder($orderId);
+    public function notifyuser(User $user, Order $order){
+        $user->notifyOrder($order->id);
         return response()->json([
             'success' => 'User Notified',
         ]);

@@ -14,7 +14,7 @@
           <p class=" card-text"><span class="font-weight-bold">order user name:-</span> {{$order->user ?$order->user->type->name : 'no owner'}}</p>
           <p class=" card-text"><span class="font-weight-bold">doctor name:-</span> {{$order->doctor ?$order->doctor->type->name : 'no doctor' }}</p>
           <p class=" card-text"><span class="font-weight-bold">delivering address:-</span> {{$order->delivering_address}}</p>
-          <p class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
+          <p id="order_status" class=" card-text"><span class="font-weight-bold">status:-</span> {{$order->status}}</p>
           <p class=" card-text"><span class="font-weight-bold">creator type:-</span> {{$order->creator_type}}</p>
           <p class=" card-text"><span class="font-weight-bold">assigned pharmacy name:-</span> {{$order->pharmacy?$order->pharmacy->type->name:'not yet'}}</p>
           <p class=" card-text"><span class="font-weight-bold">price-</span> {{$order->price}}</p>
@@ -24,13 +24,13 @@
           <p class=" card-text"><span class="font-weight-bold">Medicines</span> </p>
           <ul class="list-group" id="medlist">
             @foreach ($order->medicines as $med)
-            <li class="list-group-item">{{$med->name}} qty {{$med->quantity}}</li>
+            <li class="list-group-item">{{$med->name}} qty {{$med->pivot->quantity}}</li>
             @endforeach
           </ul>
           @if($order->status=="New" || $order->status=="Processing")
           <button id="addmedbtn" class="btn btn-success" id="medicine">add Medicine</button>
           @endif
-          </div>
+        </div>
         <div class="col col-md-8">
           <h3><strong>Prescription</strong></h3>
           <div class="row">
@@ -49,11 +49,17 @@
     </div>
     @if($order->medicines->isNotEmpty()&& $order->status=="Processing")
 
-    <button class="text-center btn btn-danger finish"> finish</button>
+    <button class="text-center btn btn-danger finish"> finish & Notify Client</button>
     @endif
+    <div id="waitingdev">
+      @if($order->medicines->isNotEmpty()&& $order->status=="Waiting")
+      <button class="text-center btn btn-success disabled"> waiting for client</button>
+      @endif
+    </div>
+
     @if($order->medicines->isNotEmpty()&& $order->status=="Confirmed")
     <form action="/order/{{$order->id}}">
-      <input  class="text-center btn btn-success" value="Deliver to user">
+      <input class="text-center btn btn-success" value="Deliver to user">
       @method('put')
     </form>
     @endif
@@ -69,7 +75,7 @@
       </div>
       <div class="modal-body">
         <span id="form_result"></span>
-        <form method="post" id="sample_form" autocomplete="off" class="form-horizontal " >
+        <form method="post" id="sample_form" autocomplete="off" class="form-horizontal ">
           @csrf
           <div class="form-group">
             <label class="control-label col-md-4">name</label>
@@ -101,7 +107,7 @@
           <br />
           <div class="form-group" align="center">
             <input type="hidden" name="hidden_id" id="hidden_id" value="{{$order->id}}" />
-            <input type="hidden" name="status" id="status" value="old" />
+            <input type="hidden" name="status" id="status" value="use" />
             <input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add" />
           </div>
         </form>
@@ -120,7 +126,7 @@
         <h4 class="modal-title">Prescription</h4>
       </div>
       <div class="modal-body PrescriptionModal">
-        
+
       </div>
     </div>
   </div>
@@ -133,7 +139,10 @@
   $(document).ready(function() {
     $('.pricediv').hide();
     $(document).on('click', '#addmedbtn', function() {
+      console.log("clicked");
+
       $('#medicineForm').modal('show');
+
     });
 
     $.ajaxSetup({
@@ -161,6 +170,7 @@
           })
           .done(function(response) {
             response.forEach(function(item) {
+              $('#status').val('use');
               $('.pricediv').hide();
               $('#medi').append(' <option id="' + item.id + '" value="' + item.name + '">');
             })
@@ -168,7 +178,7 @@
           .fail(function(error) {
             console.log('no');
 
-            $('#status').val('New');
+            $('#status').val('add');
             $('.pricediv').show();
 
           });
@@ -198,8 +208,7 @@
           console.log(!$('#finishdev').hasClass('not allowed'));
 
           if (!$('#finishdev').hasClass('not allowed')) {
-            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish</button><br>'+
-            '<button class="text-center btn-block btn btn-danger notify" id="{{$order->user->type->id}}">Notify User</button>');
+            $('#finishdev').append('<button class="text-center btn-block btn btn-danger finish" id=""> finish & Notify Client</button><br>');
           }
           $('#medlist').append('<li class="list-group-item">' +
             name + ' qty ' + quantity + '</li>');
@@ -208,6 +217,8 @@
     });
 
     $(document).on('click', '.finish', function() {
+      $('.finish').text('finishing ');
+      $('.finish').prop('disabled', true);
       $.ajax({
           type: "POST",
           url: "/medicineorder/" + $('#hidden_id').val(),
@@ -215,28 +226,34 @@
         .done(function(response) {
           $('#addmedbtn').hide();
           $('.finish').hide();
+          $('#order_status ').html('<span class="font-weight-bold">status:-</span> {{$order->status}}');
+          $('#waitingdev').append('<button class="text-center btn btn-success disabled"> waiting for client</button>');
+          // $('#finishdev').append('<button class="text-center btn-block btn btn-dark notify" id="{{$order->user->type->id}}">Notify User</button>');
+
         })
     });
 
     $(document).on('click', '.PrescriptionImage', function() {
       $('.prImg').remove();
       $('#Prescription').modal('show');
-      image= "<img class='prImg' src='"+$(this)[0].src+"'>";
-      $(image).css({'width': '400px'}).appendTo('.PrescriptionModal');
+      image = "<img class='prImg' src='" + $(this)[0].src + "'>";
+      $(image).css({
+        'width': '400px'
+      }).appendTo('.PrescriptionModal');
       // (this).clone().css('width', '400px')
     });
-    
-  $(document).on('click', '.notify', function() {
-    console.log($('.notify').attr('id'));
-    
-    $.ajax({
-        type: "post",
-        url: "/orders/notifyuser/" + $('.notify').attr('id') + "/" + $('#hidden_id').val(),
-      })
-      .done(function(response) {
-        $('.notify').hide();
-      })
-  });
+
+    // $(document).on('click', '.notify', function() {
+    //   console.log($('.notify').attr('id'));
+
+    //   $.ajax({
+    //       type: "post",
+    //       url: "/orders/notifyuser/" + $('.notify').attr('id') + "/" + $('#hidden_id').val(),
+    //     })
+    //     .done(function(response) {
+    //       $('.notify').hide();
+    //     })
+    // });
 
   });
 </script>

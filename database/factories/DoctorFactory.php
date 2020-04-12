@@ -11,7 +11,7 @@ $factory->define(App\Doctor::class, function (Faker $faker) {
     return [
             'national_id' => $faker->randomNumber($nbDigits = NULL, $strict = false),
             'avatar' => 'avatars/default.jpg',
-            'pharmacy_id' => $faker->numberBetween($min = 1, $max = 20),
+            'pharmacy_id' => $faker->numberBetween($min = 1, $max = 10),
             'is_baned' => $faker->boolean
     ];
 });
